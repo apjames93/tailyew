@@ -5,7 +5,7 @@ name = "tailyew"
 version = "0.1.0"
 edition = "2021"
 description = "Reusable Yew + Tailwind UI component library"
-license = "MIT OR Apache-2.0"
+license = "MIT"
 
 [dependencies]
 serde = { workspace = true }
@@ -19,5 +19,7 @@ wasm-bindgen-futures = { workspace = true }
 wasm-logger = { workspace = true }
 url = { workspace = true }
 js-sys = { workspace = true }
-
 web-sys = { workspace = true }
+
+uuid = { version = "1.11.0", features = ["serde", "v4", "js"] }
+regex = "1.11.1"
