@@ -1,0 +1,67 @@
+/* warp-yew/frontend/main.css */
+
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Base styles for the body */
+body {
+  @apply bg-background text-neutral; /* Use custom background and text colors for the light theme */
+}
+
+/* Dark mode styles for the body */
+body.dark {
+  @apply bg-background-dark text-foreground-dark; /* Apply dark theme colors */
+}
+
+/* Button styles */
+.button {
+  @apply bg-primary text-white border-none py-2 px-4 rounded transition duration-150 ease-in-out;
+}
+
+.button:hover {
+  @apply bg-primary-dark;
+}
+
+body.dark .button {
+  @apply bg-primary-dark text-white;
+}
+
+body.dark .button:hover {
+  @apply bg-primary;
+}
+
+/* Header and Footer */
+header,
+footer {
+  @apply bg-secondary text-white p-4;
+}
+
+body.dark header,
+body.dark footer {
+  @apply bg-secondary-dark text-foreground-dark;
+}
+
+/* Other custom styles for dark mode */
+body.dark .text-accent {
+  @apply text-accent-dark;
+}
+
+body.dark .bg-accent {
+  @apply bg-accent-dark;
+}
+
+/* Utility classes for spacing and padding */
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Additional custom styles can be added as needed */

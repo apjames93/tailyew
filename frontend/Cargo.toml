@@ -1,0 +1,27 @@
+# frontend/Cargo.toml
+
+[package]
+name = "frontend"
+version = "0.1.0"
+edition = "2021"
+description = "TailYew frontend app using the tailyew component system"
+license = "MIT OR Apache-2.0"
+
+[lib]
+# Needed for wasm-pack or trunk builds
+crate-type = ["cdylib"]
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+yew = { workspace = true }
+gloo = { workspace = true }
+web-sys = { workspace = true }
+wasm-bindgen = { workspace = true }
+
+tailyew = { path = "../crates/tailyew" }
+
+yew-router = "0.18.0"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt"] }

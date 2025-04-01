@@ -1,0 +1,21 @@
+{
+    "name": "Droplet",
+    "short_name": "PushIt",
+    "start_url": "/app",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "description": "Droplet.",
+    "icons": [
+      {
+        "src": "/images/logo.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/logo.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  

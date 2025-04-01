@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DispoGrinders</title>
+        <link rel="stylesheet" href="/styles.css">
+        <link rel="manifest" href="/manifest.json">
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="module">
+            // Import and initialize the main app
+            import init from '/pkg/frontend.js';
+            init();
+
+            // Register the service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service_worker.js')
+                    .then(() => console.log("Service Worker registered successfully."))
+                    .catch(error => console.error("Service Worker registration failed:", error));
+            } else {
+                console.log("Service Worker not supported in this browser.");
+            }
+        </script>
+    </body>
+</html>
