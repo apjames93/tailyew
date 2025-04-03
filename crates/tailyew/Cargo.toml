@@ -4,8 +4,14 @@
 name = "tailyew"
 version = "0.1.0"
 edition = "2021"
+authors = ["Alex James apjames93@gmail.com"]
 description = "Reusable Yew + Tailwind UI component library"
 license = "MIT"
+readme = "README.md"
+repository = "https://github.com/apjames93/tailyew"
+homepage = "https://github.com/apjames93/tailyew"
+keywords = ["yew", "tailwind", "component-library", "wasm", "ui"]
+categories = ["wasm", "gui", "web-programming"]
 
 [dependencies]
 serde = { workspace = true }

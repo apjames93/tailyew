@@ -38,4 +38,3 @@ doc-no-open:
 clean:
 	@echo "Cleaning tailyew build artifacts..."
 	cargo clean
-

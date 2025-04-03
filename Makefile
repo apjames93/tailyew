@@ -46,9 +46,16 @@ watch-docs:
 	@echo "📚 Watching for API doc changes..."
 	cargo watch -p tailyew -w crates/tailyew/src -s 'make tailyew-doc'
 
+release-check:
+	cargo check -p tailyew
+	make pretty
+	cd crates/tailyew && cargo publish --dry-run
+
 # Publish the tailyew crate to crates.io
 publish-tailyew:
 	@echo "🚀 Publishing tailyew to crates.io..."
+	cargo check -p tailyew
+	make pretty
 	cd crates/tailyew && cargo publish --allow-dirty
 
 # ---------------------------------------
