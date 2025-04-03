@@ -4,13 +4,13 @@ use crate::templates::demos::{
     AComponentDemoSection, AccordionDemoSection, AppBarDemoSection, BarChartDemoSection,
     BubbleChartDemoSection, ButtonDemoSection, CardDemoSection, CheckboxDemoSection,
     CircularProgressDemoSection, ColorInputDemoSection, CopyToClipboardDemoSection,
-    FileInputDemoSection, FormDemoSection, HeroHeaderDemoSection, InputDemoSection,
-    JsonInputDemoSection, LiDemoSection, LineChartDemoSection, LinearProgressDemoSection,
-    ModalButtonDemoSection, ModalDemoSection, NotificationDemoSection, PhoneInputDemoSection,
-    PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection,
-    ScatterPlotDemoSection, SelectDemoSection, SpacerDemoSection, StepperDemoSection,
-    TableDemoSection, TabsDemoSection, TextareaDemoSection, TooltipDemoSection, TypoDemoSection,
-    UlDemoSection,
+    FileInputDemoSection, FormDemoSection, HeroHeaderDemoSection, InitThemeDemoSection,
+    InputDemoSection, JsonInputDemoSection, LiDemoSection, LineChartDemoSection,
+    LinearProgressDemoSection, ModalButtonDemoSection, ModalDemoSection, NotificationDemoSection,
+    PhoneInputDemoSection, PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection,
+    RangeInputDemoSection, ScatterPlotDemoSection, SelectDemoSection, SpacerDemoSection,
+    StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection, TooltipDemoSection,
+    TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
 use tailyew::atoms::{Li, TagType, Typo, Ul};
@@ -209,6 +209,11 @@ const DEMO_LINKS: &[DemoLink] = &[
         name: "Pie Chart",
         route: "pie_chart",
         render: || html! { <PieChartDemoSection /> },
+    },
+    DemoLink {
+        name: "Init Theme",
+        route: "init_theme",
+        render: || html! { <InitThemeDemoSection /> },
     },
 ];
 

@@ -90,7 +90,7 @@ pub fn line_chart_component(props: &LineChartProps) -> Html {
                 context.begin_path();
                 context.set_line_width(2.0);
                 #[allow(deprecated)]
-                context.set_stroke_style(&line.color.clone().into()); // bug: when updating to set_fill_style_str we lose the line colors 
+                context.set_stroke_style(&line.color.clone().into()); // bug: when updating to set_fill_style_str we lose the line colors
 
                 let start = &line.points[0];
                 context.move_to(50.0 + start.x, 400.0 - start.y);

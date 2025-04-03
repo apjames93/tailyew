@@ -5,7 +5,8 @@ module.exports = {
     './**/*.html',
     './js/**/*.js',
     './components/**/*.{html,js,rs}',
-    "../crates/tailyew/src/**/*.rs", // TODO: figure out what to do here when installing crate for real 
+    "../crates/tailyew/src/**/*.rs",
+    // './node_modules/tailyew/**/*.rs',
   ],
   theme: {
     extend: {
