@@ -1,10 +1,11 @@
+use crate::Route;
 use tailyew::atoms::{Button, ButtonType, Section, Spacer, TagType, Typo};
-use tailyew::molecules::{Accordion, HeroHeader, ModalButton, AppBar};
-use tailyew::organisms::{Card, Tabs, TabItem};
+use tailyew::molecules::{Accordion, AppBar, HeroHeader};
+use tailyew::organisms::{Card, TabItem, Tabs};
 use yew::prelude::*;
+use yew_router::prelude::Link;
 
 const HERO_IMAGE_URL: &str = "/images/TailYew.png";
-const LOGO_IMAGE_URL: &str = "/images/logo.png";
 
 #[function_component(LandingPage)]
 pub fn landing_page() -> Html {
@@ -36,14 +37,17 @@ pub fn landing_page() -> Html {
                 title={Some("TailYew")}
                 logo_url={Some("/images/logo.png")}
                 links={vec![
+                    html! { <Link<Route> to={Route::DemoPage { component: "accordion".into() }}>{ "Components" }</Link<Route>> },
                     html! { <a href="#about">{ "About" }</a> },
-                    html! { <a href="#benefits">{ "Benefits" }</a> },
                     html! { <a href="#getting-started">{ "Get Started" }</a> },
                 ]}
                 actions={vec![
-                    html! { <Button button_type={ButtonType::Primary}>{ "Docs" }</Button> },
+                    html! { <Link<Route> to={Route::DemoPage { component: "button".into() }}>
+                        <Button button_type={ButtonType::Primary}>{ "Docs" }</Button>
+                    </Link<Route>> },
                 ]}
             />
+
 
             // Hero
             <HeroHeader
@@ -52,8 +56,9 @@ pub fn landing_page() -> Html {
                 background_image_url={Some(HERO_IMAGE_URL.to_string())}
             >
                 <div class="flex justify-center space-x-4 mt-6">
-                    <Button button_type={ButtonType::Primary}>{ "Get Started" }</Button>
-                    <Button button_type={ButtonType::Secondary}>{ "View Components" }</Button>
+                    <Link<Route> to={Route::DemoPage { component: "button".into() }}>
+                        <Button button_type={ButtonType::Secondary}>{ "View Components" }</Button>
+                    </Link<Route>>
                 </div>
             </HeroHeader>
 

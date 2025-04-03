@@ -16,7 +16,7 @@ pub struct SelectProps {
     #[prop_or_default]
     pub label: Option<String>,
     #[prop_or_default]
-    pub class: Option<String>,
+    pub class: Classes,
     #[prop_or(true)]
     pub required: bool,
     #[prop_or_default]

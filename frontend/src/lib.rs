@@ -4,13 +4,16 @@ use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 use yew_router::prelude::*;
 mod pages;
-use pages::{AppRouter, LandingPage, NotFoundPage};
+mod templates;
+use pages::{AppRouter, DemoPage, LandingPage, NotFoundPage};
 
 /// Define the application routes and implement the `Routable` trait
 #[derive(Clone, Routable, PartialEq, Debug)]
 pub enum Route {
     #[at("/")]
     LandingPage,
+    #[at("/demo/:component")]
+    DemoPage { component: String },
     #[not_found]
     #[at("/404")]
     NotFoundPage,
@@ -19,6 +22,7 @@ pub enum Route {
 pub fn switch(route: Route) -> Html {
     match route {
         Route::LandingPage => html! { <LandingPage /> },
+        Route::DemoPage { component } => html! { <DemoPage component={component} /> },
         Route::NotFoundPage => html! { <NotFoundPage /> },
     }
 }

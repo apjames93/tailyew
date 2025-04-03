@@ -8,15 +8,15 @@ use yew::prelude::*;
 pub struct CardProps {
     #[prop_or_default]
     pub id: Option<String>,
-    pub title: String, // Main title of the card
+    pub title: String,
     #[prop_or_default]
-    pub subtitle: Option<String>, // Optional subtitle for the card
+    pub subtitle: Option<String>,
     #[prop_or_default]
-    pub description: Option<String>, // Optional description for the card content
+    pub description: Option<String>,
     #[prop_or_default]
-    pub image_url: Option<String>, // Optional image URL for the card
+    pub image_url: Option<String>,
     #[prop_or_default]
-    pub children: Children, // Additional content for the card
+    pub children: Children,
     #[prop_or_default]
     pub class: Option<String>,
 }
@@ -33,16 +33,13 @@ pub fn card(props: &CardProps) -> Html {
         class,
     } = props;
 
-    // Combine the base styles with any additional classes provided as props
-    let classes = classes!(
-        // "max-w-sm",
+    let card_classes = classes!(
         "rounded-lg",
         "shadow-lg",
         "overflow-hidden",
         "bg-white",
         "dark:bg-gray-800",
         "transition-transform",
-        "transform",
         "hover:scale-105",
         "hover:shadow-2xl",
         "duration-300",
@@ -51,44 +48,26 @@ pub fn card(props: &CardProps) -> Html {
     );
 
     html! {
-        <div id={id.clone().unwrap_or_default()} class={classes}>
-            // Optional Card Image
-            {
-                if let Some(url) = image_url {
-                    html! {
-                        <img src={url.clone()} alt="Card Image" class="w-full h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105" />
-                    }
-                } else {
-                    html! { <></> }
-                }
+        <div id={id.clone().unwrap_or_default()} class={card_classes}>
+            if let Some(url) = image_url {
+                <img
+                    src={url.clone()}
+                    alt="Card Image"
+                    class="w-full h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+                />
             }
 
-            <div class="p-6">
-                <Typo tag={TagType::H3}>
-                    { title.clone() }
-                </Typo>
+            <div class="p-6 space-y-2">
+                <Typo tag={TagType::H3}>{ title.clone() }</Typo>
 
-                { if let Some(sub) = subtitle.clone() {
-                    html! {
-                        <Typo tag={TagType::H4}>
-                            { sub }
-                        </Typo>
-                    }
-                } else {
-                    html! { <></> }
-                }}
+                if let Some(sub) = subtitle {
+                    <Typo tag={TagType::H4} class="text-sm text-gray-500 dark:text-gray-400">{ sub.clone() }</Typo>
+                }
 
-                { if let Some(desc) = description.clone() {
-                    html! {
-                        <Typo tag={TagType::P}>
-                            { desc }
-                        </Typo>
-                    }
-                } else {
-                    html! { <></> }
-                }}
+                if let Some(desc) = description {
+                    <Typo tag={TagType::P} class="text-sm text-gray-600 dark:text-gray-300">{ desc.clone() }</Typo>
+                }
 
-                // Render additional children content passed to the Card component
                 { for children.iter() }
             </div>
         </div>

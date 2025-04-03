@@ -1,16 +1,41 @@
-// src/atoms/ul.rs
+// crates/tailyew/src/atoms/ul.rs
 
 use yew::prelude::*;
+
+#[derive(PartialEq, Clone)]
+pub enum MarkerType {
+    Disc,
+    Decimal,
+    None,
+}
+
+impl Default for MarkerType {
+    fn default() -> Self {
+        Self::None // Sidebar use case: no bullets by default
+    }
+}
+
+impl MarkerType {
+    fn as_class(&self) -> &'static str {
+        match self {
+            MarkerType::Disc => "list-disc",
+            MarkerType::Decimal => "list-decimal",
+            MarkerType::None => "list-none",
+        }
+    }
+}
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct UlProps {
     pub children: Children,
     #[prop_or_default]
-    pub class: Option<String>, // Optional class for custom styling
+    pub class: Classes,
+
+    #[prop_or_else(|| "space-y-1".into())] // Small vertical spacing by default
+    pub spacing: Classes,
+
     #[prop_or_default]
-    pub spacing: Option<String>, // Spacing between list items
-    #[prop_or_default]
-    pub marker_type: Option<String>, // Marker type for list
+    pub marker_type: MarkerType,
 }
 
 #[function_component(Ul)]
@@ -22,19 +47,11 @@ pub fn ul(props: &UlProps) -> Html {
         marker_type,
     } = props;
 
-    let list_style = match marker_type.as_deref() {
-        Some("decimal") => "list-decimal",
-        Some("circle") => "list-circle",
-        _ => "list-disc", // Default to bullet points
-    };
-
     let ul_classes = classes!(
-        list_style,
-        spacing.clone().unwrap_or_else(|| "space-y-2".to_string()), // Default spacing if not provided
-        "pl-5",                                                     // Padding for list items
-        "text-gray-700",
-        "dark:text-gray-300",
-        class.clone()
+        marker_type.as_class(),
+        "pl-0",
+        spacing.clone(),
+        class.clone(),
     );
 
     html! {

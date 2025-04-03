@@ -1,5 +1,3 @@
-// src/cp/atoms/a.rs
-
 use yew::prelude::*;
 
 /// Properties for the Anchor (A) component
@@ -10,7 +8,7 @@ pub struct AProps {
     #[prop_or_default]
     pub target: Option<String>,
     #[prop_or_default]
-    pub class: Option<String>,
+    pub class: Classes,
     #[prop_or_default]
     pub onclick: Option<Callback<MouseEvent>>,
 }
@@ -23,40 +21,36 @@ pub fn a(props: &AProps) -> Html {
         target,
         class,
         onclick,
-    } = props.clone();
+    } = props;
 
-    // Combine the base styles with any additional classes provided as props
-    let classes = classes!(
+    let merged_classes = classes!(
         "text-blue-500",
-        "dark:text-blue-300", // Text color for light/dark mode
+        "dark:text-blue-300",
         "hover:text-blue-700",
-        "dark:hover:text-blue-500", // Hover color for light/dark mode
+        "dark:hover:text-blue-500",
         "focus:outline-none",
         "focus:ring-2",
         "focus:ring-blue-400",
-        "dark:focus:ring-blue-600", // Focus outline for accessibility
+        "dark:focus:ring-blue-600",
         "transition-colors",
-        "duration-200", // Smooth color transitions
-        "underline",    // Underline for all links
-        class.clone()
+        "duration-200",
+        "underline",
+        class.clone(), // now safely a `Classes`
     );
 
-    let on_click_handler = {
-        let onclick = onclick.clone();
+    let on_click_handler = onclick.clone().map(|cb| {
         Callback::from(move |e: MouseEvent| {
-            if let Some(onclick) = &onclick {
-                e.prevent_default();
-                onclick.emit(e);
-            }
+            e.prevent_default();
+            cb.emit(e);
         })
-    };
+    });
 
     html! {
         <a
-            href={href}
+            href={href.clone()}
             target={target.clone()}
-            rel={if target.as_deref() == Some("_blank") { Some("noopener noreferrer") } else { None }}  // Add `rel` attribute for security if target is _blank
-            class={classes}
+            rel={if target.as_deref() == Some("_blank") { Some("noopener noreferrer") } else { None }}
+            class={merged_classes}
             onclick={on_click_handler}
         >
             { for children.iter() }

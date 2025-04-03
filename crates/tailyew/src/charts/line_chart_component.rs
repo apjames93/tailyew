@@ -1,4 +1,4 @@
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 use yew::prelude::*;
 
@@ -22,96 +22,103 @@ pub struct LineChartProps {
 
 #[function_component(LineChartComponent)]
 pub fn line_chart_component(props: &LineChartProps) -> Html {
+    let canvas_ref = use_node_ref();
     let lines = props.lines.clone();
-    let lines_for_legend = props.lines.clone();
 
-    use_effect(move || {
-        let window = web_sys::window().unwrap();
-        let document = window.document().unwrap();
-        let canvas = document
-            .get_element_by_id("line-chart-canvas")
-            .unwrap()
-            .dyn_into::<HtmlCanvasElement>()
-            .unwrap();
-        let context = canvas
-            .get_context("2d")
-            .unwrap()
-            .unwrap()
-            .dyn_into::<CanvasRenderingContext2d>()
-            .unwrap();
+    use_effect({
+        let canvas_ref = canvas_ref.clone();
+        move || {
+            let Some(canvas) = canvas_ref.cast::<HtmlCanvasElement>() else {
+                return;
+            };
+            let Ok(context) = canvas
+                .get_context("2d")
+                .unwrap()
+                .unwrap()
+                .dyn_into::<CanvasRenderingContext2d>()
+            else {
+                return;
+            };
 
-        // Clear the canvas before drawing
-        context.clear_rect(0.0, 0.0, canvas.width().into(), canvas.height().into());
+            // Clear canvas
+            context.clear_rect(0.0, 0.0, canvas.width().into(), canvas.height().into());
 
-        // Draw x and y axes
-        context.set_stroke_style_str("#000");
-        context.set_line_width(1.0);
+            // Axes
+            context.set_fill_style_str("#000");
+            context.set_line_width(1.0);
 
-        // X-axis
-        context.begin_path();
-        context.move_to(50.0, 400.0);
-        context.line_to(550.0, 400.0);
-        context.stroke();
-
-        // Y-axis
-        context.begin_path();
-        context.move_to(50.0, 400.0);
-        context.line_to(50.0, 50.0);
-        context.stroke();
-
-        // Draw x-axis and y-axis scales
-        context.set_fill_style_str("#000");
-        context.set_font("12px Arial");
-
-        // X-axis scale
-        for i in (0..=500).step_by(50) {
-            let x = 50.0 + i as f64;
+            // X
             context.begin_path();
-            context.move_to(x, 400.0);
-            context.line_to(x, 405.0);
+            context.move_to(50.0, 400.0);
+            context.line_to(550.0, 400.0);
             context.stroke();
-            context
-                .fill_text(&format!("{}", i), x - 10.0, 420.0)
-                .unwrap();
-        }
 
-        // Y-axis scale
-        for i in (0..=350).step_by(50) {
-            let y = 400.0 - i as f64;
+            // Y
             context.begin_path();
-            context.move_to(45.0, y);
-            context.line_to(50.0, y);
+            context.move_to(50.0, 400.0);
+            context.line_to(50.0, 50.0);
             context.stroke();
-            context.fill_text(&format!("{}", i), 15.0, y + 5.0).unwrap();
-        }
 
-        // Draw lines with individual colors for each line
-        for line in lines.iter() {
-            context.set_line_width(2.0);
-            context.begin_path();
+            // Axis labels
+            context.set_fill_style_str("#000");
+            context.set_font("12px Arial");
 
-            if let Some(start_point) = line.points.first() {
-                context.set_stroke_style_str(&line.color);
-                context.move_to(50.0 + start_point.x, 400.0 - start_point.y);
+            for i in (0..=500).step_by(50) {
+                let x = 50.0 + i as f64;
+                context.begin_path();
+                context.move_to(x, 400.0);
+                context.line_to(x, 405.0);
+                context.stroke();
+                let _ = context.fill_text(&i.to_string(), x - 10.0, 420.0);
             }
 
-            for point in &line.points[1..] {
-                context.line_to(50.0 + point.x, 400.0 - point.y);
+            for i in (0..=350).step_by(50) {
+                let y = 400.0 - i as f64;
+                context.begin_path();
+                context.move_to(45.0, y);
+                context.line_to(50.0, y);
+                context.stroke();
+                let _ = context.fill_text(&i.to_string(), 15.0, y + 5.0);
             }
 
-            context.stroke();
-        }
+            // Lines
+            for line in lines.iter() {
+                if line.points.len() < 2 {
+                    continue;
+                }
 
-        || ()
+                context.begin_path();
+                context.set_line_width(2.0);
+                #[allow(deprecated)]
+                context.set_stroke_style(&line.color.clone().into()); // bug: when updating to set_fill_style_str we lose the line colors 
+
+                let start = &line.points[0];
+                context.move_to(50.0 + start.x, 400.0 - start.y);
+
+                for point in &line.points[1..] {
+                    context.line_to(50.0 + point.x, 400.0 - point.y);
+                }
+
+                context.stroke();
+            }
+        }
     });
 
     html! {
         <div>
-            <canvas id="line-chart-canvas" width="600" height="450"></canvas>
-            <div class="legend" style="margin-top: 10px;">
-                { for lines_for_legend.iter().map(|line| html! {
-                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <div style={format!("width: 20px; height: 2px; background-color: {}; margin-right: 10px;", line.color)}></div>
+            <canvas
+                ref={canvas_ref}
+                width="600"
+                height="450"
+                style="display: block; margin-bottom: 1rem;"
+            />
+            <div class="legend space-y-1">
+                { for props.lines.iter().map(|line| html! {
+                    <div class="flex items-center space-x-2">
+                        <div
+                            class="h-1"
+                            style={format!("width: 20px; background-color: {};", line.color)}
+                        ></div>
                         <span>{ &line.label }</span>
                     </div>
                 })}

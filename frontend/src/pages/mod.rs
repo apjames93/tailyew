@@ -6,3 +6,6 @@ pub use landing_page::LandingPage;
 
 pub mod not_found_page;
 pub use not_found_page::*;
+
+pub mod demo_page;
+pub use demo_page::*;

@@ -2,10 +2,10 @@ use yew::{prelude::*, AttrValue};
 
 #[derive(PartialEq, Clone, Default)]
 pub enum AppBarPosition {
+    #[default]
+    Static,
     Top,
     Bottom,
-    #[default]
-    DefaultPosition,
 }
 
 #[derive(Properties, PartialEq, Clone)]
@@ -21,7 +21,6 @@ pub struct AppBarProps {
     #[prop_or_default]
     pub position: AppBarPosition,
 }
-
 
 #[function_component(AppBar)]
 pub fn app_bar(props: &AppBarProps) -> Html {
@@ -40,50 +39,57 @@ pub fn app_bar(props: &AppBarProps) -> Html {
         Callback::from(move |_| menu_open.set(!*menu_open))
     };
 
+    let nav_classes = classes!(
+        "bg-white",
+        "dark:bg-gray-900",
+        "shadow-md",
+        "transition-colors",
+        "duration-300",
+        get_position_class(position)
+    );
+
     html! {
-        <nav class={format!("bg-white dark:bg-gray-900 shadow-lg transition-colors duration-300 {}", get_position_class(position))}>
-            <div class="flex items-center justify-between p-4 w-full">
-                // Logo or Title Section
-                <div class="flex items-center space-x-4">
-                    {
-                        if let Some(url) = logo_url.clone() {
-                            html! { <img src={url} class="h-8 w-8" alt="logo"/> }
-                        } else {
-                            html! {}
-                        }
-                    }
-
-                    {
-                        if let Some(title_text) = title.clone() {
-                            html! { <span class="text-xl font-bold text-gray-900 dark:text-gray-100">{title_text}</span> }
-                        } else {
-                            html! {}
-                        }
-                    }
+        <nav class={nav_classes}>
+            <div class="flex items-center justify-between px-4 py-3 w-full max-w-7xl mx-auto">
+                // Left: Logo + Title
+                <div class="flex items-center space-x-3">
+                    { logo_url.map(|url| html! {
+                        <img src={url} class="h-8 w-8" alt="Logo" />
+                    }) }
+                    { title.map(|text| html! {
+                        <span class="text-xl font-bold text-gray-900 dark:text-gray-100">{ text }</span>
+                    }) }
                 </div>
 
-                // Links Section (Hidden on small screens, visible on medium screens and above)
-                <div class="hidden md:flex space-x-6 items-center">
-                    { for links.iter().cloned() } // Use iter().cloned() to prevent moving the original `links` vector
+                // Middle: Navigation links (Desktop only)
+                <div class="hidden md:flex items-center space-x-6">
+                    { for links.iter().cloned() }
                 </div>
 
-                // Responsive Menu Toggle Button (Visible on small screens)
-                <button class="md:hidden text-gray-900 dark:text-gray-100" onclick={toggle_menu.clone()}>
-                    { if *menu_open { "✖" } else { "☰" } }
-                </button>
-
-                // Action Buttons Section
-                <div class="space-x-4 hidden md:flex items-center">
+                // Right: Action buttons (Desktop only)
+                <div class="hidden md:flex items-center space-x-4">
                     { for actions.iter().cloned() }
                 </div>
+
+                // Hamburger (Mobile only)
+                <button
+                    class="md:hidden text-gray-900 dark:text-gray-100"
+                    onclick={toggle_menu.clone()}
+                    aria-expanded={menu_open.to_string()}
+                    aria-label="Toggle menu"
+                >
+                    { if *menu_open { "✖" } else { "☰" } }
+                </button>
             </div>
 
-            // Responsive Menu Links
+            // Mobile menu
             { if *menu_open {
                 html! {
-                    <div class="md:hidden bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 flex flex-col items-center space-y-4 p-4 w-full">
-                        { for links.iter().cloned() }
-                        <div class="space-x-4">
+                    <div class="md:hidden px-4 py-3 space-y-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                        <div class="flex flex-col space-y-2 items-start">
+                            { for links.iter().cloned() }
+                        </div>
+                        <div class="flex space-x-4">
                             { for actions.iter().cloned() }
                         </div>
                     </div>
@@ -95,13 +101,11 @@ pub fn app_bar(props: &AppBarProps) -> Html {
     }
 }
 
-/// Determine the position class for the AppBar based on the `position` prop.
-fn get_position_class(position: AppBarPosition) -> String {
+/// Convert position to Tailwind classes
+fn get_position_class(position: AppBarPosition) -> &'static str {
     match position {
-        AppBarPosition::Bottom => "fixed bottom-0 left-0 w-full".to_string(),
-        AppBarPosition::Top => {
-            "fixed top-0 left-0 w-full z-50 bg-white dark:bg-gray-900".to_string()
-        }
-        AppBarPosition::DefaultPosition => "w-full".to_string(),
+        AppBarPosition::Top => "fixed top-0 left-0 w-full z-50",
+        AppBarPosition::Bottom => "fixed bottom-0 left-0 w-full z-50",
+        AppBarPosition::Static => "w-full",
     }
 }

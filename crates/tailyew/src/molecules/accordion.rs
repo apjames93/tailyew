@@ -7,7 +7,7 @@ pub struct AccordionProps {
     pub title: String,
     pub children: Children,
     #[prop_or_default]
-    pub class: Option<String>,
+    pub class: Classes,
     #[prop_or(TagType::Span)]
     pub heading_tag: TagType,
     #[prop_or(false)]
@@ -43,17 +43,18 @@ pub fn accordion(props: &AccordionProps) -> Html {
     });
 
     let wrapper_classes = classes!(
-        "border", "border-gray-300", "dark:border-gray-700", "rounded-lg",
-        "overflow-hidden", "shadow-md", "mb-4",
+        "border",
+        "border-gray-300",
+        "dark:border-gray-700",
+        "rounded-lg",
+        "overflow-hidden",
+        "shadow-md",
+        "mb-4",
         class.clone()
     );
 
     let arrow_classes = {
-        let mut c = Classes::from(vec![
-            "transform",
-            "transition-transform",
-            "duration-200",
-        ]);
+        let mut c = Classes::from(vec!["transform", "transition-transform", "duration-200"]);
         if *is_open {
             c.push("rotate-180");
             c.push("text-primary");

@@ -13,7 +13,6 @@ pub struct TabsProps {
 
 #[function_component(Tabs)]
 pub fn tabs(props: &TabsProps) -> Html {
-    let TabsProps { items } = props;
     let active_tab_index = use_state(|| 0);
 
     let on_tab_click = {
@@ -29,35 +28,49 @@ pub fn tabs(props: &TabsProps) -> Html {
         }
     };
 
+    let content = props
+        .items
+        .get(*active_tab_index)
+        .map(|tab| tab.content.clone())
+        .unwrap_or_else(|| html! { <div>{"No content available"}</div> });
+
     html! {
         <div class="tabs-component w-full p-2">
-            <div class="flex border-b border-gray-200 dark:border-gray-700">
-                { for items.iter().enumerate().map(|(index, item)| {
+            <div
+                class="flex border-b border-gray-200 dark:border-gray-700"
+                role="tablist"
+            >
+                { for props.items.iter().enumerate().map(|(index, item)| {
                     let is_active = index == *active_tab_index;
-                    let on_tab_click = on_tab_click.clone();
+                    let onclick = {
+                        let on_tab_click = on_tab_click.clone();
+                        Callback::from(move |_| on_tab_click.emit(index))
+                    };
 
                     html! {
                         <div
+                            key={index}
+                            id={format!("tab-{}", index)}
                             class={tab_styles(is_active)}
                             role="tab"
                             tabindex={if is_active { "0" } else { "-1" }}
                             aria-selected={is_active.to_string()}
-                            onclick={Callback::from(move |_| on_tab_click.emit(index))}
+                            aria-controls={format!("tabpanel-{}", index)}
+                            onclick={onclick}
                         >
                             { &item.title }
                         </div>
                     }
-                })}
+                }) }
             </div>
 
-            <div class="mt-4">
-                {
-                    if let Some(tab) = items.get(*active_tab_index) {
-                        tab.content.clone()
-                    } else {
-                        html! { <div>{"No content available"}</div> }
-                    }
-                }
+            <div
+                id={format!("tabpanel-{}", *active_tab_index)}
+                role="tabpanel"
+                class="mt-4"
+                aria-labelledby={format!("tab-{}", *active_tab_index)}
+            >
+                { content }
             </div>
         </div>
     }

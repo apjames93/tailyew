@@ -2,6 +2,9 @@ use wasm_bindgen_futures::{spawn_local, JsFuture};
 use web_sys::window;
 use yew::prelude::*;
 
+use crate::atoms::{Button, ButtonType};
+use crate::form::{Input, InputType};
+
 #[derive(Properties, PartialEq, Clone)]
 pub struct CopyToClipboardProps {
     pub label: String,
@@ -11,15 +14,22 @@ pub struct CopyToClipboardProps {
 #[function_component(CopyToClipboard)]
 pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
     let CopyToClipboardProps { label, value } = props.clone();
+    let copied = use_state(|| false);
 
     let onclick = {
         let value = value.clone();
+        let copied = copied.clone();
+
         Callback::from(move |_| {
             let value = value.clone();
+            let copied = copied.clone();
+
             spawn_local(async move {
+                // wrap clipboard in Some() to match `and_then` signature
                 if let Some(clipboard) = window().map(|w| w.navigator().clipboard()) {
-                    let promise = clipboard.write_text(&value);
-                    if JsFuture::from(promise).await.is_ok() {
+                    let result = JsFuture::from(clipboard.write_text(&value)).await;
+                    if result.is_ok() {
+                        copied.set(true);
                         web_sys::console::log_1(&"Copied to clipboard".into());
                     }
                 }
@@ -28,21 +38,36 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
     };
 
     html! {
-        <div>
-            <label class="block text-sm font-medium text-gray-700">{ label.clone() }</label>
-            <div class="flex items-center space-x-2 mt-1">
-                <input
-                    type="text"
-                    readonly=true
-                    value={value.clone()}
-                    class="w-full text-sm border rounded px-2 py-1 bg-gray-100"
-                />
-                <button
-                    class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition"
+        <div class="flex flex-col space-y-2">
+            <Input
+                id="clipboard-value"
+                label={label}
+                input_type={InputType::Text}
+                default_value={value.clone()}
+                placeholder="Click Copy to copy this value"
+                required={false}
+                disabled={true}
+                class="w-full"
+            />
+
+            <div class="flex items-center gap-2">
+                <Button
+                    button_type={ButtonType::Primary}
                     onclick={onclick}
+                    class="whitespace-nowrap"
                 >
                     { "Copy" }
-                </button>
+                </Button>
+
+                {
+                    if *copied {
+                        html! {
+                            <span class="text-xs text-green-600 dark:text-green-400">{ "Copied!" }</span>
+                        }
+                    } else {
+                        html! {}
+                    }
+                }
             </div>
         </div>
     }

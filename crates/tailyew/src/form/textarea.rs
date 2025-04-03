@@ -17,42 +17,42 @@ pub struct TextareaProps {
     pub required: bool,
     #[prop_or_default]
     pub on_change: Option<Callback<String>>,
+    #[prop_or(5)]
+    pub rows: usize,
 }
 
 #[function_component(Textarea)]
 pub fn textarea(props: &TextareaProps) -> Html {
     let TextareaProps {
-        class,
-        container_class,
-        default_value,
         id,
         label,
+        default_value,
         placeholder,
+        class,
+        container_class,
         required,
         on_change,
-    } = props.clone();
+        rows,
+    } = props;
 
-    // Internal state for managing the textarea value
     let value = use_state(|| default_value.clone());
 
-    // Callback to handle textarea change
     let oninput = {
         let value = value.clone();
+        let on_change = on_change.clone();
         Callback::from(move |e: InputEvent| {
             let textarea: HtmlTextAreaElement = e.target_unchecked_into();
-            value.set(textarea.value());
-
-            if let Some(on_change_callback) = &on_change {
-                on_change_callback.emit(textarea.value());
+            let val = textarea.value();
+            value.set(val.clone());
+            if let Some(cb) = &on_change {
+                cb.emit(val);
             }
         })
     };
 
-    let div_class = if let Some(klass) = container_class {
-        classes!(klass.clone())
-    } else {
-        classes!("flex", "flex-col", "space-y-2")
-    };
+    let div_class = container_class
+        .clone()
+        .unwrap_or_else(|| "flex flex-col space-y-2".into());
 
     let textarea_classes = classes!(
         "px-4",
@@ -66,33 +66,33 @@ pub fn textarea(props: &TextareaProps) -> Html {
         "focus:ring-2",
         "focus:ring-green-500",
         "focus:border-green-500",
-        "dark:bg-gray-800",          // Background color for dark mode
-        "dark:border-gray-600",      // Border color for dark mode
-        "dark:text-gray-200",        // Text color for dark mode
-        "dark:focus:ring-green-400", // Focus ring color for dark mode
-        class.clone()                // Apply custom class if provided
+        "dark:bg-gray-800",
+        "dark:border-gray-600",
+        "dark:text-gray-200",
+        "dark:focus:ring-green-400",
+        class.clone()
     );
 
-    // Base classes for the label
     let label_classes = classes!(
         "text-lg",
         "font-semibold",
         "text-gray-700",
-        "dark:text-gray-200" // Label text color for dark mode
+        "dark:text-gray-200"
     );
 
     html! {
         <div class={div_class}>
-            <label for={id.clone()} class={label_classes}>{label.clone()}</label>
+            <label for={id.clone()} class={label_classes}>{ label.clone() }</label>
             <textarea
                 id={id.clone()}
                 placeholder={placeholder.clone()}
                 oninput={oninput}
                 value={(*value).clone()}
                 class={textarea_classes}
-                rows=5
-                required={required}
+                rows={format!("{}", rows)}
+                required={*required}
             />
+
         </div>
     }
 }

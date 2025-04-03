@@ -1,26 +1,36 @@
 use yew::prelude::*;
 
-/// Properties for the Spacer component
+/// A simple vertical or horizontal spacer used for layout control.
 #[derive(Properties, PartialEq, Clone)]
 pub struct SpacerProps {
-    #[prop_or(16)] // Default size for the spacing (16px)
-    pub size: u32, // Size of the space in pixels
+    /// Size in pixels (default: 16)
+    #[prop_or(16)]
+    pub size: u32,
+
+    /// If true, renders a horizontal spacer (width). Default: false (vertical).
     #[prop_or_default]
-    pub horizontal: bool, // Whether the spacer is horizontal or vertical (default is vertical)
+    pub horizontal: bool,
+
+    /// Optional Tailwind class overrides or additions
+    #[prop_or_default]
+    pub class: Classes,
 }
 
 #[function_component(Spacer)]
 pub fn spacer(props: &SpacerProps) -> Html {
-    let SpacerProps { size, horizontal } = props.clone();
+    let SpacerProps {
+        size,
+        horizontal,
+        class,
+    } = props;
 
-    // Determine the style based on whether the spacer is horizontal or vertical
-    let style = if horizontal {
-        format!("width: {}px; height: 1px;", size) // Horizontal spacer with specified width
+    let style = if *horizontal {
+        format!("display: inline-block; width: {}px; height: 1px;", size)
     } else {
-        format!("height: {}px; width: 100%;", size) // Vertical spacer with specified height
+        format!("display: block; height: {}px; width: 100%;", size)
     };
 
     html! {
-        <div style={style} />
+        <div style={style} class={class.clone()} />
     }
 }

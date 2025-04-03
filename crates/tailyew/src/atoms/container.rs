@@ -3,9 +3,11 @@ use yew::prelude::*;
 #[derive(Properties, PartialEq, Clone)]
 pub struct ContainerProps {
     #[prop_or_default]
-    pub class: Option<String>,
+    pub class: Classes,
+
     #[prop_or_default]
     pub id: Option<String>,
+
     pub children: Children,
 }
 
@@ -15,7 +17,7 @@ pub fn container(props: &ContainerProps) -> Html {
         class,
         id,
         children,
-    } = props.clone();
+    } = props;
 
     let base_classes = classes!(
         "max-w-screen-xl",
@@ -23,11 +25,11 @@ pub fn container(props: &ContainerProps) -> Html {
         "px-4",
         "sm:px-6",
         "lg:px-8",
-        class.unwrap_or_default(),
+        class.clone(),
     );
 
     html! {
-        <div id={id} class={base_classes}>
+        <div id={id.clone()} class={base_classes}>
             { for children.iter() }
         </div>
     }

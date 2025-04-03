@@ -3,12 +3,14 @@ use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct ColorInputProps {
-    pub id: String,    // ID for the input element
-    pub label: String, // Label text for the color input
+    pub id: String,
+    pub label: String,
+    #[prop_or("#000000".into())]
+    pub value: String,
     #[prop_or_default]
-    pub default_value: String, // Optional initial value
+    pub on_change: Option<Callback<String>>,
     #[prop_or_default]
-    pub class: Option<String>, // Optional custom classes for additional styling
+    pub class: Classes,
 }
 
 #[function_component(ColorInput)]
@@ -16,23 +18,26 @@ pub fn color_input(props: &ColorInputProps) -> Html {
     let ColorInputProps {
         id,
         label,
-        default_value,
+        value,
+        on_change,
         class,
     } = props;
 
-    // State to manage the current color value
-    let color = use_state(|| default_value.clone());
+    let color = use_state(|| value.clone());
 
-    // Callback for handling input changes
-    let oninput = {
+    let handle_input = {
         let color = color.clone();
+        let on_change = on_change.clone();
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into();
-            color.set(input.value());
+            let new_color = input.value();
+            color.set(new_color.clone());
+            if let Some(cb) = &on_change {
+                cb.emit(new_color);
+            }
         })
     };
 
-    // Base classes for the input element
     let input_classes = classes!(
         "w-16",
         "h-10",
@@ -46,13 +51,12 @@ pub fn color_input(props: &ColorInputProps) -> Html {
         "transition",
         "duration-150",
         "bg-white",
-        "dark:bg-gray-800",     // Background color for dark mode
-        "dark:border-gray-600", // Border color for dark mode
-        "dark:text-gray-200",   // Text color for dark mode
-        class.clone()           // Custom class if provided
+        "dark:bg-gray-800",
+        "dark:border-gray-600",
+        "dark:text-gray-200",
+        class.clone()
     );
 
-    // Base classes for the color preview box
     let preview_classes = classes!(
         "w-10",
         "h-10",
@@ -62,40 +66,36 @@ pub fn color_input(props: &ColorInputProps) -> Html {
         "transition",
         "duration-150",
         "border-gray-300",
-        "dark:border-gray-600" // Border color for dark mode
+        "dark:border-gray-600"
     );
 
-    // Base classes for the label text
     let label_classes = classes!(
         "text-lg",
         "font-semibold",
         "text-gray-700",
-        "dark:text-gray-200" // Text color for dark mode
+        "dark:text-gray-200"
     );
 
-    // Base classes for the description text
-    let description_classes = classes!(
-        "text-gray-600",
-        "dark:text-gray-400" // Text color for dark mode
-    );
+    let description_classes = classes!("text-gray-600", "dark:text-gray-400");
 
     html! {
         <div class="flex flex-col space-y-2">
-            <label for={id.clone()} class={label_classes}>{label.clone()}</label>
+            <label for={id.to_string()} class={label_classes}>{ label.clone() }</label>
             <div class="flex items-center space-x-4">
                 <input
                     id={id.clone()}
                     name={id.clone()}
                     type="color"
                     value={(*color).clone()}
-                    class={input_classes} // Apply theme and custom styles
-                    oninput={oninput.clone()}
+                    class={input_classes}
+                    oninput={handle_input}
+                    aria-label={label.clone()}
                 />
                 <span
-                    class={preview_classes} // Apply theme styles for the preview box
+                    class={preview_classes}
                     style={format!("background-color: {};", *color)}
                 ></span>
-                <p class={description_classes}>{format!("Selected color: {}", *color)}</p>
+                <p class={description_classes}>{ format!("Selected color: {}", *color) }</p>
             </div>
         </div>
     }

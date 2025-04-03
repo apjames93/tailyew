@@ -1,7 +1,5 @@
-// cp/organisms/pie_chart_component.rs
-
 use serde::Deserialize;
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 use yew::prelude::*;
 
@@ -15,60 +13,71 @@ pub struct PieChartData {
 #[derive(Properties, PartialEq, Clone)]
 pub struct PieChartProps {
     pub data: Vec<PieChartData>,
+
+    /// Used for the canvas `id` and legend scoping if needed
     pub chart_id: String,
 }
 
 #[function_component(PieChartComponent)]
 pub fn pie_chart_component(props: &PieChartProps) -> Html {
+    let canvas_ref = use_node_ref();
     let data = props.data.clone();
-    let data_for_legend = props.data.clone();
-    let chart_id = format!("pie-chart-canvas-{}", props.chart_id.clone());
-    let chart_id_copy = chart_id.clone();
 
-    use_effect(move || {
-        let window = web_sys::window().unwrap();
-        let document = window.document().unwrap();
-        let canvas = document
-            .get_element_by_id(&chart_id_copy)
-            .unwrap()
-            .dyn_into::<HtmlCanvasElement>()
-            .unwrap();
-        let context = canvas
-            .get_context("2d")
-            .unwrap()
-            .unwrap()
-            .dyn_into::<CanvasRenderingContext2d>()
-            .unwrap();
+    use_effect({
+        let canvas_ref = canvas_ref.clone();
+        move || {
+            let Some(canvas) = canvas_ref.cast::<HtmlCanvasElement>() else {
+                return;
+            };
 
-        let total: f64 = data.iter().map(|d| d.value).sum();
-        let mut start_angle = 0.0;
+            let Ok(ctx) = canvas
+                .get_context("2d")
+                .unwrap()
+                .unwrap()
+                .dyn_into::<CanvasRenderingContext2d>()
+            else {
+                return;
+            };
 
-        for item in data.iter() {
-            let end_angle = start_angle + (item.value / total) * std::f64::consts::PI * 2.0;
-            context.set_fill_style_str(&item.color);
-            context.begin_path();
-            context.move_to(200.0, 200.0);
-            context
-                .arc(200.0, 200.0, 200.0, start_angle, end_angle)
-                .unwrap();
-            context.close_path();
-            context.fill();
-            start_angle = end_angle;
+            // Clear before draw
+            ctx.clear_rect(0.0, 0.0, canvas.width().into(), canvas.height().into());
+
+            let total: f64 = data.iter().map(|d| d.value).sum();
+            let mut start_angle = 0.0;
+
+            for item in &data {
+                let end_angle = start_angle + (item.value / total) * std::f64::consts::PI * 2.0;
+                ctx.set_fill_style_str(&item.color);
+                ctx.begin_path();
+                ctx.move_to(200.0, 200.0);
+                ctx.arc(200.0, 200.0, 200.0, start_angle, end_angle)
+                    .unwrap();
+                ctx.close_path();
+                ctx.fill();
+                start_angle = end_angle;
+            }
         }
-
-        || ()
     });
 
     html! {
-        <div>
-            <canvas id={chart_id} width="400" height="400"></canvas>
-            <div class="legend">
-                { for data_for_legend.iter().map(|item| html! {
-                    <div style="display: flex; align-items: center;">
-                        <div style={format!("width: 20px; height: 20px; background-color: {}; margin-right: 10px;", item.color)}></div>
-                        <span>{ format!("{}: {}", item.label, item.value) }</span>
+        <div class="flex flex-col items-center">
+            <canvas
+                ref={canvas_ref}
+                id={format!("pie-chart-canvas-{}", props.chart_id)}
+                width="400"
+                height="400"
+                style="margin-bottom: 1rem;"
+            />
+            <div class="legend space-y-1">
+                { for props.data.iter().map(|item| html! {
+                    <div class="flex items-center space-x-2">
+                        <div
+                            class="w-5 h-5 rounded"
+                            style={format!("background-color: {};", item.color)}
+                        ></div>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">{ format!("{}: {}", item.label, item.value) }</span>
                     </div>
-                })}
+                }) }
             </div>
         </div>
     }

@@ -3,21 +3,32 @@ use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct SectionProps {
-    #[prop_or("py-12".to_string())]
-    pub padding: String,
+    /// Padding utility classes (e.g., "py-12")
+    #[prop_or_else(|| classes!("py-12"))]
+    pub padding: Classes,
+
+    /// Background color (e.g., "bg-gray-100")
     #[prop_or_default]
     pub background_color: Option<String>,
+
+    /// Additional classes applied to the `<section>`
     #[prop_or_default]
-    pub class: Option<String>,
+    pub class: Classes,
+
+    /// Additional classes applied to the `<Container>`
     #[prop_or_default]
-    pub container_class: Option<String>,
+    pub container_class: Classes,
+
     #[prop_or_default]
     pub id: Option<String>,
-    pub children: Children,
+
     #[prop_or_default]
     pub onclick: Option<Callback<MouseEvent>>,
+
     #[prop_or_default]
     pub style: Option<String>,
+
+    pub children: Children,
 }
 
 #[function_component(Section)]
@@ -28,25 +39,25 @@ pub fn section(props: &SectionProps) -> Html {
         class,
         container_class,
         id,
-        children,
         onclick,
         style,
-    } = props.clone();
+        children,
+    } = props;
 
     let base_classes = classes!(
-        padding,
-        background_color.unwrap_or_default(),
-        class.unwrap_or_default(),
+        padding.clone(),
+        background_color.clone().unwrap_or_default(),
+        class.clone()
     );
 
     html! {
         <section
-            id={id}
+            id={id.clone()}
             class={base_classes}
-            onclick={onclick}
-            style={style}
+            onclick={onclick.clone()}
+            style={style.clone()}
         >
-            <Container class={container_class}>
+            <Container class={container_class.clone()}>
                 { for children.iter() }
             </Container>
         </section>

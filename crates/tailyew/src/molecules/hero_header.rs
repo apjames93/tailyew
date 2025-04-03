@@ -1,5 +1,3 @@
-// src/molecules/hero_header.rs
-
 use crate::atoms::{Section, TagType, Typo};
 use yew::prelude::*;
 
@@ -17,6 +15,8 @@ pub struct HeroHeaderProps {
     #[prop_or("50vh".to_string())]
     pub height: String,
     #[prop_or_default]
+    pub overlay_class: Option<String>,
+    #[prop_or_default]
     pub children: Children,
 }
 
@@ -28,11 +28,11 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
         background_image_url,
         title_class,
         subtitle_class,
+        overlay_class,
         height,
         children,
     } = props.clone();
 
-    // Create style with optional background image and custom height
     let style = if let Some(url) = background_image_url {
         format!(
             "background-image: url('{}'); background-size: cover; background-position: center; height: {};",
@@ -42,29 +42,36 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
         format!("height: {};", height)
     };
 
+    let base_title_class = classes!("text-white", "text-4xl", "font-bold", title_class);
+    let base_subtitle_class = classes!("text-white", "text-lg", "mt-2", subtitle_class);
+    let base_overlay_class = classes!(
+        overlay_class.unwrap_or_else(|| "bg-black bg-opacity-50 p-6 rounded-lg".to_string())
+    );
+
     html! {
-        <Section class="text-white text-center flex items-center justify-center" style={style}>
-            <Section class="bg-black bg-opacity-50 rounded">
-                // Title with Typo component and custom class support
-                <Typo tag={TagType::H1} class={classes!("text-white", title_class)}>
+        <Section
+            class="text-white text-center flex items-center justify-center"
+            style={style}
+        >
+            <header class={base_overlay_class}>
+                <Typo tag={TagType::H1} class={base_title_class}>
                     { title }
                 </Typo>
 
-                // Optional Subtitle with Typo component and custom class support
                 { if let Some(subtitle) = subtitle {
                     html! {
-                        <Typo tag={TagType::P} class={classes!("text-white", subtitle_class)}>
-                        { subtitle }
+                        <Typo tag={TagType::P} class={base_subtitle_class}>
+                            { subtitle }
                         </Typo>
                     }
                 } else {
                     html! {}
                 }}
 
-                <Section>
-                    { children.clone() }
+                <Section class="mt-4">
+                    { children }
                 </Section>
-            </Section>
+            </header>
         </Section>
     }
 }

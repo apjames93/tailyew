@@ -16,11 +16,11 @@ pub enum NotificationTypes {
 pub struct NotificationProps {
     pub message: String,
     pub notification_type: NotificationTypes,
-    pub is_visible: bool,
+    pub visible: bool,
     #[prop_or_default]
     pub on_close: Option<Callback<()>>,
-    #[prop_or_default]
-    pub is_fixed: Option<bool>,
+    #[prop_or(true)]
+    pub fixed: bool,
 }
 
 #[function_component(Notification)]
@@ -28,72 +28,68 @@ pub fn notification(props: &NotificationProps) -> Html {
     let NotificationProps {
         message,
         notification_type,
-        is_visible,
+        visible,
         on_close,
-        is_fixed,
+        fixed,
     } = props.clone();
 
-    let visible_state = use_state(|| is_visible);
+    let is_visible = use_state(|| visible);
 
-    // Update internal state whenever `is_visible` prop changes
-    {
-        let visible_state = visible_state.clone();
-        use_effect_with(is_visible, move |new_is_visible| {
-            visible_state.set(*new_is_visible);
-            || ()
-        });
+    // Manually sync prop if it changes
+    if *is_visible != visible {
+        is_visible.set(visible);
     }
 
-    if !*visible_state {
-        return html! { <></> };
+    if !*is_visible {
+        return html! {};
     }
 
-    let (bg_color, border_color, text_color, icon) = match notification_type {
-        NotificationTypes::Success => (
-            "bg-green-100 dark:bg-green-800",
-            "border-green-400",
-            "text-green-800 dark:text-green-200",
-            "✓",
-        ),
-        NotificationTypes::Error => (
-            "bg-red-100 dark:bg-red-800",
-            "border-red-400",
-            "text-red-800 dark:text-red-200",
-            "✗",
-        ),
-        NotificationTypes::Warning => (
-            "bg-yellow-100 dark:bg-yellow-700",
-            "border-yellow-400",
-            "text-yellow-800 dark:text-yellow-200",
-            "!",
-        ),
-        NotificationTypes::Info => (
-            "bg-blue-100 dark:bg-blue-700",
-            "border-blue-400",
-            "text-blue-800 dark:text-blue-200",
-            "ℹ",
-        ),
-        NotificationTypes::Primary => (
-            "bg-gray-100 dark:bg-gray-800",
-            "border-gray-400",
-            "text-gray-800 dark:text-gray-200",
-            "",
-        ),
-    };
+    let (bg_color, border_color, text_color, icon): (&str, &str, &str, Option<&str>) =
+        match notification_type {
+            NotificationTypes::Success => (
+                "bg-green-100 dark:bg-green-800",
+                "border-green-400",
+                "text-green-800 dark:text-green-200",
+                Some("✓"),
+            ),
+            NotificationTypes::Error => (
+                "bg-red-100 dark:bg-red-800",
+                "border-red-400",
+                "text-red-800 dark:text-red-200",
+                Some("✗"),
+            ),
+            NotificationTypes::Warning => (
+                "bg-yellow-100 dark:bg-yellow-700",
+                "border-yellow-400",
+                "text-yellow-800 dark:text-yellow-200",
+                Some("!"),
+            ),
+            NotificationTypes::Info => (
+                "bg-blue-100 dark:bg-blue-700",
+                "border-blue-400",
+                "text-blue-800 dark:text-blue-200",
+                Some("ℹ"),
+            ),
+            NotificationTypes::Primary => (
+                "bg-gray-100 dark:bg-gray-800",
+                "border-gray-400",
+                "text-gray-800 dark:text-gray-200",
+                None,
+            ),
+        };
 
     let on_close_click = {
-        let visible_state = visible_state.clone();
+        let is_visible = is_visible.clone();
         let on_close = on_close.clone();
         Callback::from(move |_| {
-            visible_state.set(false);
-
-            if let Some(close_callback) = on_close.clone() {
-                close_callback.emit(());
+            is_visible.set(false);
+            if let Some(cb) = on_close.clone() {
+                cb.emit(());
             }
         })
     };
 
-    let position_class = if is_fixed.unwrap_or(true) {
+    let position_class = if fixed {
         "fixed top-4 right-4 z-50"
     } else {
         "relative"
@@ -101,6 +97,7 @@ pub fn notification(props: &NotificationProps) -> Html {
 
     html! {
         <div
+            role="alert"
             class={classes!(
                 position_class, "p-4", "w-full", "max-w-sm", "md:max-w-md",
                 "flex", "items-center", "justify-between", "border-l-4", "rounded-lg", "shadow-lg",
@@ -108,9 +105,11 @@ pub fn notification(props: &NotificationProps) -> Html {
                 bg_color, border_color
             )}
         >
-            <Typo tag={TagType::Span} class={classes!(text_color)}>{icon}</Typo>
+            if let Some(symbol) = icon {
+                <Typo tag={TagType::Span} class={text_color}>{symbol}</Typo>
+            }
 
-            <Typo tag={TagType::Span} class={classes!(text_color, "text-base", "font-medium", "flex-grow")}>
+            <Typo tag={TagType::Span} class={classes!(text_color, "text-base", "font-medium", "flex-grow", "ml-2")}>
                 { message.clone() }
             </Typo>
 

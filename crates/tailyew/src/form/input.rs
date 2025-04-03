@@ -31,28 +31,36 @@ impl fmt::Display for InputType {
     }
 }
 
-// Properties for the Input component
 #[derive(Properties, PartialEq, Clone)]
 pub struct InputProps {
     pub placeholder: String,
     pub label: String,
     pub id: String,
+
     #[prop_or_default]
     pub input_type: InputType,
+
     #[prop_or_default]
     pub default_value: String,
+
     #[prop_or_default]
     pub min: Option<String>,
+
     #[prop_or_default]
     pub max: Option<String>,
+
     #[prop_or(Some(".*".to_string()))]
-    pub pattern: Option<String>, // Regex pattern for input validation
+    pub pattern: Option<String>,
+
     #[prop_or(false)]
     pub required: bool,
+
     #[prop_or_default]
-    pub class: Option<String>,
+    pub class: Classes,
+
     #[prop_or_default]
     pub on_change: Option<Callback<String>>,
+
     #[prop_or(false)]
     pub disabled: bool,
 }
@@ -60,16 +68,16 @@ pub struct InputProps {
 #[function_component(Input)]
 pub fn input(props: &InputProps) -> Html {
     let InputProps {
-        class,
-        default_value,
+        placeholder,
+        label,
         id,
         input_type,
-        label,
-        max,
+        default_value,
         min,
+        max,
         pattern,
-        placeholder,
         required,
+        class,
         on_change,
         disabled,
     } = props.clone();
@@ -79,15 +87,12 @@ pub fn input(props: &InputProps) -> Html {
     let oninput = {
         let value = value.clone();
         let on_change = on_change.clone();
-
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into();
-            let new_value = input.value();
-
-            value.set(new_value.clone());
-
-            if let Some(on_change_callback) = &on_change {
-                on_change_callback.emit(new_value);
+            let new_val = input.value();
+            value.set(new_val.clone());
+            if let Some(cb) = &on_change {
+                cb.emit(new_val);
             }
         })
     };
@@ -110,7 +115,7 @@ pub fn input(props: &InputProps) -> Html {
         "dark:border-gray-600",
         "dark:focus:ring-primary-dark",
         "dark:focus:border-primary-dark",
-        class.clone(), // Include custom class if provided
+        class.clone()
     );
 
     let label_classes = classes!(
@@ -121,17 +126,17 @@ pub fn input(props: &InputProps) -> Html {
         "dark:text-gray-300"
     );
 
-    let input_section = html! {
+    let input_element = html! {
         <input
-            class={input_classes}
             id={id.clone()}
-            key={id.clone()}
-            oninput={oninput}
-            placeholder={placeholder.clone()}
+            name={id.clone()}
             type={input_type.to_string()}
             value={(*value).clone()}
-            min={min.clone()}
-            max={max.clone()}
+            placeholder={placeholder}
+            class={input_classes}
+            oninput={oninput}
+            min={min}
+            max={max}
             pattern={pattern.clone().unwrap_or_default()}
             required={required}
             disabled={disabled}
@@ -139,14 +144,12 @@ pub fn input(props: &InputProps) -> Html {
     };
 
     if input_type == InputType::Hidden {
-        html! { input_section }
+        html! { input_element }
     } else {
         html! {
             <div class="flex flex-col mb-4">
-                <label for={id.clone()} class={label_classes}>
-                    { label }
-                </label>
-                { input_section }
+                <label for={id.clone()} class={label_classes}>{ label }</label>
+                { input_element }
             </div>
         }
     }

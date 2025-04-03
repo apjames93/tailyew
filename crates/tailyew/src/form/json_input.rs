@@ -15,7 +15,7 @@ pub struct JsonInputProps {
     #[prop_or_default]
     pub initial_value: Option<Value>,
     #[prop_or_default]
-    pub on_json_change: Option<Callback<Value>>, // Notify parent on JSON updates
+    pub on_json_change: Option<Callback<Value>>,
     #[prop_or(true)]
     pub display_buttons: bool,
 }
@@ -37,13 +37,13 @@ pub fn json_input(props: &JsonInputProps) -> Html {
         ))
     });
 
-    // Updated `update_json` to avoid move issues
+    // Update the JSON output anytime the items change
     let update_json = {
         let items = items.clone();
         let json_state = json_state.clone();
         let on_json_change = props.on_json_change.clone();
 
-        Callback::from(move |_| {
+        Callback::from(move |_: ()| {
             let json_object: Map<String, Value> = Map::from_iter(
                 items
                     .borrow()
@@ -51,22 +51,21 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                     .map(|(_, key, value)| (key.clone(), value.clone())),
             );
 
-            let new_json = Value::Object(json_object.clone());
-
+            let new_json = Value::Object(json_object);
             if *json_state != new_json {
                 json_state.set(new_json.clone());
-
-                if let Some(callback) = &on_json_change {
-                    callback.emit(new_json);
+                if let Some(cb) = &on_json_change {
+                    cb.emit(new_json);
                 }
             }
         })
     };
 
+    // Trigger update on items change (Yew 0.21 workaround)
     {
         let update_json = update_json.clone();
         use_effect_with(items.clone(), move |_| {
-            update_json.emit(()); // Emit update when `items` changes
+            update_json.emit(());
             || ()
         });
     }
@@ -84,8 +83,6 @@ pub fn json_input(props: &JsonInputProps) -> Html {
             let generate_unique_key = |base: &str| -> String {
                 let mut counter = 1;
                 let mut new_key = base.to_string();
-
-                // Ensure uniqueness by appending a counter if necessary
                 while existing_keys.contains(&new_key) {
                     new_key = format!("{}_{}", base, counter);
                     counter += 1;
@@ -94,21 +91,17 @@ pub fn json_input(props: &JsonInputProps) -> Html {
             };
 
             if let Some(first_record) = new_items.first().cloned() {
-                // Copy the first existing record when adding a new entry
                 let (_, first_key, first_value) = first_record;
                 let new_key = generate_unique_key(&first_key);
                 new_items.push((Uuid::new_v4(), new_key, first_value.clone()));
             } else if let Some(existing_obj) = json_state.as_object() {
-                // If no records exist but initial state is nested, create a default key-value pair
-                if existing_obj.values().all(|v| !v.is_object()) {
-                    let new_key = generate_unique_key("new_key");
-                    new_items.push((Uuid::new_v4(), new_key, Value::String("".to_string())));
+                let new_key = if existing_obj.values().all(|v| !v.is_object()) {
+                    generate_unique_key("new_key")
                 } else {
-                    let new_key = generate_unique_key("nested_entry");
-                    new_items.push((Uuid::new_v4(), new_key, Value::Object(existing_obj.clone())));
-                }
+                    generate_unique_key("nested_entry")
+                };
+                new_items.push((Uuid::new_v4(), new_key, Value::String("".to_string())));
             } else {
-                // Default to key-value pair for flat JSON structures
                 let new_key = generate_unique_key("key");
                 new_items.push((Uuid::new_v4(), new_key, Value::String("".to_string())));
             }
@@ -125,17 +118,16 @@ pub fn json_input(props: &JsonInputProps) -> Html {
         Callback::from(move |id: Uuid| {
             let mut new_items = items.borrow().clone();
 
-            // Check if there's only one entry left and if it's nested JSON
             if new_items.len() == 1 {
                 let (_, _, value) = &new_items[0];
                 if value.is_object() {
-                    return; // Prevent deletion if it's the only nested JSON object
+                    return; // Prevent removing the only nested object
                 }
             }
 
-            new_items.retain(|(prop_id, _, _)| *prop_id != id);
+            new_items.retain(|(uuid, _, _)| *uuid != id);
             *items.borrow_mut() = new_items;
-            update_json.emit(()); // Update state after removal
+            update_json.emit(());
         })
     };
 
@@ -143,19 +135,19 @@ pub fn json_input(props: &JsonInputProps) -> Html {
         let items = items.clone();
         let update_json = update_json.clone();
 
-        Callback::from(move |(id, field, value): (Uuid, String, Value)| {
+        Callback::from(move |(id, field, val): (Uuid, String, Value)| {
             let mut new_items = items.borrow().clone();
 
-            if let Some(index) = new_items.iter().position(|(prop_id, _, _)| *prop_id == id) {
+            if let Some(index) = new_items.iter().position(|(uuid, _, _)| *uuid == id) {
                 if field == "key" {
-                    new_items[index].1 = value.as_str().unwrap_or("").to_string();
+                    new_items[index].1 = val.as_str().unwrap_or("").to_string();
                 } else {
-                    new_items[index].2 = value;
+                    new_items[index].2 = val;
                 }
             }
 
             *items.borrow_mut() = new_items;
-            update_json.emit(()); // Ensure latest state update
+            update_json.emit(());
         })
     };
 
@@ -179,28 +171,25 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                             input_type={InputType::Text}
                             default_value={key_clone.clone()}
                             required={true}
-                            on_change={update_item.reform(move |val| (id_clone, "key".to_string(), Value::String(val)))}
+                            on_change={update_item.reform(move |val| (id_clone, "key".into(), Value::String(val)))}
                         />
 
                         {
                             if let Value::Object(_) = value_clone {
-                                let nested_items = items_clone.clone();
-                                let nested_update_json = update_json_clone.clone();
-
                                 html! {
                                     <JsonInput
-                                      id={format!("nested-{}", id_clone)}
-                                      label={format!("Nested JSON for {}", key_clone)}
-                                      initial_value={Some(value_clone.clone())}
-                                      display_buttons={true}
-                                      on_json_change={Callback::from(move |updated_nested_json: Value| {
-                                          let mut new_items = nested_items.borrow().clone();
-                                          if let Some(index) = new_items.iter().position(|(prop_id, _, _)| *prop_id == id_clone) {
-                                              new_items[index].2 = updated_nested_json;
-                                          }
-                                          *nested_items.borrow_mut() = new_items;
-                                          nested_update_json.emit(());
-                                      })}
+                                        id={format!("nested-{}", id_clone)}
+                                        label={format!("Nested JSON for {}", key_clone)}
+                                        initial_value={Some(value_clone.clone())}
+                                        display_buttons={true}
+                                        on_json_change={Callback::from(move |updated_nested_json: Value| {
+                                            let mut new_items = items_clone.borrow().clone();
+                                            if let Some(index) = new_items.iter().position(|(uuid, _, _)| *uuid == id_clone) {
+                                                new_items[index].2 = updated_nested_json;
+                                            }
+                                            *items_clone.borrow_mut() = new_items;
+                                            update_json_clone.emit(());
+                                        })}
                                     />
                                 }
                             } else {
@@ -208,11 +197,15 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                                     <Input
                                         id={format!("value-{}", id_clone)}
                                         input_type={InputType::Text}
-                                        required={true}
                                         label="Value"
                                         placeholder="Enter value"
-                                        default_value={value_clone.to_string()}
-                                        on_change={update_item.reform(move |val| (id_clone, "value".to_string(), Value::String(val)))}
+                                        required={true}
+                                        default_value={
+                                            value_clone.as_str()
+                                                .map(|s| s.to_string())
+                                                .unwrap_or_else(|| value_clone.to_string())
+                                        }
+                                        on_change={update_item.reform(move |val| (id_clone, "value".into(), Value::String(val)))}
                                     />
                                 }
                             }
@@ -243,7 +236,12 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                 }
             } else { html! {} }}
 
-            <input type="hidden" id={props.id.clone()} name={props.id.clone()} value={json_state.to_string()} />
+            <input
+                type="hidden"
+                id={props.id.clone()}
+                name={props.id.clone()}
+                value={json_state.to_string()}
+            />
         </div>
     }
 }
