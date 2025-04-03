@@ -1,5 +1,6 @@
 // frontend/src/pages/app_router.rs
 
+use crate::templates::NavBar;
 use crate::{switch, Route};
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -10,7 +11,7 @@ pub fn app_router() -> Html {
     html! {
         <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-800">
             // Navbar Component
-            <div id="Nav"></div>
+            <NavBar />
 
             // Main content area with flex-grow to expand and fill available space
             <div class="flex-1" style="padding-top: 74px;">

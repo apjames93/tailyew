@@ -1,6 +1,6 @@
 use crate::Route;
 use tailyew::atoms::{Button, ButtonType, Section, Spacer, TagType, Typo};
-use tailyew::molecules::{Accordion, AppBar, HeroHeader};
+use tailyew::molecules::{Accordion, HeroHeader};
 use tailyew::organisms::{Card, TabItem, Tabs};
 use yew::prelude::*;
 use yew_router::prelude::Link;
@@ -32,23 +32,6 @@ pub fn landing_page() -> Html {
 
     html! {
         <div class="container mx-auto p-4">
-            // App Bar
-            <AppBar
-                title={Some("TailYew")}
-                logo_url={Some("/images/logo.png")}
-                links={vec![
-                    html! { <Link<Route> to={Route::DemoPage { component: "accordion".into() }}>{ "Components" }</Link<Route>> },
-                    html! { <a href="#about">{ "About" }</a> },
-                    html! { <a href="#getting-started">{ "Get Started" }</a> },
-                ]}
-                actions={vec![
-                    html! { <Link<Route> to={Route::DemoPage { component: "button".into() }}>
-                        <Button button_type={ButtonType::Primary}>{ "Docs" }</Button>
-                    </Link<Route>> },
-                ]}
-            />
-
-
             // Hero
             <HeroHeader
                 title="TailYew: Build Beautiful Rust Frontends"
