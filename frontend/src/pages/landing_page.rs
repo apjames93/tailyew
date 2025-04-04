@@ -39,8 +39,8 @@ pub fn landing_page() -> Html {
                 background_image_url={Some(HERO_IMAGE_URL.to_string())}
             >
                 <div class="flex justify-center space-x-4 mt-6">
-                    <Link<Route> to={Route::DemoPage { component: "button".into() }}>
-                        <Button button_type={ButtonType::Secondary}>{ "View Components" }</Button>
+                    <Link<Route> to={Route::DemoPage { component: "getting_started".into() }}>
+                        <Button button_type={ButtonType::Secondary}>{ "Getting Started" }</Button>
                     </Link<Route>>
                 </div>
             </HeroHeader>

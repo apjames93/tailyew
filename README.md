@@ -1,6 +1,14 @@
 <!-- README.md -->
 # 🌬️ TailYew
 
+## 📘 Documentation
+
+🧪 **Explore the live component docs and demos:**  
+👉 [https://tailyew.com](https://tailyew.com)
+
+See examples, props, and code for every component in the system.
+
+
 **TailYew** is a component system for building elegant, modern UI in Rust using [Yew](https://yew.rs/) and [Tailwind CSS](https://tailwindcss.com/).
 
 This repository includes:
@@ -13,7 +21,7 @@ This repository includes:
 
 ## 📚 Why TailYew?
 
-We love Rust and wanted a modern, type-safe UI library that makes building frontends with Yew feel like working in systems like React + Tailwind — but with all the benefits of Rust.
+A modern, type-safe UI library that makes building frontends with Yew feel like working in systems like React + Tailwind — but with all the benefits of Rust.
 
 **TailYew is:**
 
@@ -21,7 +29,7 @@ We love Rust and wanted a modern, type-safe UI library that makes building front
 - 💅 Styled: Powered by Tailwind for utility-first control
 - 📦 Packaged: Designed as a crate you can use in any Yew project
 - 🧪 Tested: Built and tested inside a real Yew app (the docs site)
-- 🧰 Developer-focused: Easy workflows via `make`, `cargo-watch`, `wasm-pack`
+- 🧰 [Tailyew Starter](https://github.com/apjames93/tailyew-starter) kit Developer-focused: Easy workflows via `make`, `cargo-watch`, `wasm-pack`
 
 ---
 
@@ -54,9 +62,6 @@ icons/       # Shared SVG icon components
 Everything is wired up with Makefiles — no guessing.
 
 ```bash
-# 🧪 Run all tests
-make test
-
 # 📐 Format and lint
 make pretty
 
@@ -83,13 +88,13 @@ make tailyew-doc      # Run target from crates/tailyew/Makefile
 
 ```toml
 # In your Cargo.toml
-tailyew = "0.1"
+tailyew = "0.1.1"
 ```
 
 Or use the latest version from GitHub (until it's published):
 
 ```toml
-tailyew = { git = "https://github.com/your-org/tailyew" }
+tailyew = "0.1.1"
 ```
 
 Then, in your Yew app:

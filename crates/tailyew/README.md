@@ -1,9 +1,18 @@
 <!-- crates/tailyew/README.md -->
 # 🧩 TailYew – Reusable Yew + Tailwind Component Library
 
+## 📘 Documentation
+
+🧪 **Explore the live component docs and demos:**  
+👉 [https://tailyew.com](https://tailyew.com)
+
+See examples, props, and code for every component in the system.
+
+---
+
 TailYew is a **modular, reusable UI component system** for [Yew](https://yew.rs) built with the utility-first power of [Tailwind CSS](https://tailwindcss.com). It provides elegant, accessible, and composable components to build Rust web frontends faster and with consistency.
 
-This crate is used internally in our own documentation site — see [`../frontend/`](../../frontend) — which showcases each component with live usage and examples.
+This crate is used internally in our own documentation site — see [`../frontend/`](../../frontend) — which showcases each component with live usage and examples live at [https://tailyew.com](https://tailyew.com),
 
 ---
 
