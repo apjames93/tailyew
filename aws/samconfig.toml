@@ -1,0 +1,35 @@
+version = 0.1
+
+[default.global.parameters]
+stack_name = "tailyew-fn-stack"
+
+[default.build.parameters]
+cached = false
+parallel = true
+
+[default.validate.parameters]
+lint = true
+
+[default.deploy.parameters]
+capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM"
+resolve_s3 = true
+confirm_changeset = true
+region = "us-east-1"
+
+[default.package.parameters]
+resolve_s3 = true
+exclude = [
+    ".git",
+    "node_modules",
+    "*.log",
+    ".DS_Store"
+]
+
+[default.sync.parameters]
+watch = true
+
+[default.local_start_api.parameters]
+warm_containers = "EAGER"
+
+[default.local_start_lambda.parameters]
+warm_containers = "LAZY"

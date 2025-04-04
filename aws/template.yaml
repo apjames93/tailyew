@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  CertbotFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./certbot_lambda
+      Handler: app.handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Timeout: 900
+      MemorySize: 2048
+      Environment:
+        Variables:
+          CERT_BUCKET: infra.tailyew.com
+          DOMAIN_NAME: tailyew.com
+          EMAIL: apjames93@gmail.com
+          ACM_REGION: us-east-1
+          IS_PRODUCTION: true
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - acm:RequestCertificate
+                - acm:DescribeCertificate
+                - acm:DeleteCertificate
+                - acm:ListCertificates
+                - acm:AddTagsToCertificate
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+                - s3:ListBucket
+              Resource:
+                - arn:aws:s3:::infra.tailyew.com
+                - arn:aws:s3:::infra.tailyew.com/*
+      Events:
+        CertbotSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: rate(60 days)
+
+Outputs:
+  CertbotStatus:
+    Description: "Lambda function that rotates ACM certs via certbot"
+    Value: !Ref CertbotFunction

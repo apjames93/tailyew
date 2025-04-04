@@ -1,0 +1,5 @@
+# AWS SAM files and artifacts
+.aws-sam/
+bootstrap/ # For custom runtime bootstrap binaries
+*.zip # SAM-packaged deployment artifacts
+env.json

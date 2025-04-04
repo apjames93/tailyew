@@ -1,10 +1,10 @@
 {
-    "name": "Droplet",
+    "name": "tailyew",
     "short_name": "PushIt",
     "start_url": "/app",
     "display": "standalone",
     "background_color": "#ffffff",
-    "description": "Droplet.",
+    "description": "tailyew.",
     "icons": [
       {
         "src": "/images/logo.png",

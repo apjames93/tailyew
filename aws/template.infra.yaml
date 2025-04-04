@@ -1,0 +1,82 @@
+# aws/template.infra.yaml
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Infrastructure stack for TailYew – includes S3 static site, public bucket policy, Route 53 DNS alias, and SSM param for ACM ARN.
+
+Parameters:
+  InfraBucketName:
+    Type: String
+    Description: The S3 bucket name to validate certs with
+    Default: infra.tailyew.com
+
+  HostedZoneId:
+    Type: String
+    Description: The Route 53 hosted zone ID for the domain
+    Default: "/hostedzone/Z01600813VTG3S52FJBE"
+
+  Route53HostedZoneId:
+    Type: String
+    Description: https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_website_region_endpoints
+    Default: "Z3AQBSTGFYJSTF" # us-east-1
+
+  DomainName:
+    Type: String
+    Description: The domain name to use for the project
+    Default: tailyew.com
+
+Resources:
+  InfraBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref InfraBucketName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+      VersioningConfiguration:
+        Status: Enabled
+    DeletionPolicy: Retain
+
+  InfraBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref InfraBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: "s3:GetObject"
+            Resource: !Sub "arn:aws:s3:::${InfraBucketName}/*"
+
+  CertRoute53Record:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub "${InfraBucketName}."
+      Type: "A"
+      AliasTarget:
+        HostedZoneId: !Ref Route53HostedZoneId
+        DNSName: "s3-website-us-east-1.amazonaws.com."
+
+  SsmAcmArn:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/infra/acm_certificate_arn"
+      Type: String
+      Value: "Run make aws-sam-certbot to set this value"
+
+Outputs:
+  InfraBucketName:
+    Description: Name of the S3 bucket used for infra hosting
+    Value: !Ref InfraBucket
+    Export:
+      Name: !Sub "${AWS::StackName}-InfraBucket"
+
+  AcmCertArnParameter:
+    Description: Path to the SSM parameter storing the ACM Certificate ARN
+    Value: !Ref SsmAcmArn
