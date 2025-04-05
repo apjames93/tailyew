@@ -13,7 +13,7 @@ on:
   pull_request:
     branches: [main]
     paths: ['crates/tailyew/**']
-  workflow_dispatch:       
+  workflow_dispatch:
 
 env:
   AWS_REGION: us-east-1
@@ -44,7 +44,7 @@ jobs:
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: 🔧 Install system dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libssl-dev pkg-config make curl
@@ -58,10 +58,29 @@ jobs:
       - name: Dry-run publish check
         run: make release-check
 
+  check-cargo-changed:
+    name: Check if Cargo.toml Changed
+    runs-on: ubuntu-22.04
+    outputs:
+      changed: ${{ steps.diff.outputs.changed }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for Cargo.toml diff
+        id: diff
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^crates/tailyew/Cargo.toml$'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
   deploy:
     name: Deploy Crate
-    needs: build-and-check
-    if: github.ref == 'refs/heads/main'
+    needs: [build-and-check, check-cargo-changed]
+    if: needs.check-cargo-changed.outputs.changed == 'true' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
 
     steps:
