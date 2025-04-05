@@ -24,3 +24,9 @@ pub use popover_demo_section::*;
 
 pub mod tooltip_demo_section;
 pub use tooltip_demo_section::*;
+
+pub mod navbar_demo_section;
+pub use navbar_demo_section::*;
+
+pub mod markdown_demo_section;
+pub use markdown_demo_section::*;

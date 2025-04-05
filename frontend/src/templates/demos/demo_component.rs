@@ -1,7 +1,7 @@
 // tailyew/src/templates/demo_component.rs
 
 use tailyew::{
-    atoms::{Section, TagType, Typo},
+    atoms::{Section, TagType, Typo, CodeBlock},
     organisms::{Column, Table},
 };
 
@@ -35,9 +35,10 @@ pub fn demo_component(props: &DemoComponentProps) -> Html {
 
             // Usage Code Block
             <Typo tag={TagType::H3} class="mt-8">{"Usage Example"}</Typo>
-            <pre class="bg-gray-200 dark:bg-gray-900 p-4 rounded overflow-auto text-sm">
-                <code>{ props.usage_code.clone() }</code>
-            </pre>
+            <CodeBlock>
+                { props.usage_code.clone() }
+            </CodeBlock>
+
 
             // Props Table
             {

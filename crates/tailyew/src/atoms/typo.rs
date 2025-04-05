@@ -8,7 +8,11 @@ pub enum TagType {
     H3,
     H4,
     H5,
+    H6,
     P,
+    BlockQuote,
+    Emphasis,
+    Strong,
     #[default]
     Span,
 }
@@ -47,6 +51,10 @@ pub fn typo(props: &TypoProps) -> Html {
         TagType::H3 => "text-2xl font-medium text-gray-700 dark:text-gray-300 mb-5",
         TagType::H4 => "text-xl font-medium text-gray-700 dark:text-gray-300 mb-4",
         TagType::H5 => "text-lg font-medium text-gray-700 dark:text-gray-300 mb-3",
+        TagType::H6 => "text-base font-medium text-gray-700 dark:text-gray-300 mb-2",
+        TagType::BlockQuote => "border-l-4 pl-4 italic text-gray-600 dark:text-gray-400 my-4",
+        TagType::Emphasis => "italic text-gray-700 dark:text-gray-300",
+        TagType::Strong => "font-bold text-gray-900 dark:text-gray-100",
         TagType::P => "text-base text-gray-800 dark:text-gray-300 mb-4",
         TagType::Span => "text-sm text-gray-600 dark:text-gray-400",
     };
@@ -69,8 +77,20 @@ pub fn typo(props: &TypoProps) -> Html {
         TagType::H5 => {
             html! { <h5 class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</h5> }
         }
+        TagType::H6 => {
+            html! { <h6 class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</h6> }
+        }
+        TagType::BlockQuote => {
+            html! { <blockquote class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</blockquote> }
+        }
+        TagType::Emphasis => {
+            html! { <em class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</em> }
+        }
+        TagType::Strong => {
+            html! { <strong class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</strong> }
+        }
         TagType::P => {
-            html! { <p class={all_classes}  style={style.clone()} id={id.clone()}>{ for children.iter() }</p> }
+            html! { <p class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</p> }
         }
         TagType::Span => {
             html! { <span class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</span> }

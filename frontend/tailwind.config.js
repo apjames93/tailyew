@@ -6,7 +6,7 @@ module.exports = {
     './js/**/*.js',
     './components/**/*.{html,js,rs}',
     "../crates/tailyew/src/**/*.rs",
-    // './node_modules/tailyew/**/*.rs',
+    "./static/**/*.{html,js,rs}"
   ],
   theme: {
     extend: {
@@ -63,5 +63,10 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  safelist: [
+    "prose",
+    "dark:prose-invert",
+    "max-w-none",
+    "text-left",
+  ], 
 };

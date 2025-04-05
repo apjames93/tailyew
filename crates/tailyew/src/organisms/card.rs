@@ -1,6 +1,6 @@
 // src/organisms/card.rs
 
-use crate::atoms::{TagType, Typo};
+use crate::atoms::{Image, TagType, Typo};
 use yew::prelude::*;
 
 /// Properties for the Card component
@@ -50,9 +50,9 @@ pub fn card(props: &CardProps) -> Html {
     html! {
         <div id={id.clone().unwrap_or_default()} class={card_classes}>
             if let Some(url) = image_url {
-                <img
+                <Image
                     src={url.clone()}
-                    alt="Card Image"
+                    alt={"Card Image"}
                     class="w-full h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
                 />
             }
