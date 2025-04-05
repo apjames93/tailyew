@@ -1,0 +1,71 @@
+## test with act
+# act push \
+#   -W .github/workflows/sam_certbot.yaml \
+#   --secret-file .env \
+#   -P ubuntu-22.04=catthehacker/ubuntu:act-22.04
+
+name: CI/CD for sam certbot lambda
+on:
+  push:
+    branches: [main]
+    paths: ['aws/certbot_lambda/**', 'aws/template.yaml']
+  pull_request:
+    branches: [main]
+    paths: ['aws/certbot_lambda/**', 'aws/template.yaml']
+  workflow_dispatch: 
+
+env:
+  AWS_REGION: us-east-1
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-check:
+    name: Build & Test Certbot Lambda
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies (incl. Python 3.9)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev pkg-config zip make curl unzip python3-pip software-properties-common
+          sudo add-apt-repository -y ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install -y python3.9 python3.9-venv python3.9-dev
+          sudo ln -sf /usr/bin/python3.9 /usr/local/bin/python
+
+      - name: Install AWS SAM CLI
+        run: pip3 install aws-sam-cli --upgrade
+
+      - name: Validate SAM Template
+        run: make aws-sam-validate
+
+      - name: Build Lambda
+        run: make aws-sam-build
+
+  deploy:
+    name: Deploy Certbot Lambda
+    runs-on: ubuntu-22.04
+    needs: build-and-check
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Install system dependencies (incl. Python 3.9)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev pkg-config zip make curl unzip python3-pip software-properties-common
+          sudo add-apt-repository -y ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install -y python3.9 python3.9-venv python3.9-dev
+          sudo ln -sf /usr/bin/python3.9 /usr/local/bin/python
+
+      - name: Install AWS SAM CLI
+        run: pip3 install aws-sam-cli --upgrade
+
+      - name: Deploy Lambdas with SAM
+        run: make aws-deploy-sam

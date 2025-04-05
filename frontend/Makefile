@@ -21,7 +21,7 @@ PORT ?= 3030                     # Default port for the development server
 # Build Tailwind CSS into the static directory
 build-tailwind:
 	@echo "Building Tailwind CSS..."
-	tailwindcss -i main.css \
+	npx tailwindcss  -i main.css \
 		-c tailwind.config.js \
 		-o ./static/styles.css --minify
 

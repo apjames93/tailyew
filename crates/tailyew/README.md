@@ -1,7 +1,6 @@
-<!-- crates/tailyew/README.md -->
-# 🧩 TailYew – Reusable Yew + Tailwind Component Library
+# 📙 TailYew – Reusable Yew + Tailwind Component Library
 
-## 📘 Documentation
+## 📜 Documentation
 
 🧪 **Explore the live component docs and demos:**  
 👉 [https://tailyew.com](https://tailyew.com)
@@ -10,19 +9,91 @@ See examples, props, and code for every component in the system.
 
 ---
 
-TailYew is a **modular, reusable UI component system** for [Yew](https://yew.rs) built with the utility-first power of [Tailwind CSS](https://tailwindcss.com). It provides elegant, accessible, and composable components to build Rust web frontends faster and with consistency.
+## 🚀 Quick Start
 
-This crate is used internally in our own documentation site — see [`../frontend/`](../../frontend) — which showcases each component with live usage and examples live at [https://tailyew.com](https://tailyew.com),
+To get up and running quickly, we recommend using our starter template.
+
+### ✅ Clone the TailYew Starter
+
+```bash
+git clone https://github.com/apjames93/tailyew-starter your-app
+cd your-app
+```
+
+### 📦 Install Tooling
+
+You'll need a mix of Rust and Node tooling:
+
+#### Rust CLI tools:
+
+```bash
+cargo install wasm-pack cargo-watch
+brew install binaryen
+```
+
+- `wasm-pack`: Builds your Yew app to WebAssembly.
+- `cargo-watch`: Watches your Rust files and rebuilds on changes.
+- `binaryen`: Provides `wasm-opt` for optimizing `.wasm` output.
+
+#### JavaScript tools (via `npm`):
+
+```bash
+npm install
+```
+
+- Installs `tailwindcss` (for styling) and `serve` (for previewing static builds).
+- These tools are installed locally and used via `npx`.
+
+### 🎨 Tailwind Setup
+
+Because Tailwind requires static analysis to include only the used CSS classes, we run this command to expose TailYew’s class usage:
+
+```bash
+make copy-tailyew
+```
+
+This copies the crate's source code to `vendor/tailyew/`, ensuring Tailwind sees the actual classes used in our component definitions during build.
+
+### ⚙️ Run Your Project
+
+```bash
+make run-frontend
+```
+
+This uses hot reloading (via `cargo-watch`) to update your app whenever your Yew code changes, and re-runs Tailwind when styles change.
+
+Now visit 👉 [http://localhost:8080](http://localhost:8080) to see TailYew in action.
 
 ---
 
-## 🏗️ Project Goals
+## 🌐 Live Docs
+
+You can also view the same guide in the UI:  
+👉 [https://tailyew.com/demo/getting_started](https://tailyew.com/demo/getting_started)
+
+---
+
+## 🏧 Highlighted Features
+
+TailYew comes with battle-tested components including:
+
+- ✅ **Forms** – Input, Select, Checkbox, JSON, Phone, File
+- 📊 **Charts** – LineChart, BubbleChart (canvas-based) 
+- 🧪 **Modals, Accordions, AppBar, Tabbed Interfaces**
+- 🔐 **Theme support** with system/light/dark and utility-first color tokens
+- ✂️ **Clipboard, Notifications, Popovers**, and more
+
+Explore all components at 👉 [https://tailyew.com/demo](https://tailyew.com/demo)
+
+---
+
+## 🏓️ Project Goals
 
 - 💡 **Atomic Design** pattern (atoms → molecules → organisms)
 - ⚙️ **Yew-native** components — idiomatic Rust, no JavaScript
 - 🎨 **Tailwind-first** styling — utility-based, flexible, consistent
-- 🧪 **Well-documented** 
-- 🧩 **Composable API** for building custom UIs
+- 🧪 **Well-documented** components
+- 📙 **Composable API** for building custom UIs
 
 ---
 
@@ -43,70 +114,8 @@ crates/tailyew/
 └── README.md          # You are here
 ```
 
----
+## 📌 Related
 
-## 🧰 Development
-
-This crate is part of a Cargo workspace. You can develop it in isolation or alongside the documentation frontend.
-
-### 🔧 Build
-
-```bash
-make build
-```
-
-### 📚 Generate docs
-
-```bash
-make doc
-```
-
-Or skip opening the browser:
-
-```bash
-make doc-no-open
-```
-
----
-
-## 🧪 Testing in the Docs Site
-
-To see components in use:
-
-1. Run `make run-frontend` from the root
-2. Edit components in this crate (`src/atoms/`, etc.)
-3. Rebuild and preview live in `frontend/`
-
-Hot reloading is handled via `cargo watch` from the root Makefile. The docs site imports this crate directly via:
-
-```toml
-# frontend/Cargo.toml
-tailyew = { path = "../crates/tailyew" }
-```
-
----
-
-## 🚀 Publishing
-
-Before publishing, ensure tests and docs pass:
-
-```bash
-make doc-no-open
-```
-
-Then:
-
-```bash
-make publish-tailyew
-```
-
----
-
-## 📎 Related
-
-- [`frontend/`](../../frontend) – Docs site showcasing TailYew
-- [`Makefile`](../../Makefile) – Root build & dev orchestrator
 - [Yew Framework](https://yew.rs/)
 - [Tailwind CSS](https://tailwindcss.com/)
-
----
+- [TailYew Starter](https://github.com/apjames93/tailyew-starter)

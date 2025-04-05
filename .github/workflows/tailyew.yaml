@@ -1,0 +1,80 @@
+## test with act
+# act push \
+#   -W .github/workflows/tailyew.yaml \
+#   --secret-file .env \
+#   -P ubuntu-22.04=catthehacker/ubuntu:act-22.04
+
+name: CI/CD for TailYew Crate
+
+on:
+  push:
+    branches: [main]
+    paths: ['crates/tailyew/**']
+  pull_request:
+    branches: [main]
+    paths: ['crates/tailyew/**']
+  workflow_dispatch:       
+
+env:
+  AWS_REGION: us-east-1
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-check:
+    name: Build and Check
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: rustfmt, clippy
+
+      - name: Cache Cargo registry and target
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: 🔧 Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev pkg-config make curl
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack
+
+      - name: Format + Lint
+        run: make pretty
+
+      - name: Dry-run publish check
+        run: make release-check
+
+  deploy:
+    name: Deploy Crate
+    needs: build-and-check
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+
+      - name: Publish `tailyew` crate to crates.io
+        run: make publish-tailyew
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}

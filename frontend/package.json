@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "serve": "^14.2.4",
+    "tailwindcss": "^3.4.3"
+  },
+  "name": "tailyew-docs",
+  "description": "** TailYew Docs **",
+  "version": "1.0.0",
+  "main": "tailwind.config.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

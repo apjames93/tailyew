@@ -1,0 +1,105 @@
+## test with act
+# act push \
+#   -W .github/workflows/frontend.yaml \
+#   --secret-file .env \
+#   -P ubuntu-22.04=catthehacker/ubuntu:act-22.04
+
+name: CI/CD for TailYew Documentation
+on:
+  push:
+    branches: [main]
+    paths: ['frontend/**']
+  pull_request:
+    branches: [main]
+    paths: ['frontend/**']
+  workflow_dispatch:     
+
+env:
+  AWS_REGION: us-east-1
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-check:
+    name: 🧪 Build & Test Frontend
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: 🦀 Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: rustfmt, clippy
+
+      - name: 📦 Cache Cargo registry and target
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: 🔧 Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev pkg-config zip make curl unzip python3-pip
+
+      - name: 📥 Install wasm-pack
+        run: cargo install wasm-pack
+
+      - name: 📥 Install Node dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: 🧹 Format + Lint
+        run: make pretty
+
+  deploy:
+    name: 🚀 Deploy Frontend
+    runs-on: ubuntu-22.04
+    needs: build-and-check
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: 📥 Install AWS CLI via pip
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install awscli
+
+      - name: 🔧 Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev pkg-config zip make curl unzip python3-pip
+
+      - name: 📥 Install wasm-pack
+        run: cargo install wasm-pack
+
+      - name: 📥 Install Node dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: 🚀 Deploy Frontend to S3 + Invalidate CloudFront
+        run: make aws-upload-frontend
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: ✅ Done!
+        run: echo "🎉 Your TailYew docs are live at https://tailyew.com"

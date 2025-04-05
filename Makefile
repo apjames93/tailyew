@@ -8,10 +8,13 @@
 # ---------------------------------------
 include frontend/Makefile
 include crates/tailyew/Makefile
+include aws/Makefile
+
 
 # ---------------------------------------
 # Directory-specific Delegates
 # ---------------------------------------
+AWS_MAKE = $(MAKE) -C aws
 FRONTEND_MAKE   = $(MAKE) -C frontend
 TAIL_YEW_MAKE   = $(MAKE) -C crates/tailyew
 
@@ -80,6 +83,10 @@ fe-%:
 tailyew-%:
 	@echo "🔧 Delegating to crates/tailyew/$*..."
 	$(TAIL_YEW_MAKE) $*
+
+aws-%:
+	@echo "🔧 Delegating to aws/$*..."
+	$(AWS_MAKE) $*
 
 # ---------------------------------------
 # Help Message
