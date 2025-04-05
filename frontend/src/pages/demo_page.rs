@@ -3,17 +3,18 @@
 use crate::templates::demos::{
     AComponentDemoSection, AccordionDemoSection, AppBarDemoSection, BarChartDemoSection,
     BubbleChartDemoSection, ButtonDemoSection, CardDemoSection, CheckboxDemoSection,
-    CircularProgressDemoSection, ColorInputDemoSection, CopyToClipboardDemoSection,
-    FileInputDemoSection, FormDemoSection, GettingStarted, HeroHeaderDemoSection,
-    InitThemeDemoSection, InputDemoSection, JsonInputDemoSection, LiDemoSection,
-    LineChartDemoSection, LinearProgressDemoSection, ModalButtonDemoSection, ModalDemoSection,
+    CircularProgressDemoSection, CodeBlockDemoSection, ColorInputDemoSection,
+    CopyToClipboardDemoSection, FileInputDemoSection, FormDemoSection, GettingStarted,
+    HeroHeaderDemoSection, ImageDemoSection, InitThemeDemoSection, InputDemoSection,
+    JsonInputDemoSection, LiDemoSection, LineChartDemoSection, LinearProgressDemoSection,
+    MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection, NavBarDemoSection,
     NotificationDemoSection, PhoneInputDemoSection, PieChartDemoSection, PopoverDemoSection,
     RadioGroupDemoSection, RangeInputDemoSection, ScatterPlotDemoSection, SelectDemoSection,
     SpacerDemoSection, StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection,
     TooltipDemoSection, TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
-use tailyew::atoms::{Li, TagType, Typo, Ul};
+use tailyew::atoms::{Button, ButtonType, Li, TagType, Typo, Ul};
 use yew::prelude::*;
 use yew_router::prelude::*;
 
@@ -220,29 +221,86 @@ const DEMO_LINKS: &[DemoLink] = &[
         route: "getting_started",
         render: || html! { <GettingStarted /> },
     },
+    DemoLink {
+        name: "Navbar",
+        route: "navbar",
+        render: || html! { <NavBarDemoSection /> },
+    },
+    DemoLink {
+        name: "Markdown",
+        route: "markdown",
+        render: || html! { <MarkdownDemoSection /> },
+    },
+    DemoLink {
+        name: "CodeBlock",
+        route: "code_block",
+        render: || html! { <CodeBlockDemoSection /> },
+    },
+    DemoLink {
+        name: "Image",
+        route: "image",
+        render: || html! { <ImageDemoSection /> },
+    },
 ];
 
 #[function_component(DemoSidebar)]
 pub fn demo_sidebar() -> Html {
-    html! {
-        <nav class="w-64 p-4 border-r border-gray-200 dark:border-gray-700 h-screen overflow-y-auto sticky top-0">
-            <Typo tag={TagType::H3}>{ "Components" }</Typo>
+    let is_open = use_state(|| true);
 
-            <Ul>
-                { for DEMO_LINKS.iter().map(|link| html! {
-                    <Li>
-                        <Link<Route>
-                            to={Route::DemoPage { component: link.route.to_string() }}
-                            classes="block px-3 py-2 rounded text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                        >
-                            { link.name }
-                        </Link<Route>>
-                    </Li>
-                }) }
-            </Ul>
-        </nav>
+    let toggle_sidebar = {
+        let is_open = is_open.clone();
+        Callback::from(move |_| is_open.set(!*is_open))
+    };
+
+    let close_sidebar = {
+        let is_open = is_open.clone();
+        Callback::from(move |_: MouseEvent| is_open.set(false))
+    };
+
+    html! {
+        <>
+            // Sidebar Toggle Column (always visible, narrow)
+            <div class="w-12 md:w-16 p-2 pt-4 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 sticky top-0 h-screen z-20 flex flex-col items-center">
+                <Button
+                    button_type={ButtonType::Ghost}
+                    onclick={toggle_sidebar}
+                    class="p-2 rounded-md"
+                >
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </Button>
+            </div>
+
+            // Sidebar Drawer (conditional)
+            {
+                if *is_open {
+                    html! {
+                        <div class="w-64 bg-white dark:bg-gray-900 h-screen border-r border-gray-200 dark:border-gray-700 p-4 overflow-y-auto sticky top-0 z-10">
+                            <Typo tag={TagType::H3} class="mb-4">{ "Components" }</Typo>
+                            <Ul>
+                                { for DEMO_LINKS.iter().map(|link| html! {
+                                    <Li onclick={close_sidebar.clone()}>
+                                        <Link<Route>
+                                            to={Route::DemoPage { component: link.route.to_string() }}
+                                            classes="block px-3 py-2 rounded text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+
+                                        >
+                                            { link.name }
+                                        </Link<Route>>
+                                    </Li>
+                                }) }
+                            </Ul>
+                        </div>
+                    }
+                } else {
+                    html! {}
+                }
+            }
+        </>
     }
 }
+
 #[derive(Properties, PartialEq)]
 pub struct DemoPageProps {
     pub component: String,
