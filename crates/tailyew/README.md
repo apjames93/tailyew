@@ -1,102 +1,11 @@
+![Crates.io](https://img.shields.io/crates/v/tailyew)
+![Docs.rs](https://img.shields.io/docsrs/tailyew)
+![License](https://img.shields.io/crates/l/tailyew)
+
 # 🌟 TailYew
 > A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and built in Rust.
 
 TailYew helps you ship fast, beautiful Yew apps using fully-styled, accessible components with dark mode, markdown rendering, charts, modals, and form elements — all built in idiomatic Rust.
-
----
-
-## 📸 Preview
-
-> Explore TailYew’s live components, props, and code samples:  
-👉 [https://tailyew.com](https://tailyew.com)
-
----
-
-## 🚀 Get Started in 2 Minutes
-
-### ✅ Option 1: Use the Starter Template (Recommended)
-
-```bash
-git clone https://github.com/apjames93/tailyew-starter my-app
-cd my-app
-make run-frontend
-```
-
-Then open 👉 [http://localhost:8080](http://localhost:8080)
-
-This gives you hot reloading, built-in Tailwind support, and access to every TailYew component.
-
----
-
-### 🛠️ Install Tooling
-
-> You'll need a mix of Rust + JS tooling:
-
-#### Rust CLI tools:
-
-```bash
-cargo install wasm-pack cargo-watch
-brew install binaryen
-```
-
-#### JavaScript tools:
-
-```bash
-npm install
-```
-
-> Installs `tailwindcss` and dev tools (e.g. `serve`)
-
----
-
-### 🎨 Tailwind Setup (Important!)
-
-Tailwind uses static analysis to detect classes. To expose classes from TailYew's crate, run:
-
-```bash
-make copy-tailyew
-```
-
-This copies `crates/tailyew` into your app’s `vendor/` directory so Tailwind includes all component class usage.
-
----
-
-### ⚙️ Run the App
-
-```bash
-make run-frontend
-```
-
-This watches both Tailwind + Yew code for hot reloading using `cargo-watch`.
-
----
-
-## 📦 Using TailYew as a Crate (without starter)
-
-Add to your `Cargo.toml`:
-
-```toml
-tailyew = "0.1.2"
-```
-
-Make sure your `tailwind.config.js` includes the path:
-
-```js
-content: [
-  "./src/**/*.rs",
-  "../crates/tailyew/src/**/*.rs", // <-- for TailYew usage
-],
-```
-
-Then use in your app:
-
-```rust
-use tailyew::atoms::Button;
-
-html! {
-  <Button>{ "Click Me!" }</Button>
-}
-```
 
 ---
 
@@ -114,6 +23,76 @@ TailYew comes with battle-tested components including:
 🔎 See them all at 👉 [https://tailyew.com/demo/getting_started](https://tailyew.com/demo/getting_started)
 
 ---
+
+## 📸 Preview
+
+> Explore TailYew’s live components, props, and code samples:  
+👉 [https://tailyew.com](https://tailyew.com)
+
+---
+
+> ## 🚀 Get Started in 5 Minutes  
+> ...*if you already have all the dependencies, a stable toolchain, and emotionally prepared for Rust*
+
+### ✅ Option 1: Use the Starter Template (Recommended)
+
+```bash
+git clone https://github.com/apjames93/tailyew-starter my-app
+cd my-app
+
+cargo install wasm-pack cargo-watch
+brew install binaryen
+npm install # for local deps tailwindcss cli and serve
+
+make hot-run
+```
+
+Then open 👉 [http://localhost:8080](http://localhost:8080)
+
+This gives you hot reloading, built-in Tailwind support, and access to every TailYew component.
+
+---
+
+## 📦 Using TailYew as a Crate (without starter)
+
+Add to your `Cargo.toml`:
+
+```toml
+tailyew = "0.1.2"
+```
+
+### 🎨 Tailwind Setup (Important!)
+
+Tailwind uses static analysis to detect classes. 
+To expose classes from TailYew's crate, we have the make comand:
+
+```bash
+make copy-tailyew
+```
+
+This copies `crates/tailyew` into your app’s `vendor/` directory so Tailwind includes all component class usage.
+This is ran with `make run-frontend`
+
+Make sure your `tailwind.config.js` includes the path:
+
+```js
+content: [
+  "./src/**/*.rs", // <---- for other components that you will build in your project
+  "../crates/tailyew/src/**/*.rs", // <-- for TailYew usage
+],
+```
+
+---
+
+Then use in your app:
+
+```rust
+use tailyew::atoms::Button;
+
+html! {
+  <Button>{ "Click Me!" }</Button>
+}
+```
 
 ## 🏗️ Project Goals
 
@@ -142,6 +121,38 @@ crates/tailyew/
 └── README.md          # You're here
 ```
 
+## 🤝 Contributing
+
+TailYew is an open source project — and we’d love your help!
+
+### ✨ Ways to Contribute
+
+- Submit a **feature request** or improvement idea
+- Report **bugs or visual issues**
+- Build new components or improve styling
+- Add or update documentation and demos
+
+### ✅ Contribution Checklist
+
+Before submitting a pull request:
+
+- Make sure `make release-check` passes
+- If it's a visual/UI change, include **before/after screenshots**
+- Update or add related demo pages in `frontend/src/pages/`
+- Test in both **light mode** and **dark mode**
+
+---
+
+### 📄 Helpful Links
+
+- 📥 [Open a Pull Request](https://github.com/apjames93/tailyew/compare)
+- 🐛 [Report a Bug](https://github.com/apjames93/tailyew/issues/new?template=bug_report.md)
+- 💡 [Propose a Feature](https://github.com/apjames93/tailyew/issues/new?template=feature_request.md)
+
+---
+
+🙌 Thank you for helping grow the Rust UI ecosystem!
+
 ---
 
 ## 🔗 Related
@@ -151,5 +162,3 @@ crates/tailyew/
 - 🚀 [TailYew Starter](https://github.com/apjames93/tailyew-starter)
 
 ---
-
-> Looking to build a full Yew app with Markdown, forms, charts, and SSR-ready UI blocks? TailYew is your foundation.

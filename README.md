@@ -1,23 +1,34 @@
-<!-- README.md -->
+![Crates.io](https://img.shields.io/crates/v/tailyew)
+![Docs.rs](https://img.shields.io/docsrs/tailyew)
+![License](https://img.shields.io/crates/l/tailyew)
+
 # 🌬️ TailYew
+> A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and built in Rust.
 
-## 📘 Documentation
+TailYew helps you ship fast, beautiful Yew apps using fully-styled, accessible components with dark mode, markdown rendering, charts, modals, and form elements — all built in idiomatic Rust.
 
-🧪 **Explore the live component docs and demos:**  
-👉 [https://tailyew.com](https://tailyew.com)
+## 🧩 Component Highlights
 
-See examples, props, and code for every component in the system.
+TailYew comes with battle-tested components including:
 
+- ✅ **Forms** – Input, Select, Checkbox, JSON, Phone, File
+- 📊 **Charts** – LineChart, BubbleChart (canvas-based)
+- 🧪 **Modals, Accordions, AppBar, Tabs**
+- 📙 **Markdown** – Parse + sanitize with `pulldown-cmark` and `ammonia`
+- ✂️ **Clipboard**, **Notifications**, **Popover**, **Section**, and more
+- 🌗 **Dark mode ready** — with Tailwind’s `dark:` utilities
 
-**TailYew** is a component system for building elegant, modern UI in Rust using [Yew](https://yew.rs/) and [Tailwind CSS](https://tailwindcss.com/).
-
-This repository includes:
-
-- 📦 `tailyew` – A reusable crate of Yew + Tailwind components
-- 🌐 `frontend` – A live documentation site that uses TailYew internally
-- 🛠️ A Makefile-powered workflow for building, testing, and documenting
+🔎 See them all at 👉 [https://tailyew.com/demo/getting_started](https://tailyew.com/demo/getting_started)
 
 ---
+
+## 🧱 Using TailYew in Your Project
+
+Check out our [starter kit](https://github.com/apjames93/tailyew-starter) to get up and running quickly
+
+If you're integrating manually or want to poke around, start with our [crate README](https://github.com/apjames93/tailyew/blob/main/crates/tailyew/README.md) for install instructions and usage examples.
+
+> Bonus: The starter kit is the fastest path to a working TailYew setup. The README is your DIY route if you're feeling brave. Either way, you've got options.
 
 ## 📚 Why TailYew?
 
@@ -28,7 +39,7 @@ A modern, type-safe UI library that makes building frontends with Yew feel like 
 - 🔩 Composable: Built with Atomic Design principles (atoms → organisms)
 - 💅 Styled: Powered by Tailwind for utility-first control
 - 📦 Packaged: Designed as a crate you can use in any Yew project
-- 🧪 Tested: Built and tested inside a real Yew app (the docs site)
+- 🧪 Tested: Built and tested inside a real Yew app in [the docs site](https://tailyew.com/demo/getting_started)
 - 🧰 [Tailyew Starter](https://github.com/apjames93/tailyew-starter) kit Developer-focused: Easy workflows via `make`, `cargo-watch`, `wasm-pack`
 
 ---
@@ -71,8 +82,6 @@ make run-frontend
 # 📚 Watch and rebuild Rust API docs
 make watch-docs
 
-# 📦 Publish the component crate
-make publish-tailyew
 ```
 
 You can also run targets inside subdirectories:
@@ -81,34 +90,35 @@ You can also run targets inside subdirectories:
 make fe-build         # Run target from frontend/Makefile
 make tailyew-doc      # Run target from crates/tailyew/Makefile
 ```
+---
+
+### ✅ Contribution Checklist
+
+Before submitting a pull request:
+
+- Make sure `make release-check` passes
+- If it's a visual/UI change, include **before/after screenshots**
+- Update or add related demo pages in `frontend/src/pages/`
+- Test in both **light mode** and **dark mode**
 
 ---
 
-## 🧱 Using TailYew in Your Project
+### 📄 Helpful Links
 
-```toml
-# In your Cargo.toml
-tailyew = "0.1.1"
-```
+- 📥 [Open a Pull Request](https://github.com/apjames93/tailyew/compare)
+- 🐛 [Report a Bug](https://github.com/apjames93/tailyew/issues/new?template=bug_report.md)
+- 💡 [Propose a Feature](https://github.com/apjames93/tailyew/issues/new?template=feature_request.md)
 
-Or use the latest version from GitHub (until it's published):
+---
 
-```toml
-tailyew = "0.1.1"
-```
+🙌 Thank you for helping grow the Rust UI ecosystem!
 
-Then, in your Yew app:
+---
 
-```rust
-use tailyew::atoms::Button;
+## 🔗 Related
 
-html! {
-  <Button label="Click Me!" />
-}
-```
+- 🦀 [Yew Framework](https://yew.rs/)
+- 🎨 [Tailwind CSS](https://tailwindcss.com/)
+- 🚀 [TailYew Starter](https://github.com/apjames93/tailyew-starter)
 
-
-## 🤝 Contributing
-
-We welcome issues, suggestions, and pull requests! Feel free to open a discussion if you’re using TailYew and want to share feedback or ideas.
-
+---
