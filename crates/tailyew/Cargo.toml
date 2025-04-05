@@ -27,3 +27,4 @@ web-sys = { workspace = true }
 
 uuid = { version = "1.11.0", features = ["serde", "v4", "js"] }
 regex = "1.11.1"
+pulldown-cmark = "0.9"
