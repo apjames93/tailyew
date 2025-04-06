@@ -1,7 +1,7 @@
 // tailyew/src/templates/demo_component.rs
 
 use tailyew::{
-    atoms::{Section, TagType, Typo, CodeBlock},
+    atoms::{CodeBlock, Section, TagType, Typo},
     organisms::{Column, Table},
 };
 
@@ -26,7 +26,7 @@ pub fn demo_component(props: &DemoComponentProps) -> Html {
         <Section class="mb-16">
             <Typo tag={TagType::H2} class="mb-4">{ props.title.clone() }</Typo>
 
-            { props.description.clone().unwrap_or_else(|| html! {}) }
+            <Typo tag={TagType::P} class="mb-4">{ props.description.clone().unwrap_or_else(|| html! {}) }</Typo>
 
             // Example Render
             <div class="my-6 p-4 rounded bg-gray-50 dark:bg-gray-800 text-center">

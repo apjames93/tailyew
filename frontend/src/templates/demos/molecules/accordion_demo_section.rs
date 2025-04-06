@@ -1,4 +1,5 @@
 use crate::templates::demos::DemoComponent;
+use tailyew::atoms::Typo;
 use tailyew::molecules::Accordion;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
@@ -8,20 +9,20 @@ pub fn accordion_demo_section() -> Html {
     let example = html! {
         <div class="space-y-4">
             <Accordion title="What is TailYew?" default_open={true}>
-                <p>{"TailYew is a UI component library for Rust + Yew, styled with Tailwind CSS."}</p>
+                <Typo>{"TailYew is a UI component library for Rust + Yew, styled with Tailwind CSS."}</Typo>
             </Accordion>
             <Accordion title="Can I customize components?" default_open={false}>
-                <p>{"Yes! You can extend or override any component using standard Rust and Yew patterns."}</p>
+                <Typo>{"Yes! You can extend or override any component using standard Rust and Yew patterns."}</Typo>
             </Accordion>
             <Accordion title="Is it production-ready?">
-                <p>{"Absolutely — we're using it in real-world apps with SSR and WASM support."}</p>
+                <Typo>{"Absolutely — we're using it in real-world apps with SSR and WASM support."}</Typo>
             </Accordion>
         </div>
     };
 
     let usage_code = r#"
 <Accordion title="What is TailYew?" default_open={true}>
-    <p>{"TailYew is a UI component library for Rust + Yew, styled with Tailwind CSS."}</p>
+    <Typo>{"TailYew is a UI component library for Rust + Yew, styled with Tailwind CSS."}</Typo>
 </Accordion>
 "#;
 
@@ -65,7 +66,7 @@ pub fn accordion_demo_section() -> Html {
         <DemoComponent
             title="Accordion Component"
             description={Some(html! {
-                <p>{"The `Accordion` toggles visibility of content. Fully accessible with keyboard support, and customizable with a `heading_tag` or arrow icon."}</p>
+                <Typo>{"The `Accordion` toggles visibility of content. Fully accessible with keyboard support, and customizable with a `heading_tag` or arrow icon."}</Typo>
             })}
             example={example}
             usage_code={usage_code}
