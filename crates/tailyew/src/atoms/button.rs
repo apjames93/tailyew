@@ -3,12 +3,12 @@ use yew::prelude::*;
 /// Define the possible HTML tag types for the Button component
 #[derive(Clone, Default, PartialEq)]
 pub enum ButtonType {
+    #[default]
     Primary,
     Secondary,
     Danger,
     Submit,
     Ghost,
-    #[default]
     Button,
     Icon,
 }

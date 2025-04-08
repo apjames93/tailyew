@@ -37,7 +37,7 @@ pub fn getting_started() -> Html {
 
             <Typo tag={TagType::H3}>{"⚙️ 4. Build and Run Your App"}</Typo>
             <pre class="bg-gray-800 text-white p-4 rounded overflow-x-auto text-sm">
-                {"make run-frontend"}
+                {"make hot-run"}
             </pre>
             <Typo tag={TagType::P}>{"This uses `cargo-watch` to hot-reload your Yew frontend as you save Rust files. Your Tailwind CSS is also recompiled with every change."}</Typo>
 

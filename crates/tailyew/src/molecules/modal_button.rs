@@ -7,6 +7,8 @@ use yew::prelude::*;
 #[derive(Properties, PartialEq)]
 pub struct ModalButtonProps {
     pub button_text: String,
+    #[prop_or_default]
+    pub button_type: ButtonType,
     pub modal_title: String,
     pub modal_content: Html,
     #[prop_or_default]
@@ -40,7 +42,7 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
     html! {
         <div>
             <Button
-                button_type={ButtonType::Primary}
+                button_type={props.button_type.clone()}
                 onclick={toggle_modal.clone()}
             >
                 { html! { &props.button_text } }
@@ -49,7 +51,7 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
             <Modal
                 title={props.modal_title.clone()}
                 is_open={*modal_open}
-                on_close={close_modal} // Use close_modal to handle the close behavior
+                on_close={close_modal}
             >
                 { props.modal_content.clone() }
             </Modal>

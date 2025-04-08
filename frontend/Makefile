@@ -12,7 +12,7 @@
 ENV_FILE ?= .env.development     # Default environment file (can be overridden)
 STATIC_DIR ?= ./static           # Directory for static assets
 BUILD_DIR ?= ./static/pkg        # Directory for WebAssembly build artifacts
-PORT ?= 3030                     # Default port for the development server
+PORT ?= 3031                     # Default port for the development server
 
 # =======================================
 # Build Targets

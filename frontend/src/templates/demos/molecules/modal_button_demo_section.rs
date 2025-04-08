@@ -1,26 +1,43 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::molecules::ModalButton;
 use tailyew::organisms::table::Column;
+use tailyew::ButtonType;
 use yew::prelude::*;
 
 #[function_component(ModalButtonDemoSection)]
 pub fn modal_button_demo_section() -> Html {
     let example = html! {
+        <>
         <ModalButton
-            button_text={"Open Info Modal".to_string()}
-            modal_title={"Important Information".to_string()}
-            modal_content={html! {
-                <div class="text-sm space-y-2">
-                    <p>{"This modal was triggered by a button click."}</p>
-                    <p>{"You can reuse this pattern anywhere you need a quick inline modal."}</p>
-                </div>
-            }}
-        />
+                button_text={"Open Info Modal".to_string()}
+                modal_title={"Important Information".to_string()}
+                modal_content={html! {
+                    <div class="text-sm space-y-2">
+                        <p>{"This modal was triggered by a button click."}</p>
+                        <p>{"You can reuse this pattern anywhere you need a quick inline modal."}</p>
+                    </div>
+                }}
+            />
+
+            <ModalButton
+                button_text={"Open Danger Modal".to_string()}
+                button_type={ButtonType::Danger}
+                modal_title={"Danger Information".to_string()}
+                modal_content={html! {
+                    <div class="text-sm space-y-2">
+                        <p>{"This modal was triggered by a button click."}</p>
+                        <p>{"You can reuse this pattern anywhere you need a quick inline modal."}</p>
+                    </div>
+                }}
+            />
+
+        </>
     };
 
     let usage_code = r#"
 <ModalButton
     button_text={"Open Info Modal".to_string()}
+    button_type={ButtonType::Danger}
     modal_title={"Important Information".to_string()}
     modal_content={html! {
         <div class="text-sm space-y-2">
