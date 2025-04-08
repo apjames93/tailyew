@@ -67,16 +67,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch origin/main for diff
+        run: git fetch origin main
 
       - name: Check for Cargo.toml diff
         id: diff
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^crates/tailyew/Cargo.toml$'; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+          echo "🔍 Checking if Cargo.toml changed in this commit..."
+          if git diff --name-only HEAD^ HEAD | grep '^crates/tailyew/Cargo.toml$'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
+  
   deploy:
     name: Deploy Crate
     needs: [build-and-check, check-cargo-changed]
