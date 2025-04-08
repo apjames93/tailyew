@@ -14,6 +14,8 @@ pub fn card_demo_section() -> Html {
                 subtitle={Some("Exploring the wild with Rust")}
                 description={Some("Dive into performance and safety with modern systems programming.")}
                 image_url={Some(HERO_IMAGE_URL.to_string())}
+                image_class={"transition-transform hover:scale-105 hover:shadow-2xl duration-300 ease-in-out"}
+                image_alt="TailYew"
             >
                 <Button button_type={ButtonType::Primary}>
                     { "Read More" }
@@ -30,6 +32,7 @@ pub fn card_demo_section() -> Html {
                 subtitle={Some("Sleek and responsive design")}
                 description={Some("Cards adapt beautifully to light and dark themes out of the box.")}
                 image_url={Some(HERO_IMAGE_URL.to_string())}
+                class={"transition-transform hover:scale-105 hover:shadow-2xl duration-300 ease-in-out"}
             />
         </div>
     };
@@ -40,6 +43,7 @@ pub fn card_demo_section() -> Html {
     subtitle={Some("Exploring the wild with Rust")}
     description={Some("Dive into performance and safety with modern systems programming.")}
     image_url={Some(HERO_IMAGE_URL.to_string())}
+    class={"transition-transform hover:scale-105 hover:shadow-2xl duration-300 ease-in-out"}
 >
     <Button button_type={ButtonType::Primary}>
         { "Read More" }

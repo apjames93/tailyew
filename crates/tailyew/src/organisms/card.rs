@@ -16,6 +16,10 @@ pub struct CardProps {
     #[prop_or_default]
     pub image_url: Option<String>,
     #[prop_or_default]
+    pub image_alt: Option<String>,
+    #[prop_or_default]
+    pub image_class: Classes,
+    #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
     pub class: Option<String>,
@@ -29,6 +33,8 @@ pub fn card(props: &CardProps) -> Html {
         subtitle,
         description,
         image_url,
+        image_alt,
+        image_class,
         children,
         class,
     } = props;
@@ -39,11 +45,11 @@ pub fn card(props: &CardProps) -> Html {
         "overflow-hidden",
         "bg-white",
         "dark:bg-gray-800",
-        "transition-transform",
-        "hover:scale-105",
-        "hover:shadow-2xl",
-        "duration-300",
-        "ease-in-out",
+        // "transition-transform",
+        // "hover:scale-105",
+        // "hover:shadow-2xl",
+        // "duration-300",
+        // "ease-in-out",
         class.clone()
     );
 
@@ -52,8 +58,8 @@ pub fn card(props: &CardProps) -> Html {
             if let Some(url) = image_url {
                 <Image
                     src={url.clone()}
-                    alt={"Card Image"}
-                    class="w-full h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+                    alt={image_alt.clone().unwrap_or("Card Image".to_string())}
+                    class={classes!("w-full", "h-48", "object-cover", image_class.clone())}
                 />
             }
 
