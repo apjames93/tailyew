@@ -2,49 +2,72 @@ use crate::templates::demos::DemoComponent;
 use tailyew::molecules::ModalButton;
 use tailyew::organisms::table::Column;
 use tailyew::ButtonType;
+use tailyew::Typo;
 use yew::prelude::*;
 
 #[function_component(ModalButtonDemoSection)]
 pub fn modal_button_demo_section() -> Html {
+    let confirmed = use_state(|| false);
+
+    let confirm_message = if *confirmed {
+        html! { <Typo class="text-green-600 text-sm font-medium">{"You confirmed the action!"}</Typo> }
+    } else {
+        html! {}
+    };
+
+    let on_confirm = {
+        let confirmed = confirmed.clone();
+        Callback::from(move |_| {
+            confirmed.set(true);
+        })
+    };
+
     let example = html! {
-        <>
-        <ModalButton
+        <div class="space-y-4">
+            <ModalButton
                 button_text={"Open Info Modal".to_string()}
-                modal_title={"Important Information".to_string()}
+                modal_title={"Informational Modal".to_string()}
                 modal_content={html! {
                     <div class="text-sm space-y-2">
-                        <p>{"This modal was triggered by a button click."}</p>
-                        <p>{"You can reuse this pattern anywhere you need a quick inline modal."}</p>
+                        <Typo>{"This modal was triggered by a button click."}</Typo>
+                        <Typo>{"You can reuse this pattern anywhere you need a quick inline modal."}</Typo>
                     </div>
                 }}
             />
 
             <ModalButton
-                button_text={"Open Danger Modal".to_string()}
-                button_type={ButtonType::Danger}
-                modal_title={"Danger Information".to_string()}
+                button_text={"Open Confirm Modal".to_string()}
+                button_type={ButtonType::Primary}
+                modal_title={"Confirm Action".to_string()}
                 modal_content={html! {
-                    <div class="text-sm space-y-2">
-                        <p>{"This modal was triggered by a button click."}</p>
-                        <p>{"You can reuse this pattern anywhere you need a quick inline modal."}</p>
-                    </div>
+                    <Typo class="text-sm">{"Are you sure you want to confirm this action?"}</Typo>
                 }}
+                on_confirm_click={Some(on_confirm)}
+                confirm_button_text={"Confirm"}
             />
 
-        </>
+            { confirm_message }
+        </div>
     };
 
     let usage_code = r#"
+let confirmed = use_state(|| false);
+
+let on_confirm = {
+    let confirmed = confirmed.clone();
+    Callback::from(move |_| {
+        confirmed.set(true);
+    })
+};
+
 <ModalButton
-    button_text={"Open Info Modal".to_string()}
-    button_type={ButtonType::Danger}
-    modal_title={"Important Information".to_string()}
+    button_text={"Open Confirm Modal".to_string()}
+    modal_title={"Confirm Action".to_string()}
     modal_content={html! {
-        <div class="text-sm space-y-2">
-            <p>{"This modal was triggered by a button click."}</p>
-            <p>{"You can reuse this pattern anywhere you need a quick inline modal."}</p>
-        </div>
+        <p>{"Are you sure you want to confirm this action?"}</p>
     }}
+    on_confirm_click={Some(on_confirm)}
+    confirm_button_text={"Confirm".into()}
 />
 "#;
 
@@ -56,6 +79,10 @@ pub fn modal_button_demo_section() -> Html {
                 "modal_title".into(),
                 "modal_content".into(),
                 "on_modal_close".into(),
+                "on_confirm_click".into(),
+                "confirm_button_text".into(),
+                "confirm_button_type".into(),
+                "confirm_disabled".into(),
                 "is_open".into(),
             ],
         },
@@ -66,6 +93,10 @@ pub fn modal_button_demo_section() -> Html {
                 "String".into(),
                 "Html".into(),
                 "Option<Callback<()>>".into(),
+                "Option<Callback<()>>".into(),
+                "String".into(),
+                "ButtonType".into(),
+                "bool".into(),
                 "bool".into(),
             ],
         },
@@ -76,6 +107,10 @@ pub fn modal_button_demo_section() -> Html {
                 "Heading shown in the modal.".into(),
                 "Body content of the modal.".into(),
                 "Callback when the modal is closed.".into(),
+                "Callback fired on confirm button click.".into(),
+                "Label for the confirm button.".into(),
+                "Type of confirm button (Primary, Danger, etc).".into(),
+                "Disables the confirm button.".into(),
                 "Initial open state (default: false).".into(),
             ],
         },
