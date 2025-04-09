@@ -1,19 +1,47 @@
+use gloo::timers::callback::Timeout;
 use wasm_bindgen_futures::{spawn_local, JsFuture};
 use web_sys::window;
 use yew::prelude::*;
 
 use crate::atoms::{Button, ButtonType};
-use crate::form::{Input, InputType};
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct CopyToClipboardProps {
-    pub label: String,
-    pub value: String,
+    /// The string value to copy to the clipboard
+    pub value: AttrValue,
+
+    /// The label shown before copying
+    #[prop_or_else(|| "Copy".into())]
+    pub copy_text: String,
+
+    /// The label shown after copying
+    #[prop_or_else(|| "Copied!".into())]
+    pub copied_text: String,
+
+    /// Optional button type before copying
+    #[prop_or(ButtonType::Primary)]
+    pub button_type: ButtonType,
+
+    /// Optional button type after copying
+    #[prop_or(ButtonType::Secondary)]
+    pub copied_button_type: ButtonType,
+
+    /// Optional extra classes for the button
+    #[prop_or_default]
+    pub class: Classes,
 }
 
 #[function_component(CopyToClipboard)]
 pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
-    let CopyToClipboardProps { label, value } = props.clone();
+    let CopyToClipboardProps {
+        value,
+        copy_text,
+        copied_text,
+        button_type,
+        copied_button_type,
+        class,
+    } = props.clone();
+
     let copied = use_state(|| false);
 
     let onclick = {
@@ -25,50 +53,34 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
             let copied = copied.clone();
 
             spawn_local(async move {
-                // wrap clipboard in Some() to match `and_then` signature
                 if let Some(clipboard) = window().map(|w| w.navigator().clipboard()) {
-                    let result = JsFuture::from(clipboard.write_text(&value)).await;
-                    if result.is_ok() {
+                    if JsFuture::from(clipboard.write_text(&value)).await.is_ok() {
                         copied.set(true);
-                        web_sys::console::log_1(&"Copied to clipboard".into());
+                        Timeout::new(2000, move || copied.set(false)).forget();
                     }
                 }
             });
         })
     };
 
+    let current_label = if *copied {
+        copied_text.clone()
+    } else {
+        copy_text.clone()
+    };
+    let current_type = if *copied {
+        copied_button_type.clone()
+    } else {
+        button_type.clone()
+    };
+
     html! {
-        <div class="flex flex-col space-y-2">
-            <Input
-                id="clipboard-value"
-                label={label}
-                input_type={InputType::Text}
-                default_value={value.clone()}
-                placeholder="Click Copy to copy this value"
-                required={false}
-                disabled={true}
-                class="w-full"
-            />
-
-            <div class="flex items-center gap-2">
-                <Button
-                    button_type={ButtonType::Primary}
-                    onclick={onclick}
-                    class="whitespace-nowrap"
-                >
-                    { "Copy" }
-                </Button>
-
-                {
-                    if *copied {
-                        html! {
-                            <span class="text-xs text-green-600 dark:text-green-400">{ "Copied!" }</span>
-                        }
-                    } else {
-                        html! {}
-                    }
-                }
-            </div>
-        </div>
+        <Button
+            button_type={current_type}
+            onclick={onclick}
+            class={class}
+        >
+            { current_label }
+        </Button>
     }
 }

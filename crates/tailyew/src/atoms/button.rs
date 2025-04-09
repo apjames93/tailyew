@@ -31,7 +31,7 @@ pub struct ButtonProps {
     #[prop_or(false)]
     pub disabled: bool,
     #[prop_or_default]
-    pub class: Option<String>,
+    pub class: Classes,
     #[prop_or_default]
     pub children: Children,
 }
