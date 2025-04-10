@@ -2,7 +2,7 @@
 
 [package]
 name = "tailyew"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 authors = ["Alex James <apjames93@gmail.com>"]
 description = "Reusable Yew + Tailwind UI component library"
@@ -28,3 +28,4 @@ web-sys = { workspace = true }
 uuid = { version = "1.11.0", features = ["serde", "v4", "js"] }
 regex = "1.11.1"
 pulldown-cmark = "0.9"
+erased-serde = "0.4.6"

@@ -4,14 +4,14 @@ use crate::templates::demos::{
     AComponentDemoSection, AccordionDemoSection, AppBarDemoSection, BarChartDemoSection,
     BubbleChartDemoSection, ButtonDemoSection, CardDemoSection, CheckboxDemoSection,
     CircularProgressDemoSection, CodeBlockDemoSection, ColorInputDemoSection,
-    CopyToClipboardDemoSection, FileInputDemoSection, FormDemoSection, GettingStarted,
-    HeroHeaderDemoSection, ImageDemoSection, InitThemeDemoSection, InputDemoSection,
-    JsonInputDemoSection, LiDemoSection, LineChartDemoSection, LinearProgressDemoSection,
-    MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection, NavBarDemoSection,
-    NotificationDemoSection, PhoneInputDemoSection, PieChartDemoSection, PopoverDemoSection,
-    RadioGroupDemoSection, RangeInputDemoSection, ScatterPlotDemoSection, SelectDemoSection,
-    SpacerDemoSection, StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection,
-    TooltipDemoSection, TypoDemoSection, UlDemoSection,
+    CopyToClipboardDemoSection, DownloadButtonDemoSection, FileInputDemoSection, FormDemoSection,
+    GettingStarted, HeroHeaderDemoSection, ImageDemoSection, InitThemeDemoSection,
+    InputDemoSection, JsonInputDemoSection, LiDemoSection, LineChartDemoSection,
+    LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection,
+    NavBarDemoSection, NotificationDemoSection, PhoneInputDemoSection, PieChartDemoSection,
+    PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection, ScatterPlotDemoSection,
+    SelectDemoSection, SpacerDemoSection, StepperDemoSection, TableDemoSection, TabsDemoSection,
+    TextareaDemoSection, TooltipDemoSection, TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
 use tailyew::atoms::{Button, ButtonType, Li, TagType, Typo, Ul};
@@ -60,6 +60,11 @@ const DEMO_LINKS: &[DemoLink] = &[
         name: "Copy to Clipboard",
         route: "copy_to_clipboard",
         render: || html! { <CopyToClipboardDemoSection /> },
+    },
+    DemoLink {
+        name: "Download Button",
+        route: "download_button",
+        render: || html! { <DownloadButtonDemoSection /> },
     },
     DemoLink {
         name: "File Input",

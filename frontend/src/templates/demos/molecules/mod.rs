@@ -30,3 +30,6 @@ pub use navbar_demo_section::*;
 
 pub mod markdown_demo_section;
 pub use markdown_demo_section::*;
+
+pub mod download_button_demo_section;
+pub use download_button_demo_section::*;
