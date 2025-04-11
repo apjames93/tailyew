@@ -1,5 +1,5 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::Typo;
+use tailyew::atoms::{TagType, Typo};
 use tailyew::molecules::Accordion;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
@@ -8,21 +8,39 @@ use yew::prelude::*;
 pub fn accordion_demo_section() -> Html {
     let example = html! {
         <div class="space-y-4">
-            <Accordion title="What is TailYew?" default_open={true}>
+            <Accordion
+                title="What is TailYew?"
+                default_open={true}
+                heading_tag={TagType::H3}
+            >
                 <Typo>{"TailYew is a UI component library for Rust + Yew, styled with Tailwind CSS."}</Typo>
             </Accordion>
-            <Accordion title="Can I customize components?" default_open={false}>
+
+            <Accordion
+                title="Can I customize components?"
+                heading_tag={TagType::H3}
+                content_class="bg-yellow-50 dark:bg-yellow-900"
+            >
                 <Typo>{"Yes! You can extend or override any component using standard Rust and Yew patterns."}</Typo>
             </Accordion>
-            <Accordion title="Is it production-ready?">
-                <Typo>{"Absolutely — we're using it in real-world apps with SSR and WASM support."}</Typo>
+
+            <Accordion
+                title="Compact mode example"
+                compact={true}
+                default_open={true}
+            >
+                <Typo>{"Compact accordions remove padding and styling for use in tighter layouts (like sidebars)."}</Typo>
             </Accordion>
         </div>
     };
 
     let usage_code = r#"
-<Accordion title="What is TailYew?" default_open={true}>
+<Accordion title="What is TailYew?" default_open={true} heading_tag={TagType::H3}>
     <Typo>{"TailYew is a UI component library for Rust + Yew, styled with Tailwind CSS."}</Typo>
+</Accordion>
+
+<Accordion title="Compact mode" compact={true}>
+    <Typo>{"Useful in nested UIs like sidebars."}</Typo>
 </Accordion>
 "#;
 
@@ -33,18 +51,22 @@ pub fn accordion_demo_section() -> Html {
                 "title".into(),
                 "children".into(),
                 "class".into(),
+                "content_class".into(),
                 "heading_tag".into(),
                 "default_open".into(),
+                "compact".into(),
                 "arrow".into(),
             ],
         },
         Column {
             header: "Type".into(),
             values: vec![
-                "String".into(),
+                "AttrValue".into(),
                 "Children".into(),
                 "Classes".into(),
+                "Classes".into(),
                 "TagType".into(),
+                "bool".into(),
                 "bool".into(),
                 "Option<Html>".into(),
             ],
@@ -54,10 +76,12 @@ pub fn accordion_demo_section() -> Html {
             values: vec![
                 "The title of the accordion header.".into(),
                 "Content shown when expanded.".into(),
-                "Optional custom classes for the outer wrapper.".into(),
-                "The HTML tag used for the title (e.g., H2, H3, Span).".into(),
-                "Sets the initial open state.".into(),
-                "Optional custom arrow icon.".into(),
+                "Classes for the outer wrapper.".into(),
+                "Additional Tailwind classes for content wrapper.".into(),
+                "Tag used for the heading (e.g. H2, Span).".into(),
+                "Initial open state.".into(),
+                "Enable compact styling for dense layouts.".into(),
+                "Optional icon to replace the default arrow.".into(),
             ],
         },
     ];
@@ -66,7 +90,7 @@ pub fn accordion_demo_section() -> Html {
         <DemoComponent
             title="Accordion Component"
             description={Some(html! {
-                <Typo>{"The `Accordion` toggles visibility of content. Fully accessible with keyboard support, and customizable with a `heading_tag` or arrow icon."}</Typo>
+                <Typo>{"The `Accordion` component toggles visibility of its children. It supports light/dark themes, custom heading tags, compact layouts, and custom arrow icons."}</Typo>
             })}
             example={example}
             usage_code={usage_code}
