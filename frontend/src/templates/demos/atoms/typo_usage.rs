@@ -10,6 +10,7 @@ html! {
       <Typo tag={TagType::Emphasis}>{ "This is an Emphasis" }</Typo>
       <Typo tag={TagType::Strong}>{ "This is an Strong" }</Typo>
       <Typo tag={TagType::P}>{ "This is a paragraph of text using the P tag." }</Typo>
+      <Typo tag={TagType::Error}>{ "This is an error" }</Typo>
       <Typo tag={TagType::Span} class="bg-yellow-100 px-1 rounded">{ "This is a styled span" }</Typo>
   </div>
 }

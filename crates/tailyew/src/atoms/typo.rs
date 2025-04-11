@@ -13,6 +13,7 @@ pub enum TagType {
     BlockQuote,
     Emphasis,
     Strong,
+    Error,
     #[default]
     Span,
 }
@@ -56,6 +57,7 @@ pub fn typo(props: &TypoProps) -> Html {
         TagType::Emphasis => "italic text-gray-700 dark:text-gray-300",
         TagType::Strong => "font-bold text-gray-900 dark:text-gray-100",
         TagType::P => "text-base text-gray-800 dark:text-gray-300 mb-4",
+        TagType::Error => "text-sm text-red-600 dark:text-red-400 font-medium mt-2",
         TagType::Span => "text-sm text-gray-600 dark:text-gray-400",
     };
 
@@ -90,6 +92,9 @@ pub fn typo(props: &TypoProps) -> Html {
             html! { <strong class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</strong> }
         }
         TagType::P => {
+            html! { <p class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</p> }
+        }
+        TagType::Error => {
             html! { <p class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</p> }
         }
         TagType::Span => {
