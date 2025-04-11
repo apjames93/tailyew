@@ -10,15 +10,13 @@ use crate::templates::demos::{
     LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection,
     NavBarDemoSection, NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection,
     PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection,
-    ScatterPlotDemoSection, SelectDemoSection, SpacerDemoSection, StepperDemoSection,
-    TableDemoSection, TabsDemoSection, TextareaDemoSection, TooltipDemoSection, TypoDemoSection,
-    UlDemoSection,
+    ScatterPlotDemoSection, SelectDemoSection, SidebarDemoSection, SpacerDemoSection,
+    StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection, TooltipDemoSection,
+    TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
 use std::collections::HashMap;
-use tailyew::atoms::{Button, ButtonType, TagType, Typo};
-use tailyew::organisms::NestedList;
-use tailyew::NestedItem;
+use tailyew::organisms::{NestedItem, Sidebar, SidebarButton};
 use yew::prelude::*;
 use yew_router::prelude::use_navigator;
 
@@ -308,6 +306,12 @@ const DEMO_LINKS: &[DemoLink] = &[
         route: "markdown",
         render: || html! { <MarkdownDemoSection /> },
     },
+    DemoLink {
+        ctype: "organisms",
+        name: "Sidebar",
+        route: "sidebar",
+        render: || html! { <SidebarDemoSection /> },
+    },
 ];
 
 fn build_nested_sidebar_links() -> Vec<NestedItem> {
@@ -352,81 +356,38 @@ fn build_nested_sidebar_links() -> Vec<NestedItem> {
 
 #[function_component(DemoSidebar)]
 pub fn demo_sidebar() -> Html {
-    let is_open = use_state(|| true);
-    let navigator = use_navigator().unwrap();
-
-    let toggle_sidebar = {
-        let is_open = is_open.clone();
-        Callback::from(move |_| is_open.set(!*is_open))
-    };
-
-    let close_sidebar = {
-        let is_open = is_open.clone();
-        Callback::from(move |_: MouseEvent| is_open.set(false))
-    };
+    let navigator = use_navigator();
 
     let on_select = {
-        let navigator = navigator.clone();
-        let close_sidebar = close_sidebar.clone();
+        let Some(navigator) = navigator else {
+            return html! { <div>{"Navigator not available"}</div> };
+        };
+
         Callback::from(move |value: AttrValue| {
             navigator.push(&Route::DemoPage {
                 component: value.to_string(),
             });
-            close_sidebar.emit(MouseEvent::new("click").unwrap());
         })
     };
 
-    let sidebar_classes = classes!(
-        "w-64",
-        "bg-white",
-        "dark:bg-gray-900",
-        "h-screen",
-        "border-r",
-        "border-gray-200",
-        "dark:border-gray-700",
-        "p-4",
-        "overflow-y-auto",
-        "sticky",
-        "top-0",
-        "z-10",
-        "transition-transform",
-        "duration-300",
-        "ease-in-out",
-        if *is_open {
-            "translate-x-0"
-        } else {
-            "-translate-x-full"
-        }
-    );
-
     html! {
-        <>
-        <div class="flex">
-            // Toggle Column
-            <div class="w-12 md:w-16 p-2 pt-4 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 sticky top-0 h-screen z-20 flex flex-col items-center">
-                <Button
-                    button_type={ButtonType::Ghost}
-                    onclick={toggle_sidebar}
-                    class="p-2 rounded-md"
-                >
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </Button>
-            </div>
-
-                // Sidebar
-                <div class="relative">
-                    <div class={sidebar_classes}>
-                        <Typo tag={TagType::H3} class="mb-4">{ "Components" }</Typo>
-                        <NestedList list={build_nested_sidebar_links()} on_select={on_select} />
-                    </div>
-                </div>
-            </div>
-
-        </>
+        <Sidebar
+            on_select={on_select}
+            top_offset_class={classes!("top-16")}
+            icon_list={vec![
+                SidebarButton {
+                    icon: html! {
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    },
+                    list: build_nested_sidebar_links(),
+                }
+            ]}
+        />
     }
 }
+
 #[derive(Properties, PartialEq)]
 pub struct DemoPageProps {
     pub component: String,

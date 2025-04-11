@@ -10,15 +10,22 @@ use yew_router::prelude::*;
 pub fn app_router() -> Html {
     html! {
         <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-800">
-            // Navbar Component
+
+            // AppBar (fixed)
             <NavBar />
 
-            // Main content area with flex-grow to expand and fill available space
-            <div class="flex-1" style="padding-top: 74px;">
+            // Main content
+            <div
+                class="flex-1"
+                style="
+                    padding-top: 74px;       /* nav height */
+                    padding-left: 56px;      /* sidebar toggle bar (w-14 = 3.5rem = 56px) */
+                "
+            >
                 <Switch<Route> render={switch} />
             </div>
 
-            // Footer Component, stays at the bottom
+            // Optional Footer
             <div id="Footer"></div>
         </div>
     }

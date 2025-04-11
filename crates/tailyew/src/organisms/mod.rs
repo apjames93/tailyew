@@ -15,3 +15,6 @@ pub use tabs::*;
 
 pub mod nested_list;
 pub use nested_list::*;
+
+pub mod sidebar;
+pub use sidebar::*;
