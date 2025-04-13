@@ -23,7 +23,9 @@ web-sys = { version = "0.3.69", features = [
   "CanvasRenderingContext2d",
   "Clipboard",
   "Navigator",
-  "HtmlAnchorElement",   
+  "HtmlAnchorElement",
+  "MutationObserver",    
+  "MutationObserverInit",
 ]}
 
 gloo-net = "0.6.0"

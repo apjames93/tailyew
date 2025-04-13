@@ -1,3 +1,7 @@
+use super::{
+    chart_helpers::{apply_theme_styles, get_theme_styles, use_get_chart_theme},
+    chart_legend::{ChartLegend, LegendItem},
+};
 use wasm_bindgen::JsCast;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 use yew::prelude::*;
@@ -24,105 +28,106 @@ pub struct LineChartProps {
 pub fn line_chart_component(props: &LineChartProps) -> Html {
     let canvas_ref = use_node_ref();
     let lines = props.lines.clone();
+    let theme = use_get_chart_theme();
 
-    use_effect({
+    {
         let canvas_ref = canvas_ref.clone();
-        move || {
-            let Some(canvas) = canvas_ref.cast::<HtmlCanvasElement>() else {
-                return;
-            };
-            let Ok(context) = canvas
-                .get_context("2d")
-                .unwrap()
-                .unwrap()
-                .dyn_into::<CanvasRenderingContext2d>()
-            else {
-                return;
-            };
+        let theme = theme.clone();
+        let lines = lines.clone();
 
-            // Clear canvas
-            context.clear_rect(0.0, 0.0, canvas.width().into(), canvas.height().into());
+        use_effect_with((theme.clone(), lines.clone()), move |_| {
+            if let Some(canvas) = canvas_ref.cast::<HtmlCanvasElement>() {
+                if let Ok(ctx) = canvas
+                    .get_context("2d")
+                    .unwrap()
+                    .unwrap()
+                    .dyn_into::<CanvasRenderingContext2d>()
+                {
+                    let styles = get_theme_styles(&theme);
 
-            // Axes
-            context.set_fill_style_str("#000");
-            context.set_line_width(1.0);
+                    ctx.clear_rect(0.0, 0.0, canvas.width().into(), canvas.height().into());
+                    ctx.set_line_width(1.0);
 
-            // X
-            context.begin_path();
-            context.move_to(50.0, 400.0);
-            context.line_to(550.0, 400.0);
-            context.stroke();
+                    apply_theme_styles(&ctx, &styles);
 
-            // Y
-            context.begin_path();
-            context.move_to(50.0, 400.0);
-            context.line_to(50.0, 50.0);
-            context.stroke();
+                    // Axes
+                    ctx.begin_path();
+                    ctx.move_to(50.0, 400.0);
+                    ctx.line_to(550.0, 400.0); // X-axis
+                    ctx.stroke();
 
-            // Axis labels
-            context.set_fill_style_str("#000");
-            context.set_font("12px Arial");
+                    ctx.begin_path();
+                    ctx.move_to(50.0, 400.0);
+                    ctx.line_to(50.0, 50.0); // Y-axis
+                    ctx.stroke();
 
-            for i in (0..=500).step_by(50) {
-                let x = 50.0 + i as f64;
-                context.begin_path();
-                context.move_to(x, 400.0);
-                context.line_to(x, 405.0);
-                context.stroke();
-                let _ = context.fill_text(&i.to_string(), x - 10.0, 420.0);
-            }
+                    // Tick Labels
+                    for i in (0..=500).step_by(50) {
+                        let x = 50.0 + i as f64;
+                        ctx.begin_path();
+                        ctx.move_to(x, 400.0);
+                        ctx.line_to(x, 405.0);
+                        ctx.stroke();
+                        let _ = ctx.fill_text(&i.to_string(), x - 10.0, 420.0);
+                    }
 
-            for i in (0..=350).step_by(50) {
-                let y = 400.0 - i as f64;
-                context.begin_path();
-                context.move_to(45.0, y);
-                context.line_to(50.0, y);
-                context.stroke();
-                let _ = context.fill_text(&i.to_string(), 15.0, y + 5.0);
-            }
+                    for i in (0..=350).step_by(50) {
+                        let y = 400.0 - i as f64;
+                        ctx.begin_path();
+                        ctx.move_to(45.0, y);
+                        ctx.line_to(50.0, y);
+                        ctx.stroke();
+                        let _ = ctx.fill_text(&i.to_string(), 15.0, y + 5.0);
+                    }
 
-            // Lines
-            for line in lines.iter() {
-                if line.points.len() < 2 {
-                    continue;
+                    // Lines
+                    for line in &lines {
+                        if line.points.len() < 2 {
+                            continue;
+                        }
+
+                        ctx.begin_path();
+                        ctx.set_line_width(2.0);
+                        ctx.set_stroke_style_str(&line.color);
+
+                        let start = &line.points[0];
+                        ctx.move_to(50.0 + start.x, 400.0 - start.y);
+
+                        for point in &line.points[1..] {
+                            ctx.line_to(50.0 + point.x, 400.0 - point.y);
+                        }
+
+                        ctx.stroke();
+                    }
+
+                    // Reapply theme fill style for future text or overlay
+                    apply_theme_styles(&ctx, &styles);
                 }
-
-                context.begin_path();
-                context.set_line_width(2.0);
-                #[allow(deprecated)]
-                context.set_stroke_style(&line.color.clone().into()); // bug: when updating to set_fill_style_str we lose the line colors
-
-                let start = &line.points[0];
-                context.move_to(50.0 + start.x, 400.0 - start.y);
-
-                for point in &line.points[1..] {
-                    context.line_to(50.0 + point.x, 400.0 - point.y);
-                }
-
-                context.stroke();
             }
-        }
-    });
+
+            || ()
+        });
+    }
+
+    let legend_items = props
+        .lines
+        .iter()
+        .map(|line| LegendItem {
+            label: line.label.clone(),
+            value: Some(line.points.iter().map(|p| p.y).sum::<f64>()),
+            color: line.color.clone(),
+        })
+        .collect::<Vec<LegendItem>>();
 
     html! {
-        <div>
+        <div class="flex flex-row items-start gap-6">
             <canvas
                 ref={canvas_ref}
                 width="600"
                 height="450"
-                style="display: block; margin-bottom: 1rem;"
+                class="mb-4"
             />
-            <div class="legend space-y-1">
-                { for props.lines.iter().map(|line| html! {
-                    <div class="flex items-center space-x-2">
-                        <div
-                            class="h-1"
-                            style={format!("width: 20px; background-color: {};", line.color)}
-                        ></div>
-                        <span>{ &line.label }</span>
-                    </div>
-                })}
-            </div>
+            <ChartLegend items={legend_items} />
         </div>
     }
 }
