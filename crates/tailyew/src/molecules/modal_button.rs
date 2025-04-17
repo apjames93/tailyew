@@ -1,5 +1,5 @@
 use crate::atoms::{Button, ButtonType};
-use crate::molecules::Modal;
+use crate::molecules::{Modal, ModalSize};
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
@@ -15,14 +15,12 @@ pub struct ModalButtonProps {
     #[prop_or_default]
     pub on_modal_close: Option<Callback<()>>,
 
+    /// A callback that receives the `close_modal` handler and returns a block of buttons.
     #[prop_or_default]
-    pub on_confirm_click: Option<Callback<()>>,
-    #[prop_or("Confirm".into())]
-    pub confirm_button_text: String,
-    #[prop_or(ButtonType::Primary)]
-    pub confirm_button_type: ButtonType,
-    #[prop_or(false)]
-    pub confirm_disabled: bool,
+    pub footer: Option<Callback<Callback<()>, Html>>,
+
+    #[prop_or(ModalSize::Large)]
+    pub modal_size: ModalSize,
 }
 
 #[function_component(ModalButton)]
@@ -31,9 +29,7 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
 
     let toggle_modal = {
         let modal_open = modal_open.clone();
-        Callback::from(move |_| {
-            modal_open.set(!*modal_open);
-        })
+        Callback::from(move |_| modal_open.set(!*modal_open))
     };
 
     let close_modal = {
@@ -41,27 +37,14 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
         let on_modal_close = props.on_modal_close.clone();
         Callback::from(move |_| {
             modal_open.set(false);
-            if let Some(callback) = on_modal_close.clone() {
-                callback.emit(());
+            if let Some(cb) = on_modal_close.clone() {
+                cb.emit(());
             }
         })
     };
 
-    let confirm = {
-        let modal_open = modal_open.clone();
-        let on_modal_close = props.on_modal_close.clone();
-        let on_confirm_click = props.on_confirm_click.clone();
-
-        Callback::from(move |_| {
-            if let Some(confirm_handler) = on_confirm_click.clone() {
-                confirm_handler.emit(());
-            }
-            modal_open.set(false);
-            if let Some(close_handler) = on_modal_close.clone() {
-                close_handler.emit(());
-            }
-        })
-    };
+    // Generate footer content dynamically
+    let footer_content = props.footer.as_ref().map(|cb| cb.emit(close_modal.clone()));
 
     html! {
         <div>
@@ -75,22 +58,17 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
             <Modal
                 title={props.modal_title.clone()}
                 is_open={*modal_open}
-                on_close={close_modal}
+                on_close={close_modal.clone()}
+                size={props.modal_size}
             >
                 <div class="space-y-6 text-sm text-gray-800 dark:text-gray-100">
                     { props.modal_content.clone() }
 
                     {
-                        if props.on_confirm_click.is_some() {
+                        if let Some(buttons) = footer_content {
                             html! {
                                 <div class="flex justify-end space-x-2 pt-2">
-                                    <Button
-                                        button_type={props.confirm_button_type.clone()}
-                                        onclick={confirm}
-                                        disabled={props.confirm_disabled}
-                                    >
-                                        { &*props.confirm_button_text }
-                                    </Button>
+                                    { buttons }
                                 </div>
                             }
                         } else {

@@ -1,25 +1,38 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::molecules::ModalButton;
 use tailyew::organisms::table::Column;
-use tailyew::ButtonType;
-use tailyew::Typo;
+use tailyew::{Button, ButtonType, Typo};
 use yew::prelude::*;
 
 #[function_component(ModalButtonDemoSection)]
 pub fn modal_button_demo_section() -> Html {
     let confirmed = use_state(|| false);
-
-    let confirm_message = if *confirmed {
-        html! { <Typo class="text-green-600 text-sm font-medium">{"You confirmed the action!"}</Typo> }
-    } else {
-        html! {}
-    };
+    let declined = use_state(|| false);
 
     let on_confirm = {
         let confirmed = confirmed.clone();
+        let declined = declined.clone();
         Callback::from(move |_| {
             confirmed.set(true);
+            declined.set(false);
         })
+    };
+
+    let on_decline = {
+        let confirmed = confirmed.clone();
+        let declined = declined.clone();
+        Callback::from(move |_| {
+            declined.set(true);
+            confirmed.set(false);
+        })
+    };
+
+    let feedback_message = if *confirmed {
+        html! { <Typo class="text-green-600 text-sm font-medium">{"✅ You confirmed the action."}</Typo> }
+    } else if *declined {
+        html! { <Typo class="text-red-600 text-sm font-medium">{"❌ You declined the action."}</Typo> }
+    } else {
+        html! {}
     };
 
     let example = html! {
@@ -42,33 +55,92 @@ pub fn modal_button_demo_section() -> Html {
                 modal_content={html! {
                     <Typo class="text-sm">{"Are you sure you want to confirm this action?"}</Typo>
                 }}
-                on_confirm_click={Some(on_confirm)}
-                confirm_button_text={"Confirm"}
+                footer={Some({
+                    let on_confirm = on_confirm.clone();
+                    Callback::from(move |close_modal: Callback<()>| {
+                        html! {
+                            <Button
+                                button_type={ButtonType::Primary}
+                                onclick={{
+                                    let close_modal = close_modal.clone();
+                                    let on_confirm = on_confirm.clone();
+                                    Callback::from(move |_| {
+                                        on_confirm.emit(());
+                                        close_modal.emit(());
+                                    })
+                                }}
+                            >
+                                { "Confirm" }
+                            </Button>
+                        }
+                    })
+                })}
             />
 
-            { confirm_message }
+            <ModalButton
+                button_text={"Open Confirm + Decline Modal".to_string()}
+                button_type={ButtonType::Secondary}
+                modal_title={"Two-Action Modal".to_string()}
+                modal_content={html! {
+                    <Typo class="text-sm">{"Choose whether to proceed or cancel."}</Typo>
+                }}
+                footer={Some({
+                    let on_confirm = on_confirm.clone();
+                    let on_decline = on_decline.clone();
+                    Callback::from(move |close_modal: Callback<()>| {
+                        html! {
+                            <>
+                                <Button
+                                    button_type={ButtonType::Secondary}
+                                    onclick={{
+                                        let close_modal = close_modal.clone();
+                                        let on_decline = on_decline.clone();
+                                        Callback::from(move |_| {
+                                            on_decline.emit(());
+                                            close_modal.emit(());
+                                        })
+                                    }}
+                                >
+                                    { "Decline" }
+                                </Button>
+
+                                <Button
+                                    button_type={ButtonType::Danger}
+                                    onclick={{
+                                        let close_modal = close_modal.clone();
+                                        let on_confirm = on_confirm.clone();
+                                        Callback::from(move |_| {
+                                            on_confirm.emit(());
+                                            close_modal.emit(());
+                                        })
+                                    }}
+                                >
+                                    { "Confirm" }
+                                </Button>
+                            </>
+                        }
+                    })
+                })}
+            />
+
+            { feedback_message }
         </div>
     };
 
     let usage_code = r#"
-let confirmed = use_state(|| false);
-
-let on_confirm = {
-    let confirmed = confirmed.clone();
-    Callback::from(move |_| {
-        confirmed.set(true);
-    })
-};
-
 <ModalButton
-    button_text={"Open Confirm Modal".to_string()}
-    modal_title={"Confirm Action".to_string()}
-    modal_content={html! {
-        <p>{"Are you sure you want to confirm this action?"}</p>
-    }}
-    on_confirm_click={Some(on_confirm)}
-    confirm_button_text={"Confirm".into()}
-/>
+    button_text={"Open Confirm + Decline Modal".to_string()}
+    modal_title={"Two-Action Modal".to_string()}
+    modal_content={html! { <p>{"Choose whether to proceed or cancel."}</p> }}
+    footer={Some(Callback::from(move |close_modal: Callback<()>| {
+        html! {
+            <>
+                <Button button_type={ButtonType::Secondary} onclick={...}>{"Decline"}</Button>
+                <Button button_type={ButtonType::Danger} onclick={...}>{"Confirm"}</Button>
+            </>
+        }
+    }))}
+ />
 "#;
 
     let props_table = vec![
@@ -76,42 +148,36 @@ let on_confirm = {
             header: "Prop".into(),
             values: vec![
                 "button_text".into(),
+                "button_type".into(),
                 "modal_title".into(),
                 "modal_content".into(),
-                "on_modal_close".into(),
-                "on_confirm_click".into(),
-                "confirm_button_text".into(),
-                "confirm_button_type".into(),
-                "confirm_disabled".into(),
                 "is_open".into(),
+                "on_modal_close".into(),
+                "footer".into(),
             ],
         },
         Column {
             header: "Type".into(),
             values: vec![
                 "String".into(),
+                "ButtonType".into(),
                 "String".into(),
                 "Html".into(),
-                "Option<Callback<()>>".into(),
-                "Option<Callback<()>>".into(),
-                "String".into(),
-                "ButtonType".into(),
                 "bool".into(),
-                "bool".into(),
+                "Option<Callback<()>>".into(),
+                "Option<Callback<Callback<()>>>".into(),
             ],
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "Label for the trigger button.".into(),
-                "Heading shown in the modal.".into(),
-                "Body content of the modal.".into(),
+                "Text for the trigger button.".into(),
+                "Type of the trigger button.".into(),
+                "Heading displayed in the modal.".into(),
+                "Main content inside the modal.".into(),
+                "Optional default open state.".into(),
                 "Callback when the modal is closed.".into(),
-                "Callback fired on confirm button click.".into(),
-                "Label for the confirm button.".into(),
-                "Type of confirm button (Primary, Danger, etc).".into(),
-                "Disables the confirm button.".into(),
-                "Initial open state (default: false).".into(),
+                "Optional footer renderer; receives a close callback.".into(),
             ],
         },
     ];
@@ -120,7 +186,7 @@ let on_confirm = {
         <DemoComponent
             title="ModalButton Component"
             description={Some(html! {
-                <p>{"The `ModalButton` component wraps a `Button` and `Modal` into a convenient toggleable unit. Great for confirmations, extra info, or inline modals."}</p>
+                <p>{"The `ModalButton` component wraps a trigger and modal in one. You can provide custom footer buttons using a `Callback<Callback<()>>` that receives a modal-closing function."}</p>
             })}
             example={example}
             usage_code={usage_code}
