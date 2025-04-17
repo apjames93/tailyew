@@ -1,13 +1,11 @@
-// src/organisms/table.rs
-
 use crate::atoms::{TagType, Typo};
 use yew::prelude::*;
 
-/// Define a new structure for representing a column
+/// A flexible column definition supporting arbitrary Yew HTML for headers and cells
 #[derive(Clone, PartialEq)]
 pub struct Column {
-    pub header: String,
-    pub values: Vec<String>,
+    pub header: Html,
+    pub values: Vec<Html>,
 }
 
 /// Properties for the Table component
@@ -25,14 +23,14 @@ pub fn table(props: &TableProps) -> Html {
         row_click_callback,
     } = props.clone();
 
-    let headers: Vec<String> = columns.iter().map(|col| col.header.clone()).collect();
+    let headers: Vec<Html> = columns.iter().map(|col| col.header.clone()).collect();
     let num_rows = columns.first().map(|col| col.values.len()).unwrap_or(0);
 
-    let rows: Vec<Vec<String>> = (0..num_rows)
+    let rows: Vec<Vec<Html>> = (0..num_rows)
         .map(|row_index| {
             columns
                 .iter()
-                .map(|col| col.values.get(row_index).unwrap_or(&String::new()).clone())
+                .map(|col| col.values.get(row_index).cloned().unwrap_or_default())
                 .collect()
         })
         .collect();
@@ -53,7 +51,7 @@ pub fn table(props: &TableProps) -> Html {
                     <tr>
                         { for headers.iter().enumerate().map(|(i, header)| html! {
                             <th key={i} class="py-2 px-4 text-left border-b border-gray-300 dark:border-gray-600">
-                                <Typo tag={TagType::P} class="font-semibold">{ header.clone() }</Typo>
+                                { header.clone() }
                             </th>
                         }) }
                     </tr>
@@ -85,7 +83,7 @@ pub fn table(props: &TableProps) -> Html {
                             <tr key={index} class={classes!(row_classes)} onclick={if clickable { Some(onclick) } else { None }}>
                                 { for row.iter().enumerate().map(|(col_idx, cell)| html! {
                                     <td key={col_idx} class="py-2 px-4 border-b border-gray-300 dark:border-gray-600">
-                                        <Typo tag={TagType::P}>{ cell.clone() }</Typo>
+                                        { cell.clone() }
                                     </td>
                                 }) }
                             </tr>

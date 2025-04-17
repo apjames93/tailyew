@@ -116,8 +116,8 @@ pub fn form_demo_section() -> Html {
                 </div>
 
                 <Textarea id="textarea" label="Description" placeholder="Write something..." />
-                <Select id="select" options={options} default_value={"2".to_string()} />
-                <RadioGroup id="gender" label="Select Gender" options={radio_options} default_value={"female".to_string()} />
+                <Select id="select" options={options} default_value="2" />
+                <RadioGroup id="gender" label="Select Gender" options={radio_options} default_value="female" />
                 <FileInput id="file_upload" label="Upload File" />
                 <Checkbox id="checkbox" label="Accept Terms" />
                 <PhoneInput id="phone" label="Phone Number" placeholder="123-456-7890" />
@@ -144,7 +144,7 @@ pub fn form_demo_section() -> Html {
                 "success_message",
             ]
             .into_iter()
-            .map(String::from)
+            .map(|s| html! {s})
             .collect(),
         },
         Column {
@@ -161,7 +161,7 @@ pub fn form_demo_section() -> Html {
                 "Option<String>",
             ]
             .into_iter()
-            .map(String::from)
+            .map(|s| html! {s})
             .collect(),
         },
         Column {
@@ -169,16 +169,16 @@ pub fn form_demo_section() -> Html {
             values: vec![
                 "Form content and layout.",
                 "Fires on form submit.",
-                "Custom class for the <form> element.",
+                "Custom class for the form element.",
                 "Submit button text.",
-                "Controls visibility of the submit button.",
+                "Controls visibility of submit button.",
                 "Disables button when loading.",
                 "Optional form ID.",
                 "Error banner message.",
                 "Success banner message.",
             ]
             .into_iter()
-            .map(String::from)
+            .map(|s| html! {s})
             .collect(),
         },
     ];
@@ -186,9 +186,7 @@ pub fn form_demo_section() -> Html {
     html! {
         <DemoComponent
             title="Form Component"
-            description={Some(html! {
-                <p>{"The `Form` component wraps children and handles validation, layout, and submit logic. Demonstrated here with every form input component."}</p>
-            })}
+            description={Some(html! {<p>{"The `Form` component wraps children and handles validation, layout, and submit logic. Demonstrated here with every form input component."}</p>})}
             example={example}
             usage_code={USAGE_CODE}
             props_table={Some(props_table)}
