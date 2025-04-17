@@ -30,3 +30,6 @@ pub use select_demo_section::*;
 
 pub mod textarea_demo_section;
 pub use textarea_demo_section::*;
+
+pub mod form_modal_demo_section;
+pub use form_modal_demo_section::*;

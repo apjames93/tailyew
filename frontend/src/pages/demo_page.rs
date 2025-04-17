@@ -5,14 +5,14 @@ use crate::templates::demos::{
     BubbleChartDemoSection, ButtonDemoSection, CardDemoSection, CheckboxDemoSection,
     CircularProgressDemoSection, CodeBlockDemoSection, ColorInputDemoSection,
     CopyToClipboardDemoSection, DownloadButtonDemoSection, FileInputDemoSection, FormDemoSection,
-    GettingStarted, HeroHeaderDemoSection, ImageDemoSection, InitThemeDemoSection,
-    InputDemoSection, JsonInputDemoSection, LiDemoSection, LineChartDemoSection,
-    LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection,
-    NavBarDemoSection, NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection,
-    PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection,
-    ScatterPlotDemoSection, SelectDemoSection, SidebarDemoSection, SpacerDemoSection,
-    StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection, TooltipDemoSection,
-    TypoDemoSection, UlDemoSection,
+    FormModalDemoSection, GettingStarted, HeroHeaderDemoSection, ImageDemoSection,
+    InitThemeDemoSection, InputDemoSection, JsonInputDemoSection, LiDemoSection,
+    LineChartDemoSection, LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection,
+    ModalDemoSection, NavBarDemoSection, NestedListDemoSection, NotificationDemoSection,
+    PhoneInputDemoSection, PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection,
+    RangeInputDemoSection, ScatterPlotDemoSection, SelectDemoSection, SidebarDemoSection,
+    SpacerDemoSection, StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection,
+    TooltipDemoSection, TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
 use std::collections::HashMap;
@@ -183,6 +183,12 @@ const DEMO_LINKS: &[DemoLink] = &[
         name: "Textarea",
         route: "textarea",
         render: || html! { <TextareaDemoSection /> },
+    },
+    DemoLink {
+        ctype: "forms",
+        name: "Form Modal",
+        route: "form_modal",
+        render: || html! { <FormModalDemoSection /> },
     },
     DemoLink {
         ctype: "forms",

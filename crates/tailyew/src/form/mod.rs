@@ -33,3 +33,6 @@ pub use form_container::*;
 
 pub mod state_dropdown;
 pub use state_dropdown::*;
+
+pub mod form_modal;
+pub use form_modal::*;
