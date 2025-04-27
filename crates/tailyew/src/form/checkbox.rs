@@ -1,3 +1,4 @@
+use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -6,6 +7,8 @@ pub struct CheckboxProps {
     pub label: String,
     #[prop_or(false)]
     pub checked: bool,
+    #[prop_or(false)]
+    pub required: bool,
     #[prop_or_default]
     pub description: Option<String>,
     #[prop_or(false)]
@@ -20,12 +23,12 @@ pub fn checkbox(props: &CheckboxProps) -> Html {
         id,
         label,
         checked,
+        required,
         description,
         disabled,
         on_change,
     } = props;
 
-    // Determine styling based on state
     let checkbox_classes = classes!(
         "h-4",
         "w-4",
@@ -71,7 +74,7 @@ pub fn checkbox(props: &CheckboxProps) -> Html {
     let handle_change = {
         let on_change = on_change.clone();
         Callback::from(move |e: Event| {
-            let input = e.target_unchecked_into::<web_sys::HtmlInputElement>();
+            let input = e.target_unchecked_into::<HtmlInputElement>();
             if let Some(cb) = &on_change {
                 cb.emit(input.checked());
             }
@@ -86,6 +89,7 @@ pub fn checkbox(props: &CheckboxProps) -> Html {
                     name={id.clone()}
                     type="checkbox"
                     checked={*checked}
+                    required={*required}
                     class={checkbox_classes}
                     onchange={handle_change}
                     disabled={*disabled}
