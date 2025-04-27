@@ -33,3 +33,6 @@ pub use textarea_demo_section::*;
 
 pub mod form_modal_demo_section;
 pub use form_modal_demo_section::*;
+
+pub mod form_builder_demo_section;
+pub use form_builder_demo_section::*;

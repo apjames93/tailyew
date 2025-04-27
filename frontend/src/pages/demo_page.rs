@@ -4,15 +4,15 @@ use crate::templates::demos::{
     AComponentDemoSection, AccordionDemoSection, AppBarDemoSection, BarChartDemoSection,
     BubbleChartDemoSection, ButtonDemoSection, CardDemoSection, CheckboxDemoSection,
     CircularProgressDemoSection, CodeBlockDemoSection, ColorInputDemoSection,
-    CopyToClipboardDemoSection, DownloadButtonDemoSection, FileInputDemoSection, FormDemoSection,
-    FormModalDemoSection, GettingStarted, HeroHeaderDemoSection, ImageDemoSection,
-    InitThemeDemoSection, InputDemoSection, JsonInputDemoSection, LiDemoSection,
-    LineChartDemoSection, LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection,
-    ModalDemoSection, NavBarDemoSection, NestedListDemoSection, NotificationDemoSection,
-    PhoneInputDemoSection, PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection,
-    RangeInputDemoSection, ScatterPlotDemoSection, SelectDemoSection, SidebarDemoSection,
-    SpacerDemoSection, StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection,
-    TooltipDemoSection, TypoDemoSection, UlDemoSection,
+    CopyToClipboardDemoSection, DownloadButtonDemoSection, FileInputDemoSection,
+    FormBuilderDemoSection, FormDemoSection, FormModalDemoSection, GettingStarted,
+    HeroHeaderDemoSection, ImageDemoSection, InitThemeDemoSection, InputDemoSection,
+    JsonInputDemoSection, LiDemoSection, LineChartDemoSection, LinearProgressDemoSection,
+    MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection, NavBarDemoSection,
+    NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection, PieChartDemoSection,
+    PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection, ScatterPlotDemoSection,
+    SelectDemoSection, SidebarDemoSection, SpacerDemoSection, StepperDemoSection, TableDemoSection,
+    TabsDemoSection, TextareaDemoSection, TooltipDemoSection, TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
 use std::collections::HashMap;
@@ -189,6 +189,12 @@ const DEMO_LINKS: &[DemoLink] = &[
         name: "Form Modal",
         route: "form_modal",
         render: || html! { <FormModalDemoSection /> },
+    },
+    DemoLink {
+        ctype: "forms",
+        name: "Form Builder",
+        route: "form_builder",
+        render: || html! { <FormBuilderDemoSection /> },
     },
     DemoLink {
         ctype: "forms",
