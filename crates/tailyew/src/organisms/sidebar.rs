@@ -111,7 +111,6 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                             })
                         };
 
-
                         let drawer_classes = classes!(
                             "fixed",
                             "inset-y-0",
@@ -128,6 +127,7 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                             "transition-transform",
                             "duration-300",
                             "ease-in-out",
+                            top_offset_class.clone(),
                             if is_open { "translate-x-0" } else { "-translate-x-full" }
                         );
 
