@@ -1,34 +1,34 @@
 use crate::{form::*, ButtonType, ModalSize};
+use serde::Deserialize;
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
-#[derive(Clone, PartialEq, Properties)]
+#[derive(Clone, PartialEq, Properties, Deserialize)]
 pub struct FormBuilderConfig {
+    #[serde(default)]
     pub button_label: Option<String>,
+
+    #[serde(default)]
     pub error_message: Option<String>,
+
+    #[serde(default)]
     pub success_message: Option<String>,
+
+    #[serde(default)]
     pub inputs: Vec<InputFieldConfig>,
+
+    #[serde(default)]
     pub modal: bool,
+
+    #[serde(default)]
     pub modal_title: Option<String>,
+
+    #[serde(default)]
     #[prop_or(true)]
     pub auto_close_on_success: bool,
 }
 
-impl Default for FormBuilderConfig {
-    fn default() -> Self {
-        Self {
-            button_label: None,
-            error_message: None,
-            success_message: None,
-            inputs: vec![],
-            modal: false,
-            modal_title: None,
-            auto_close_on_success: true,
-        }
-    }
-}
-
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Deserialize)]
 pub struct InputFieldConfig {
     pub id: String,
     pub label: String,
@@ -40,7 +40,7 @@ pub struct InputFieldConfig {
     pub col_span: Option<u8>,               // 1 or 2
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Deserialize)]
 pub enum FieldType {
     Input(InputType),
     Textarea,

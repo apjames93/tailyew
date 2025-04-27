@@ -1,8 +1,9 @@
+use serde::Deserialize;
 use std::fmt;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
-#[derive(Debug, PartialEq, Clone, Default)]
+#[derive(Debug, PartialEq, Clone, Default, Deserialize)]
 pub enum InputType {
     #[default]
     Text,

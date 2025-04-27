@@ -1,5 +1,3 @@
-# crates/tailyew/Cargo.toml
-
 [package]
 name = "tailyew"
 version = "0.1.11"

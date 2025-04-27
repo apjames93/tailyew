@@ -81,3 +81,37 @@ console.log("JavaScript Code Block");
 ```
 
 Final paragraph with multiple styles, an image inline ![Inline image](https://yew.rs/img/logo.png), and a final [link](https://github.com).
+
+
+---
+
+## Dynamic Form
+
+```form
+{
+  "button_label": "Submit Demo Form",
+  "inputs": [
+    {
+      "id": "email",
+      "label": "Email",
+      "input_type": { "Input": "Email" },
+      "placeholder": "Enter your email",
+      "required": true
+    },
+    {
+      "id": "name",
+      "label": "Name",
+      "input_type": { "Input": "Text" },
+      "placeholder": "Your Name",
+      "required": true
+    },
+    {
+      "id": "accept",
+      "label": "Accept Terms",
+      "input_type": "Checkbox",
+      "required": true
+    }
+  ],
+  "modal": false
+}
+```

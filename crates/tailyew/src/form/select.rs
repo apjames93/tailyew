@@ -1,7 +1,8 @@
+use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Clone, Deserialize)]
 pub struct SelectOption {
     pub label: String,
     pub value: String,
