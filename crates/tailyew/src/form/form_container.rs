@@ -55,6 +55,9 @@ pub struct FormProps {
 
     #[prop_or_default]
     pub success_message: Option<String>,
+
+    #[prop_or_default]
+    pub extra_footer_buttons: Option<Callback<Callback<()>, Html>>,
 }
 
 #[function_component(Form)]
@@ -69,6 +72,7 @@ pub fn form(props: &FormProps) -> Html {
         id,
         error_message,
         success_message,
+        extra_footer_buttons,
     } = props;
 
     let form_classes = if form_class.is_empty() {
@@ -83,11 +87,20 @@ pub fn form(props: &FormProps) -> Html {
         form_class.clone()
     };
 
+    let onsubmit_wrapper = {
+        let onsubmit_callback = onsubmit_callback.clone();
+        Callback::from(move |e: SubmitEvent| {
+            e.prevent_default();
+            onsubmit_callback.emit(e);
+            // No HTML reset here!
+        })
+    };
+
     html! {
         <div>
             if let Some(error) = error_message {
                 <Notification
-                    message={error.to_string()}
+                    message={error.clone()}
                     notification_type={NotificationTypes::Error}
                     visible={true}
                     fixed={false}
@@ -95,25 +108,39 @@ pub fn form(props: &FormProps) -> Html {
             }
             if let Some(success) = success_message {
                 <Notification
-                    message={success.to_string()}
+                    message={success.clone()}
                     notification_type={NotificationTypes::Success}
                     visible={true}
                     fixed={false}
                 />
             }
 
-            <form id={id.clone()} class={form_classes} onsubmit={onsubmit_callback.clone()}>
+            <form
+                id={id.clone()}
+                class={form_classes}
+                onsubmit={onsubmit_wrapper}
+            >
                 { for children.iter() }
 
-                if *show_submit_button {
-                    <div class="flex justify-end mt-4">
-                        <Button
-                            button_type={ButtonType::Submit}
-                            disabled={*loading}
-                            class="ml-auto"
-                        >
-                            { button_label.clone() }
-                        </Button>
+                if *show_submit_button || extra_footer_buttons.is_some() {
+                    <div class="flex justify-end space-x-2 pt-2">
+                        {
+                            if let Some(cb) = &extra_footer_buttons {
+                                cb.emit(Callback::from(|_| {}))
+                            } else {
+                                html! {}
+                            }
+                        }
+
+                        if *show_submit_button {
+                            <Button
+                                button_type={ButtonType::Submit}
+                                disabled={*loading}
+                                class="ml-auto"
+                            >
+                                { button_label.clone() }
+                            </Button>
+                        }
                     </div>
                 }
             </form>

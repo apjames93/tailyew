@@ -1,6 +1,6 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::form::*;
-use tailyew::{Button, ButtonType};
+use tailyew::{Button, ButtonType, ModalSize};
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
@@ -74,8 +74,14 @@ pub fn form_modal_demo_section() -> Html {
     let example = html! {
         <div class="max-w-xl mx-auto space-y-8">
             <FormModal
-                button_text={"Auto Close Form"}
-                modal_title={"Auto-Close on Success"}
+                modal_button={ModalButtonConfig {
+                    button_text: "Auto Close Form".into(),
+                    button_type: ButtonType::Primary,
+                    modal_title: "Auto-Close on Success".into(),
+                    modal_size: ModalSize::Large,
+                    is_open: false,
+                    on_modal_close: None,
+                }}
                 onsubmit={onsubmit.clone()}
                 error_message={(*error_message).clone()}
                 success_message={(*success_message).clone()}
@@ -86,12 +92,19 @@ pub fn form_modal_demo_section() -> Html {
                 extra_footer_buttons={Some(extra_buttons("Auto Close".to_string()))}
             >
                 <Input id="email" label="Email" input_type={InputType::Email} placeholder="you@example.com" />
+                <PhoneInput id="phone" label="Phone" placeholder="123-456-7890" />
                 <Checkbox id="terms" label="I accept the terms" />
             </FormModal>
 
             <FormModal
-                button_text={"Manual Close Form"}
-                modal_title={"Manual Modal Close"}
+                modal_button={ModalButtonConfig {
+                    button_text: "Manual Close Form".into(),
+                    button_type: ButtonType::Primary,
+                    modal_title: "Manual Modal Close".into(),
+                    modal_size: ModalSize::Large,
+                    is_open: false,
+                    on_modal_close: None,
+                }}
                 onsubmit={onsubmit}
                 error_message={(*error_message).clone()}
                 success_message={(*success_message).clone()}
@@ -100,6 +113,7 @@ pub fn form_modal_demo_section() -> Html {
                 extra_footer_buttons={Some(extra_buttons("Manual Close".to_string()))}
             >
                 <Input id="email" label="Email" input_type={InputType::Email} placeholder="you@example.com" />
+                <PhoneInput id="phone" label="Phone" placeholder="123-456-7890" default_value="123-456-7890" />
                 <Checkbox id="terms" label="I accept the terms" />
             </FormModal>
 

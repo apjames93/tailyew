@@ -35,9 +35,12 @@ pub fn notification(props: &NotificationProps) -> Html {
 
     let is_visible = use_state(|| visible);
 
-    // Manually sync prop if it changes
-    if *is_visible != visible {
-        is_visible.set(visible);
+    {
+        let is_visible = is_visible.clone();
+        use_effect_with(visible, move |visible| {
+            is_visible.set(*visible);
+            || ()
+        });
     }
 
     if !*is_visible {
@@ -83,7 +86,7 @@ pub fn notification(props: &NotificationProps) -> Html {
         let on_close = on_close.clone();
         Callback::from(move |_| {
             is_visible.set(false);
-            if let Some(cb) = on_close.clone() {
+            if let Some(cb) = &on_close {
                 cb.emit(());
             }
         })
@@ -106,11 +109,11 @@ pub fn notification(props: &NotificationProps) -> Html {
             )}
         >
             if let Some(symbol) = icon {
-                <Typo tag={TagType::Span} class={text_color}>{symbol}</Typo>
+                <Typo tag={TagType::Span} class={text_color}>{ symbol }</Typo>
             }
 
             <Typo tag={TagType::Span} class={classes!(text_color, "text-base", "font-medium", "flex-grow", "ml-2")}>
-                { message.clone() }
+                { message }
             </Typo>
 
             <Button

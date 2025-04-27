@@ -1,7 +1,8 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::{TagType, Typo};
+use tailyew::atoms::{Button, ButtonType, TagType, Typo};
 use tailyew::form::*;
 use tailyew::organisms::table::Column;
+use web_sys::console;
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
@@ -12,21 +13,17 @@ let onsubmit_callback = {
     let form_values = form_values.clone();
     Callback::from(move |e: SubmitEvent| {
         e.prevent_default();
-
         let mut values = String::new();
         let fields = vec![
             "email", "password", "search", "color", "range", "date", "age",
             "time", "textarea", "select", "gender", "file_upload", "phone",
         ];
-
         for field in fields {
             let value = e_input_value(field, &e);
             values.push_str(&format!("{}: {}\n", field, value));
         }
-
         let checked = e_checkbox_checked("checkbox", &e);
         values.push_str(&format!("checkbox: {}\n", checked));
-
         form_values.set(values);
     })
 };
@@ -48,7 +45,6 @@ pub fn form_demo_section() -> Html {
         let form_values = form_values.clone();
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
-
             let mut values = String::new();
             let fields = vec![
                 "email",
@@ -65,15 +61,12 @@ pub fn form_demo_section() -> Html {
                 "file_upload",
                 "phone",
             ];
-
             for field in fields {
                 let value = e_input_value(field, &e);
                 values.push_str(&format!("{}: {}\n", field, value));
             }
-
             let checked = e_checkbox_checked("checkbox", &e);
             values.push_str(&format!("checkbox: {}\n", checked));
-
             form_values.set(values);
         })
     };
@@ -99,11 +92,24 @@ pub fn form_demo_section() -> Html {
         ("other".to_string(), "Other".to_string()),
     ];
 
+    // ✨ New: Create an extra footer button
+    let extra_footer_buttons = Some(Callback::from(move |_| {
+        html! {
+            <Button
+                button_type={ButtonType::Ghost}
+                onclick={Callback::from(move |_| console::log_1(&"Extra Button Clicked!".into()))}
+            >
+                { "Extra Action" }
+            </Button>
+        }
+    }));
+
     let example = html! {
-        <section class="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg space-y-6">
+        <section class="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg space-y-10">
             <Typo tag={TagType::H1}>{ "Form Component Demo" }</Typo>
 
-            <Form onsubmit_callback={onsubmit_callback}>
+            // Original full form
+            <Form onsubmit_callback={onsubmit_callback.clone()}>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Input id="email" label="Email" input_type={InputType::Email} placeholder="Enter email" />
                     <Input id="password" label="Password" input_type={InputType::Password} placeholder="Enter password" />
@@ -116,8 +122,8 @@ pub fn form_demo_section() -> Html {
                 </div>
 
                 <Textarea id="textarea" label="Description" placeholder="Write something..." />
-                <Select id="select" options={options} default_value="2" />
-                <RadioGroup id="gender" label="Select Gender" options={radio_options} default_value="female" />
+                <Select id="select" options={options.clone()} default_value="2" />
+                <RadioGroup id="gender" label="Select Gender" options={radio_options.clone()} default_value="female" />
                 <FileInput id="file_upload" label="Upload File" />
                 <Checkbox id="checkbox" label="Accept Terms" />
                 <PhoneInput id="phone" label="Phone Number" placeholder="123-456-7890" />
@@ -125,6 +131,20 @@ pub fn form_demo_section() -> Html {
                 <div class="mt-6 text-sm text-gray-600 whitespace-pre-wrap dark:text-gray-300">
                     { (*form_values).clone() }
                 </div>
+            </Form>
+
+            // ✨ New minimal form with extra footer button
+            <Typo tag={TagType::H2}>{ "Minimal Form with Extra Footer Button" }</Typo>
+
+            <Form
+                onsubmit_callback={Callback::from(|e: SubmitEvent| {
+                    e.prevent_default();
+                    console::log_1(&"Minimal Form Submitted!".into());
+                })}
+                button_label="Submit Minimal"
+                extra_footer_buttons={extra_footer_buttons.clone()}
+            >
+                <Input id="name" label="Name" placeholder="Enter your name" />
             </Form>
         </section>
     };
@@ -142,9 +162,10 @@ pub fn form_demo_section() -> Html {
                 "id",
                 "error_message",
                 "success_message",
+                "extra_footer_buttons",
             ]
             .into_iter()
-            .map(|s| html! {s})
+            .map(|s| html! { s })
             .collect(),
         },
         Column {
@@ -159,9 +180,10 @@ pub fn form_demo_section() -> Html {
                 "Option<String>",
                 "Option<String>",
                 "Option<String>",
+                "Option<Callback<Callback<()>, Html>>",
             ]
             .into_iter()
-            .map(|s| html! {s})
+            .map(|s| html! { s })
             .collect(),
         },
         Column {
@@ -176,9 +198,10 @@ pub fn form_demo_section() -> Html {
                 "Optional form ID.",
                 "Error banner message.",
                 "Success banner message.",
+                "Optional extra footer buttons rendered next to Submit.",
             ]
             .into_iter()
-            .map(|s| html! {s})
+            .map(|s| html! { s })
             .collect(),
         },
     ];
@@ -186,7 +209,7 @@ pub fn form_demo_section() -> Html {
     html! {
         <DemoComponent
             title="Form Component"
-            description={Some(html! {<p>{"The `Form` component wraps children and handles validation, layout, and submit logic. Demonstrated here with every form input component."}</p>})}
+            description={Some(html! {<p>{"The `Form` component wraps children and handles validation, layout, and submit logic. Demonstrated here with every form input component, and a minimal form showing `extra_footer_buttons`."}</p>})}
             example={example}
             usage_code={USAGE_CODE}
             props_table={Some(props_table)}

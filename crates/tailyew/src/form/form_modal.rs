@@ -4,19 +4,21 @@ use crate::Form;
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq, Clone)]
-pub struct FormModalProps {
+#[derive(Clone, PartialEq)]
+pub struct ModalButtonConfig {
     pub button_text: String,
-    #[prop_or_default]
     pub button_type: ButtonType,
     pub modal_title: String,
+    pub modal_size: ModalSize,
+    pub is_open: bool,
+    pub on_modal_close: Option<Callback<()>>,
+}
+
+#[derive(Properties, PartialEq, Clone)]
+pub struct FormModalProps {
+    pub modal_button: ModalButtonConfig,
     pub children: Children,
     pub onsubmit: Callback<SubmitEvent>,
-
-    #[prop_or_default]
-    pub is_open: bool,
-    #[prop_or_default]
-    pub on_modal_close: Option<Callback<()>>,
 
     #[prop_or_default]
     pub error_message: Option<String>,
@@ -27,15 +29,12 @@ pub struct FormModalProps {
     pub submit_label: String,
     #[prop_or(false)]
     pub loading: bool,
-    #[prop_or(ModalSize::Large)]
-    pub modal_size: ModalSize,
 
     #[prop_or_default]
     pub extra_footer_buttons: Option<Callback<Callback<()>, Html>>,
 
     #[prop_or(true)]
     pub auto_close_on_success: bool,
-
     #[prop_or_default]
     pub on_success: Option<Callback<()>>,
     #[prop_or_default]
@@ -46,14 +45,17 @@ pub struct FormModalProps {
 pub fn form_modal(props: &FormModalProps) -> Html {
     let close_modal_ref = use_mut_ref(|| None::<Callback<()>>);
 
-    // Watch for success_message to auto-close modal and call on_success
+    // 🔥 Move to internal state
+    let internal_success_message = use_state(|| props.success_message.clone());
+    let internal_error_message = use_state(|| props.error_message.clone());
+
     {
-        let success_message = props.success_message.clone();
+        let success_message = internal_success_message.clone();
         let auto_close_on_success = props.auto_close_on_success;
         let close_modal_ref = close_modal_ref.clone();
         let on_success = props.on_success.clone();
 
-        use_effect_with(success_message, move |message| {
+        use_effect_with(success_message.clone(), move |message| {
             if message.is_some() {
                 if let Some(cb) = on_success.clone() {
                     cb.emit(());
@@ -61,6 +63,8 @@ pub fn form_modal(props: &FormModalProps) -> Html {
                 if auto_close_on_success {
                     if let Some(close_cb) = (*close_modal_ref.borrow()).clone() {
                         close_cb.emit(());
+                        // 🔥 Reset success message after closing
+                        success_message.set(None);
                     }
                 }
             }
@@ -68,16 +72,17 @@ pub fn form_modal(props: &FormModalProps) -> Html {
         });
     }
 
-    // Watch for error_message to trigger on_error (optional)
     {
-        let error_message = props.error_message.clone();
+        let error_message = internal_error_message.clone();
         let on_error = props.on_error.clone();
 
-        use_effect_with(error_message, move |message| {
+        use_effect_with(error_message.clone(), move |message| {
             if message.is_some() {
                 if let Some(cb) = on_error.clone() {
                     cb.emit(());
                 }
+                // 🔥 Reset error message (optional)
+                // error_message.set(None);
             }
             || ()
         });
@@ -85,8 +90,10 @@ pub fn form_modal(props: &FormModalProps) -> Html {
 
     let form_onsubmit = {
         let onsubmit = props.onsubmit.clone();
+        let internal_success_message = internal_success_message.clone();
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
+            internal_success_message.set(Some("Form submitted successfully.".to_string()));
             onsubmit.emit(e);
         })
     };
@@ -99,12 +106,12 @@ pub fn form_modal(props: &FormModalProps) -> Html {
             loading={props.loading}
         >
             <ModalButton
-                button_text={props.button_text.clone()}
-                button_type={props.button_type.clone()}
-                modal_title={props.modal_title.clone()}
-                modal_size={props.modal_size}
-                is_open={props.is_open}
-                on_modal_close={props.on_modal_close.clone()}
+                button_text={props.modal_button.button_text.clone()}
+                button_type={props.modal_button.button_type.clone()}
+                modal_title={props.modal_button.modal_title.clone()}
+                modal_size={props.modal_button.modal_size}
+                is_open={props.modal_button.is_open}
+                on_modal_close={props.modal_button.on_modal_close.clone()}
                 footer={Some({
                     let submit_label = props.submit_label.clone();
                     let extra_footer_buttons = props.extra_footer_buttons.clone();
@@ -137,7 +144,7 @@ pub fn form_modal(props: &FormModalProps) -> Html {
                 modal_content={html! {
                     <>
                         {
-                            if let Some(error) = &props.error_message {
+                            if let Some(error) = &*internal_error_message {
                                 html! {
                                     <Notification
                                         message={error.clone()}
@@ -149,7 +156,7 @@ pub fn form_modal(props: &FormModalProps) -> Html {
                             } else { html! {} }
                         }
                         {
-                            if let Some(success) = &props.success_message {
+                            if let Some(success) = &*internal_success_message {
                                 html! {
                                     <Notification
                                         message={success.clone()}
