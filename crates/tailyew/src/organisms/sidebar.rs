@@ -1,5 +1,5 @@
 use crate::{
-    atoms::{Button, ButtonType, TagType, Typo},
+    atoms::{Button, ButtonType},
     organisms::{NestedItem, NestedList},
 };
 use yew::prelude::*;
@@ -33,7 +33,7 @@ pub fn sidebar(props: &SidebarProps) -> Html {
 
     html! {
         <>
-            // Overlay on mobile when any drawer is open
+            // Overlay when any drawer is open
             {
                 if active_index.is_some() {
                     let close_sidebar = {
@@ -42,7 +42,7 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                     };
                     html! {
                         <div
-                            class="fixed inset-0 bg-black bg-opacity-40 z-30 md:hidden"
+                            class="fixed inset-0 bg-black bg-opacity-40 z-30 transition-opacity duration-300"
                             onclick={close_sidebar}
                         />
                     }
@@ -53,16 +53,16 @@ pub fn sidebar(props: &SidebarProps) -> Html {
 
 
             <div class="relative flex">
-
-                // Sidebar Toggle Buttons (always visible)
+                // Sidebar Toggle Buttons
                 <div
                     class={classes!(
-                            "fixed", "left-0", "z-50", "w-14", "h-screen", "bg-white", "dark:bg-gray-900",
-                            "border-r", "border-gray-200", "dark:border-gray-700",
-                            "flex", "flex-col", "items-center", "space-y-2",
-                            top_offset_class.clone()
-                        )}
-                    >
+                        "fixed", "left-0", "z-50", "w-14", "h-screen",
+                        "bg-white", "dark:bg-gray-900",
+                        "border-r", "border-gray-200", "dark:border-gray-700",
+                        "flex", "flex-col", "items-center", "space-y-2",
+                        top_offset_class.clone(),
+                    )}
+                >
                     {
                         for icon_list.iter().enumerate().map(|(i, btn)| {
                             let is_active = *active_index == Some(i);
@@ -90,7 +90,7 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                     }
                 </div>
 
-                // Sidebar Drawers (slide-out)
+                // Sidebar Drawers
                 {
                     for icon_list.iter().enumerate().map(|(i, btn)| {
                         let is_open = *active_index == Some(i);

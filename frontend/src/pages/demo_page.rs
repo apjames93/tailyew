@@ -331,7 +331,7 @@ fn build_nested_sidebar_links() -> Vec<NestedItem> {
     let mut grouped: HashMap<&str, Vec<NestedItem>> = HashMap::new();
 
     for link in DEMO_LINKS {
-        let item = NestedItem::with_value(link.name, link.route);
+        let item = NestedItem::with_html(html! { link.name }, link.route);
         grouped.entry(link.ctype).or_default().push(item);
     }
 

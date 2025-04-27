@@ -1,7 +1,6 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::{Button, ButtonType};
 use tailyew::molecules::{AppBar, AppBarPosition};
-use tailyew::organisms::table::Column;
+use tailyew::organisms::{table::Column, NestedItem};
 use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("app_bar_usage.rs");
@@ -9,21 +8,27 @@ const LOGO_IMAGE_URL: &str = "/images/logo.png";
 
 #[function_component(AppBarDemoSection)]
 pub fn app_bar_demo_section() -> Html {
+    let nested_list = vec![
+        NestedItem::with_html(html! { "Home" }, "home"),
+        NestedItem::with_html(html! { "Docs" }, "docs"),
+        NestedItem::with_html(html! { "Components" }, "components"),
+        NestedItem::with_html(html! { "GitHub" }, "github"),
+        NestedItem::with_children(
+            "Account",
+            vec![
+                NestedItem::with_html(html! { "Login" }, "login"),
+                NestedItem::with_html(html! { "Sign up" }, "signup"),
+            ],
+        ),
+    ];
+
     let example = html! {
-        <div class="h-[200px] bg-gray-50 dark:bg-gray-800">
+        <div class="h-[300px] bg-gray-50 dark:bg-gray-800 relative">
             <AppBar
                 title={Some(AttrValue::from("TailYew"))}
                 logo_url={Some(AttrValue::from(LOGO_IMAGE_URL))}
+                nested_list={nested_list}
                 position={AppBarPosition::Static}
-                links={vec![
-                    html! { <a href="#" class="text-sm font-medium hover:underline">{"Docs"}</a> },
-                    html! { <a href="#" class="text-sm font-medium hover:underline">{"Components"}</a> },
-                    html! { <a href="#" class="text-sm font-medium hover:underline">{"GitHub"}</a> },
-                ]}
-                actions={vec![
-                    html! { <Button button_type={ButtonType::Secondary}>{"Login"}</Button> },
-                    html! { <Button button_type={ButtonType::Primary}>{"Sign up"}</Button> },
-                ]}
             />
         </div>
     };
@@ -34,8 +39,7 @@ pub fn app_bar_demo_section() -> Html {
             values: vec![
                 "title".into(),
                 "logo_url".into(),
-                "links".into(),
-                "actions".into(),
+                "nested_list".into(),
                 "position".into(),
             ],
         },
@@ -44,8 +48,7 @@ pub fn app_bar_demo_section() -> Html {
             values: vec![
                 "Option<AttrValue>".into(),
                 "Option<AttrValue>".into(),
-                "Vec<Html>".into(),
-                "Vec<Html>".into(),
+                "Vec<NestedItem>".into(),
                 "AppBarPosition".into(),
             ],
         },
@@ -54,9 +57,8 @@ pub fn app_bar_demo_section() -> Html {
             values: vec![
                 "Optional brand or site name displayed next to the logo.".into(),
                 "Optional logo image URL.".into(),
-                "Vector of navigation link elements.".into(),
-                "Vector of action buttons or controls.".into(),
-                "Placement of the bar: Top, Bottom, or Static.".into(),
+                "Vector of `NestedItem` used for drawer navigation.".into(),
+                "Placement of the AppBar: Top, Bottom, or Static.".into(),
             ],
         },
     ];
@@ -65,7 +67,7 @@ pub fn app_bar_demo_section() -> Html {
         <DemoComponent
             title="AppBar Component"
             description={Some(html! {
-                <p>{"The `AppBar` provides a responsive top or bottom navigation bar with logo, links, and actions. Adjust for mobile with automatic menu toggle."}</p>
+                <p>{"The `AppBar` provides a responsive navigation bar with logo, centered title, and a mobile-friendly drawer for navigation."}</p>
             })}
             example={example}
             usage_code={USAGE_CODE}

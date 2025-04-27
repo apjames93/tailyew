@@ -4,7 +4,7 @@ use yew::prelude::*;
 
 #[derive(Clone, PartialEq)]
 pub struct NestedItem {
-    pub text: AttrValue,
+    pub label: Html,
     pub value: AttrValue,
     pub children: Option<Vec<NestedItem>>,
 }
@@ -13,7 +13,7 @@ impl NestedItem {
     pub fn new<T: Into<AttrValue>>(text: T) -> Self {
         let value = text.into();
         Self {
-            text: value.clone(),
+            label: html! { { &value } },
             value,
             children: None,
         }
@@ -22,15 +22,15 @@ impl NestedItem {
     pub fn with_children<T: Into<AttrValue>>(text: T, children: Vec<NestedItem>) -> Self {
         let value = text.into();
         Self {
-            text: value.clone(),
+            label: html! { { &value } },
             value,
             children: Some(children),
         }
     }
 
-    pub fn with_value<T: Into<AttrValue>>(text: T, value: T) -> Self {
+    pub fn with_html(label: Html, value: impl Into<AttrValue>) -> Self {
         Self {
-            text: text.into(),
+            label,
             value: value.into(),
             children: None,
         }
@@ -127,12 +127,16 @@ fn nested_list_item(props: &NestedListItemProps) -> Html {
         html! {
             <Li class="w-full">
                 <Accordion
-                    title={item.text.to_string()}
+                    title={item.label.clone()}
                     compact={true}
                     class={classes!(row_class)}
                     content_class="pl-2"
                     default_open={false}
                 >
+                    // Inject label manually into Accordion header
+                    <div class="font-semibold text-gray-900 dark:text-gray-100 px-4 py-2">
+                        { item.label.clone() }
+                    </div>
                     { nested_html }
                 </Accordion>
             </Li>
@@ -151,7 +155,7 @@ fn nested_list_item(props: &NestedListItemProps) -> Html {
                         row_class
                     )}
                 >
-                    <Typo class="text-sm font-medium m-0">{ item.text.clone() }</Typo>
+                    { item.label.clone() }
                 </div>
             </Li>
         }

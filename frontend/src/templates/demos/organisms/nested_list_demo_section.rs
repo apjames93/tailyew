@@ -10,57 +10,26 @@ pub fn nested_list_demo_section() -> Html {
     });
 
     let nested_items = vec![
-        NestedItem {
-            value: "wow".into(),
-            text: "Billing".into(),
-            children: Some(vec![
-                NestedItem {
-                    value: "Invoices".into(),
-                    text: "Invoices".into(),
-                    children: None,
-                },
-                NestedItem {
-                    value: "subscriptions_route".into(),
-                    text: "Subscriptions".into(),
-                    children: Some(vec![NestedItem {
-                        value: "order".into(),
-                        text: "Order".into(),
-                        children: None,
-                    }]),
-                },
-                NestedItem {
-                    value: "value".into(),
-                    text: "Past Due".into(),
-                    children: None,
-                },
-            ]),
-        },
-        NestedItem {
-            value: "wow".into(),
-            text: "Reports".into(),
-            children: None,
-        },
-        NestedItem {
-            value: "wow".into(),
-            text: "Dashboards".into(),
-            children: Some(vec![
-                NestedItem {
-                    value: "wow".into(),
-                    text: "Admin".into(),
-                    children: None,
-                },
-                NestedItem {
-                    value: "wow".into(),
-                    text: "User".into(),
-                    children: None,
-                },
-            ]),
-        },
-        NestedItem {
-            value: "settings".into(),
-            text: "Settings".into(),
-            children: None,
-        },
+        NestedItem::with_children(
+            "Billing",
+            vec![
+                NestedItem::with_html(html! { "Invoices" }, "invoices"),
+                NestedItem::with_children(
+                    "Subscriptions",
+                    vec![NestedItem::with_html(html! { "Order" }, "order")],
+                ),
+                NestedItem::with_html(html! { "Past Due" }, "past_due"),
+            ],
+        ),
+        NestedItem::with_html(html! { "Reports" }, "reports"),
+        NestedItem::with_children(
+            "Dashboards",
+            vec![
+                NestedItem::with_html(html! { "Admin" }, "admin"),
+                NestedItem::with_html(html! { "User" }, "user"),
+            ],
+        ),
+        NestedItem::with_html(html! { "Settings" }, "settings"),
     ];
 
     let example = html! {
@@ -75,17 +44,11 @@ let on_select = Callback::from(|value: AttrValue| {
 });
 
 let nested_items = vec![
-    NestedItem {
-        text: "Reports".into(),
-        children: None,
-    },
-    NestedItem {
-        text: "Dashboards".into(),
-        children: Some(vec![
-            NestedItem { text: "Admin".into(), children: None },
-            NestedItem { text: "User".into(), children: None },
-        ]),
-    },
+    NestedItem::with_html(html! { "Reports" }, "reports"),
+    NestedItem::with_children("Dashboards", vec![
+        NestedItem::with_html(html! { "Admin" }, "admin"),
+        NestedItem::with_html(html! { "User" }, "user"),
+    ]),
 ];
 
 <NestedList list={nested_items} on_select={on_select} start_index={0} />

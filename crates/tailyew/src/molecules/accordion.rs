@@ -4,7 +4,7 @@ use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct AccordionProps {
-    pub title: AttrValue,
+    pub title: Html,
     pub children: Children,
 
     #[prop_or_default]

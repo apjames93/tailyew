@@ -1,28 +1,50 @@
 use crate::Route;
-use tailyew::atoms::{Button, ButtonType, Typo};
+use tailyew::atoms::{Button, ButtonType};
 use tailyew::molecules::{AppBar, AppBarPosition, ThemeToggle};
+use tailyew::organisms::NestedItem;
 use yew::prelude::*;
 use yew_router::prelude::Link;
 
 #[function_component(NavBar)]
 pub fn nav_bar() -> Html {
+    let nested_list = vec![
+        NestedItem::with_children(
+            "Navigation",
+            vec![
+                NestedItem::with_html(
+                    html! { <Link<Route> to={Route::DemoPage { component: "accordion".into() }}>
+                        { "Components" }
+                    </Link<Route>> },
+                    "components",
+                ),
+                NestedItem::with_html(
+                    html! { <Link<Route> to={Route::LandingPage}>
+                        { "About" }
+                    </Link<Route>> },
+                    "about",
+                ),
+            ],
+        ),
+        NestedItem::with_children(
+            "Actions",
+            vec![
+                NestedItem::with_html(
+                    html! { <Link<Route> to={Route::DemoPage { component: "button".into() }}>
+                        <Button button_type={ButtonType::Primary}>{ "Docs" }</Button>
+                    </Link<Route>> },
+                    "docs",
+                ),
+                NestedItem::with_html(html! { <ThemeToggle /> }, "theme_toggle"),
+            ],
+        ),
+    ];
+
     html! {
       <AppBar
           title={Some("TailYew")}
-          position={AppBarPosition::Top}
           logo_url={Some("/images/logo.png")}
-          links={vec![
-              html! { <Link<Route> to={Route::DemoPage { component: "accordion".into() }}>
-                <Typo>{"Components"}</Typo>
-              </Link<Route>> },
-              html! { <Link<Route> to={Route::LandingPage}><Typo>{ "About" }</Typo></Link<Route>> },
-          ]}
-          actions={vec![
-              html! { <Link<Route> to={Route::DemoPage { component: "button".into() }}>
-                  <Button button_type={ButtonType::Primary}>{ "Docs" }</Button>
-              </Link<Route>> },
-              html!{ <ThemeToggle /> }
-          ]}
+          position={AppBarPosition::Top}
+          nested_list={nested_list}
       />
     }
 }
