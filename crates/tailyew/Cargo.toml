@@ -1,6 +1,6 @@
 [package]
 name = "tailyew"
-version = "0.1.12"
+version = "0.1.13"
 edition = "2021"
 authors = ["Alex James <apjames93@gmail.com>"]
 description = "Reusable Yew + Tailwind UI component library"
@@ -12,6 +12,16 @@ documentation = "https://tailyew.com"
 keywords = ["yew", "tailwind", "component-library", "wasm", "ui"]
 categories = ["wasm", "gui", "web-programming"]
 
+include = [
+  "src/**",
+  "tailyew-safelist.html",
+  "README.md",
+  "Cargo.toml",
+]
+
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
@@ -22,7 +32,6 @@ wasm-bindgen = { workspace = true }
 wasm-bindgen-futures = { workspace = true }
 js-sys = { workspace = true }
 web-sys = { workspace = true }
-
 uuid = { version = "1.11.0", features = ["serde", "v4", "js"] }
 regex = "1.11.1"
 pulldown-cmark = "0.9"

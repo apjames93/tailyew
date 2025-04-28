@@ -1,40 +1,41 @@
+---
+
+# 🌟 TailYew
+
+> A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and written fully in Rust.
+
 ![Crates.io](https://img.shields.io/crates/v/tailyew)
 ![Docs.rs](https://img.shields.io/docsrs/tailyew)
 ![License](https://img.shields.io/crates/l/tailyew)
 
-# 🌟 TailYew
-> A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and built in Rust.
-
-TailYew helps you ship fast, beautiful Yew apps using fully-styled, accessible components with dark mode, markdown rendering, charts, modals, and form elements — all built in idiomatic Rust.
-
 ---
 
-## 🧩 Component Highlights
+## 🚀 Why TailYew?
 
-TailYew comes with battle-tested components including:
+TailYew helps you build fast, beautiful, **dark-mode ready** Yew apps — with minimal styling effort.
 
-- ✅ **Forms** – Input, Select, Checkbox, JSON, Phone, File
-- 📊 **Charts** – LineChart, BubbleChart (canvas-based)
-- 🧪 **Modals, Accordions, AppBar, Tabs**
-- 📙 **Markdown** – Parse + sanitize with `pulldown-cmark` and `ammonia`
-- ✂️ **Clipboard**, **Notifications**, **Popover**, **Section**, and more
-- 🌗 **Dark mode ready** — with Tailwind’s `dark:` utilities
+- 🌗 **Dark mode** with Tailwind's `dark:` utilities
+- 🧹 **Reusable components**: Buttons, Modals, Forms, Accordions, Tabs
+- 📙 **Markdown rendering** with sanitization
+- 📊 **Charts** (Canvas-based Bubble and Line charts)
+- ✂️ **Clipboard, Popovers, Notifications, and more**
+- 🦠 **Pure Rust** — No JavaScript needed
+- 📦 **Small bundle sizes** — thanks to WASM and Tailwind JIT
 
-🔎 See them all at 👉 [https://tailyew.com/demo/getting_started](https://tailyew.com/demo/getting_started)
+🔎 Explore live examples 👉 [https://tailyew.com/demo/getting_started](https://tailyew.com/demo/getting_started)
 
 ---
 
 ## 📸 Preview
 
-> Explore TailYew’s live components, props, and code samples:  
+✨ See demos, props, and usage:  
 👉 [https://tailyew.com](https://tailyew.com)
 
 ---
 
-> ## 🚀 Get Started in 5 Minutes  
-> ...*if you already have all the dependencies, a stable toolchain, and emotionally prepared for Rust*
+# 🧹 Quick Start
 
-### ✅ Option 1: Use the Starter Template (Recommended)
+## ✅ Option 1: Use the Starter Template (Recommended)
 
 ```bash
 git clone https://github.com/apjames93/tailyew-starter my-app
@@ -42,108 +43,124 @@ cd my-app
 
 cargo install wasm-pack cargo-watch
 brew install binaryen
-npm install # for local deps tailwindcss cli and serve
+npm install
 
 make hot-run
 ```
 
 Then open 👉 [http://localhost:8080](http://localhost:8080)
 
-This gives you hot reloading, built-in Tailwind support, and access to every TailYew component.
+You get:
+
+- Hot reloading
+- Preconfigured TailwindCSS
+- All TailYew components ready to use
 
 ---
 
-## 📦 Using TailYew as a Crate (without starter)
+## ✅ Option 2: Add TailYew to Your Own App
 
-Add to your `Cargo.toml`:
+In your `Cargo.toml`:
 
 ```toml
-tailyew = "0.1.2"
+tailyew = "0.1.13"
 ```
 
-### 🎨 Tailwind Setup (Important!)
+### ⚡️ Important: Tailwind Setup
 
-Tailwind uses static analysis to detect classes. 
-To expose classes from TailYew's crate, we have the make comand:
+Because Tailwind uses static analysis, you must **expose TailYew's classes** manually.
+
+We include a **safelist** file (`tailyew-safelist.html`) inside the crate.
+
+Your `tailwind.config.js` should look like:
+
+```js
+darkMode: 'class',
+content: [
+  './src/**/*.rs',
+  './**/*.html',
+  './js/**/*.js',
+  './components/**/*.{html,js,rs}',
+  './vendor/tailyew/**/*.rs',               // 👉 TailYew source files
+  './vendor/tailyew/tailyew-safelist.html',  // 👉 TailYew critical runtime classes
+],
+```
+
+### If you are using **TailYew Starter**:
+
+Simply run:
 
 ```bash
 make copy-tailyew
 ```
 
-This copies `crates/tailyew` into your app’s `vendor/` directory so Tailwind includes all component class usage.
-This is ran with `make run-frontend`
+✅ This will copy TailYew sources + safelist automatically.
 
-Make sure your `tailwind.config.js` includes the path:
+### If you are **not** using the starter:
 
-```js
-content: [
-  "./src/**/*.rs", // <---- for other components that you will build in your project
-  "../crates/tailyew/src/**/*.rs", // <-- for TailYew usage
-],
+Manually copy TailYew files:
+
+```bash
+mkdir -p vendor/tailyew
+cp -r ~/.cargo/registry/src/*/tailyew-*/src vendor/tailyew/
+cp ~/.cargo/registry/src/*/tailyew-*/tailyew-safelist.html vendor/tailyew/
 ```
+
+(Adjust the exact path to your system.)
 
 ---
 
-Then use in your app:
+# 🏗️ Project Goals
 
-```rust
-use tailyew::atoms::Button;
-
-html! {
-  <Button>{ "Click Me!" }</Button>
-}
-```
-
-## 🏗️ Project Goals
-
-- 💡 **Atomic Design** – Atoms → Molecules → Organisms
-- ⚙️ **Yew-Native** – Fully idiomatic Rust, zero JavaScript
-- 🎨 **Tailwind-First** – Utility classes, theming, dark mode
-- 📚 **Composable APIs** – Clean prop-driven ergonomics
-- 🧪 **Developer Experience** – Hot reload, clear docs, consistent props
+| Goal                     | Status |
+| ------------------------ | ------ |
+| 🧹 Atomic Components      | ✅ Atoms → Molecules → Organisms |
+| ⚙️ Yew-Native Rust Code    | ✅ No JavaScript needed |
+| 🎨 Tailwind-First Styling  | ✅ Utility-first classes |
+| 🌗 Dark Mode Friendly      | ✅ Fully supported |
+| 📙 Typed Prop APIs         | ✅ Rust ergonomics |
 
 ---
 
-## 📁 Folder Structure
+# 📁 Folder Structure
 
 ```bash
 crates/tailyew/
 ├── src/
-│   ├── atoms/         # Buttons, Inputs, etc.
-│   ├── molecules/     # Modals, Forms, Selects
-│   ├── organisms/     # Full blocks like Nav, Footer
-│   ├── charts/        # Canvas-based charts (optional)
-│   ├── form/          # Form layout + state helpers
-│   ├── icons/         # Reusable SVGs
-│   └── lib.rs         # Exports all public components
-├── Makefile           # Dev commands (build, docs, hot reload)
-├── Cargo.toml         # Rust crate config
-└── README.md          # You're here
+│   ├── atoms/         # Low-level UI primitives (Button, Input, etc.)
+│   ├── molecules/     # Combined components (Form, ModalButton, etc.)
+│   ├── organisms/     # Full page structures (Navbar, Footer, Table)
+│   ├── charts/        # Canvas-based charts
+│   ├── form/          # Form helpers and layout
+│   └── lib.rs         # Top-level exports
+├── Cargo.toml         # Crate config
+├── Makefile           # Dev commands (build, release-check, docs)
+└── tailyew-safelist.html # ✨ Tailwind runtime classes (critical)
 ```
-
-## 🤝 Contributing
-
-TailYew is an open source project — and we’d love your help!
-
-### ✨ Ways to Contribute
-
-- Submit a **feature request** or improvement idea
-- Report **bugs or visual issues**
-- Build new components or improve styling
-- Add or update documentation and demos
-
-### ✅ Contribution Checklist
-
-Before submitting a pull request:
-
-- Make sure `make release-check` passes
-- If it's a visual/UI change, include **before/after screenshots**
-- Update or add related demo pages in `frontend/src/pages/`
-- Test in both **light mode** and **dark mode**
 
 ---
 
-### 📄 Helpful Links
+# 🤝 Contributing
+
+We welcome contributions! ❤️
+
+**Ways you can help:**
+
+- Suggest a new component
+- Improve UX/UI or theming
+- Add missing dark mode styles
+- Write docs or demos
+- Report bugs and issues
+
+**Before submitting a PR:**
+
+- Run `make release-check`
+- Test both **light mode** and **dark mode**
+- Include **before/after screenshots** if you change visuals
+
+---
+
+# 📂 Helpful Links
 
 - 📥 [Open a Pull Request](https://github.com/apjames93/tailyew/compare)
 - 🐛 [Report a Bug](https://github.com/apjames93/tailyew/issues/new?template=bug_report.md)
@@ -151,14 +168,39 @@ Before submitting a pull request:
 
 ---
 
-🙌 Thank you for helping grow the Rust UI ecosystem!
+# 🔗 Related Projects
 
----
-
-## 🔗 Related
-
-- 🦀 [Yew Framework](https://yew.rs/)
-- 🎨 [Tailwind CSS](https://tailwindcss.com/)
+- 🦠 [Yew Framework](https://yew.rs/)
+- 🎨 [TailwindCSS](https://tailwindcss.com/)
 - 🚀 [TailYew Starter](https://github.com/apjames93/tailyew-starter)
 
 ---
+
+👌 Thank you for helping grow the Rust UI ecosystem!
+
+---
+
+# 📜 License
+
+MIT License — see [LICENSE](./LICENSE).
+
+---
+
+# 🎯 TL;DR for Setup
+
+```bash
+# Install TailYew
+cargo add tailyew
+
+# Copy TailYew files (if not using starter)
+mkdir -p vendor/tailyew
+cp -r ~/.cargo/registry/src/*/tailyew-*/src vendor/tailyew/
+cp ~/.cargo/registry/src/*/tailyew-*/tailyew-safelist.html vendor/tailyew/
+
+# Add to tailwind.config.js
+'./vendor/tailyew/**/*.rs',
+'./vendor/tailyew/tailyew-safelist.html',
+
+# Start building 🚀
+```
+
