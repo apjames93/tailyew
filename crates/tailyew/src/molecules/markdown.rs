@@ -11,7 +11,7 @@ pub struct MarkdownProps {
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
-    pub on_form_submit: Option<Callback<SubmitEvent>>, // ✨ new
+    pub on_form_submit: Option<Callback<SubmitEvent>>,
 }
 
 #[function_component(Markdown)]
@@ -29,8 +29,8 @@ pub fn markdown(props: &MarkdownProps) -> Html {
 fn markdown_to_yew(parser: Parser, on_form_submit: Option<Callback<SubmitEvent>>) -> Html {
     let mut html_nodes = Vec::new();
     let mut tags_stack = Vec::new();
-    let mut current_form_json: Option<String> = None; // ✨ NEW
-    let mut inside_form_block = false; // ✨ NEW
+    let mut current_form_json: Option<String> = None;
+    let mut inside_form_block = false;
 
     for event in parser {
         match event {

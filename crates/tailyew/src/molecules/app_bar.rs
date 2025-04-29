@@ -13,9 +13,14 @@ pub struct AppBarProps {
     #[prop_or_default]
     pub logo_url: Option<AttrValue>,
     #[prop_or_default]
-    pub nested_list: Vec<NestedItem>, // ✨ New: For drawer content
+    pub nested_list: Vec<NestedItem>,
     #[prop_or_default]
     pub position: AppBarPosition,
+
+    #[prop_or_default]
+    pub logo_onclick: Option<Callback<MouseEvent>>,
+    #[prop_or_default]
+    pub title_onclick: Option<Callback<MouseEvent>>,
 }
 
 #[function_component(AppBar)]
@@ -25,6 +30,8 @@ pub fn app_bar(props: &AppBarProps) -> Html {
         logo_url,
         nested_list,
         position,
+        logo_onclick,
+        title_onclick,
     } = props.clone();
 
     let drawer_open = use_state(|| false);
@@ -35,13 +42,13 @@ pub fn app_bar(props: &AppBarProps) -> Html {
         Callback::from(move |_| drawer_open.set(!*drawer_open))
     };
 
-    // ✨ New: Close drawer on overlay click (MouseEvent)
+    // Close drawer on overlay click (MouseEvent)
     let close_drawer_mouse = {
         let drawer_open = drawer_open.clone();
         Callback::from(move |_| drawer_open.set(false))
     };
 
-    // ✨ New: Close drawer on NestedList select (AttrValue)
+    // Close drawer on NestedList select (AttrValue)
     let close_drawer_attr = {
         let drawer_open = drawer_open.clone();
         Callback::from(move |_value: AttrValue| drawer_open.set(false))
@@ -51,17 +58,37 @@ pub fn app_bar(props: &AppBarProps) -> Html {
         <NavBar position={position}>
             <div class="flex items-center justify-between w-full">
                 // Left: Logo
-                <div class="flex items-center space-x-3">
-                    { logo_url.map(|url| html! {
-                        <img src={url} class="h-8 w-8" alt="Logo" />
-                    }) }
-                </div>
+                { logo_url.map(|url| {
+                    let maybe_logo_onclick = logo_onclick.clone();
+                    html! {
+                        <img
+                            src={url}
+                            class={classes!(
+                                "h-8", "w-8",
+                                maybe_logo_onclick.as_ref().map(|_| "cursor-pointer")
+                            )}
+                            alt="Logo"
+                            onclick={maybe_logo_onclick.unwrap_or_else(|| Callback::from(|_| {}))} // no-op if none
+                        />
+                    }
+                }) }
 
-                // Center: Title
-                { title.map(|text| html! {
-                    <div class="absolute left-1/2 transform -translate-x-1/2">
-                        <span class="text-xl font-bold text-gray-900 dark:text-gray-100">{ text }</span>
-                    </div>
+                // Title
+                { title.map(|text| {
+                    let maybe_title_onclick = title_onclick.clone();
+                    html! {
+                        <div
+                            class={classes!(
+                                "absolute", "left-1/2", "transform", "-translate-x-1/2",
+                                maybe_title_onclick.as_ref().map(|_| "cursor-pointer")
+                            )}
+                            onclick={maybe_title_onclick.unwrap_or_else(|| Callback::from(|_| {}))} // no-op if none
+                        >
+                            <span class="text-xl font-bold text-gray-900 dark:text-gray-100">
+                                { text }
+                            </span>
+                        </div>
+                    }
                 }) }
 
                 // Right: Drawer toggle button

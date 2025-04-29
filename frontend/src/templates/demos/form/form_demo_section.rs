@@ -92,7 +92,7 @@ pub fn form_demo_section() -> Html {
         ("other".to_string(), "Other".to_string()),
     ];
 
-    // ✨ New: Create an extra footer button
+    // Create an extra footer button
     let extra_footer_buttons = Some(Callback::from(move |_| {
         html! {
             <Button
@@ -133,7 +133,7 @@ pub fn form_demo_section() -> Html {
                 </div>
             </Form>
 
-            // ✨ New minimal form with extra footer button
+            //  minimal form with extra footer button
             <Typo tag={TagType::H2}>{ "Minimal Form with Extra Footer Button" }</Typo>
 
             <Form

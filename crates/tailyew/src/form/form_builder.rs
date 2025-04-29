@@ -79,7 +79,7 @@ pub fn form_builder(props: &FormBuilderProps) -> Html {
         .clone()
         .unwrap_or_else(|| button_label.clone());
 
-    let success_message = use_state(|| None::<String>); // ✨ NEW: dynamic success
+    let success_message = use_state(|| None::<String>); // dynamic success
 
     let internal_onsubmit = {
         let success_message = success_message.clone();

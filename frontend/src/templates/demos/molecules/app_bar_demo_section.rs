@@ -1,6 +1,9 @@
 use crate::templates::demos::DemoComponent;
+use tailyew::atoms::{Button, ButtonType};
+use tailyew::molecules::ThemeToggle;
 use tailyew::molecules::{AppBar, AppBarPosition};
 use tailyew::organisms::{table::Column, NestedItem};
+use web_sys::console;
 use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("app_bar_usage.rs");
@@ -16,11 +19,27 @@ pub fn app_bar_demo_section() -> Html {
         NestedItem::with_children(
             "Account",
             vec![
-                NestedItem::with_html(html! { "Login" }, "login"),
-                NestedItem::with_html(html! { "Sign up" }, "signup"),
+                NestedItem::with_html(
+                    html! { <Button button_type={ButtonType::Primary}>{ "Login" }</Button> },
+                    "login",
+                ),
+                NestedItem::with_html(
+                    html! { <Button button_type={ButtonType::Secondary}>{ "Sign up" }</Button> },
+                    "signup",
+                ),
             ],
         ),
+        NestedItem::with_children(
+            "Settings",
+            vec![NestedItem::with_html(
+                html! { <ThemeToggle /> },
+                "theme-toggle",
+            )],
+        ),
     ];
+
+    let on_logo_click = Callback::from(|_| console::log_1(&"Logo clicked!".into()));
+    let on_title_click = Callback::from(|_| console::log_1(&"Title clicked!".into()));
 
     let example = html! {
         <div class="h-[300px] bg-gray-50 dark:bg-gray-800 relative">
@@ -29,6 +48,8 @@ pub fn app_bar_demo_section() -> Html {
                 logo_url={Some(AttrValue::from(LOGO_IMAGE_URL))}
                 nested_list={nested_list}
                 position={AppBarPosition::Static}
+                logo_onclick={Some(on_logo_click)}
+                title_onclick={Some(on_title_click)}
             />
         </div>
     };
@@ -41,6 +62,8 @@ pub fn app_bar_demo_section() -> Html {
                 "logo_url".into(),
                 "nested_list".into(),
                 "position".into(),
+                "logo_onclick".into(),
+                "title_onclick".into(),
             ],
         },
         Column {
@@ -50,15 +73,19 @@ pub fn app_bar_demo_section() -> Html {
                 "Option<AttrValue>".into(),
                 "Vec<NestedItem>".into(),
                 "AppBarPosition".into(),
+                "Option<Callback<MouseEvent>>".into(),
+                "Option<Callback<MouseEvent>>".into(),
             ],
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "Optional brand or site name displayed next to the logo.".into(),
-                "Optional logo image URL.".into(),
+                "Optional brand or site name displayed centered in the AppBar.".into(),
+                "Optional logo image URL displayed left-aligned.".into(),
                 "Vector of `NestedItem` used for drawer navigation.".into(),
-                "Placement of the AppBar: Top, Bottom, or Static.".into(),
+                "Placement of the AppBar: Top (default), Bottom, or Static.".into(),
+                "Optional click handler for the logo image.".into(),
+                "Optional click handler for the title text.".into(),
             ],
         },
     ];
@@ -67,7 +94,7 @@ pub fn app_bar_demo_section() -> Html {
         <DemoComponent
             title="AppBar Component"
             description={Some(html! {
-                <p>{"The `AppBar` provides a responsive navigation bar with logo, centered title, and a mobile-friendly drawer for navigation."}</p>
+                <p>{"The `AppBar` provides a responsive navigation bar with logo, centered title, and a mobile-friendly drawer. The logo and title can be made clickable with optional callbacks."}</p>
             })}
             example={example}
             usage_code={USAGE_CODE}
