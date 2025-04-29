@@ -8,13 +8,13 @@ use yew_router::prelude::Link;
 pub fn nav_bar() -> Html {
     let nested_list = vec![
         NestedItem::with_html(
-            html! { <Link<Route> to={Route::LandingPage}>
+            html! { <Link<Route> to={Route::LandingPage} classes="block w-full">
                 { "About" }
             </Link<Route>> },
             "about",
         ),
         NestedItem::with_html(
-            html! { <Link<Route> to={Route::DemoPage { component: "button".into() }}>
+            html! { <Link<Route> to={Route::DemoPage { component: "button".into() }} classes="block w-full">
                 { "Docs" }
             </Link<Route>> },
             "docs",

@@ -1,6 +1,6 @@
 ---
 
-# 🌟 TailYew
+# ✨ TailYew
 
 > A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and written fully in Rust.
 
@@ -28,7 +28,7 @@ TailYew helps you build fast, beautiful, **dark-mode ready** Yew apps — with m
 
 ## 📸 Preview
 
-✨ See demos, props, and usage:  
+🌟 See demos, props, and usage:  
 👉 [https://tailyew.com](https://tailyew.com)
 
 ---
@@ -43,7 +43,7 @@ cd my-app
 
 cargo install wasm-pack cargo-watch
 brew install binaryen
-npm install
+npm install # for tailwindcss and local js server for development
 
 make hot-run
 ```
@@ -63,61 +63,71 @@ You get:
 In your `Cargo.toml`:
 
 ```toml
-tailyew = "0.1.13"
+tailyew = "0.1.15"
 ```
-
-### ⚡️ Important: Tailwind Setup
-
-Because Tailwind uses static analysis, you must **expose TailYew's classes** manually.
-
-We include a **safelist** file (`tailyew-safelist.html`) inside the crate.
-
-Your `tailwind.config.js` should look like:
-
-```js
-darkMode: 'class',
-content: [
-  './src/**/*.rs',
-  './**/*.html',
-  './js/**/*.js',
-  './components/**/*.{html,js,rs}',
-  './vendor/tailyew/**/*.rs',               // 👉 TailYew source files
-  './vendor/tailyew/tailyew-safelist.html',  // 👉 TailYew critical runtime classes
-],
-```
-
-### If you are using **TailYew Starter**:
-
-Simply run:
-
-```bash
-make copy-tailyew
-```
-
-✅ This will copy TailYew sources + safelist automatically.
-
-### If you are **not** using the starter:
-
-Manually copy TailYew files:
-
-```bash
-mkdir -p vendor/tailyew
-cp -r ~/.cargo/registry/src/*/tailyew-*/src vendor/tailyew/
-cp ~/.cargo/registry/src/*/tailyew-*/tailyew-safelist.html vendor/tailyew/
-```
-
-(Adjust the exact path to your system.)
 
 ---
 
-# 🏗️ Project Goals
+## ⚡️ Important: Tailwind Setup (Safelist)
+
+Tailwind CSS uses static analysis to determine which classes to include in your final CSS bundle. Since TailYew applies some classes dynamically, **you must safelist them**.
+
+### 📅 Recommended: Use the Built-in Safelist HTML
+
+TailYew includes a `tailyew-safelist.html` file that lists all runtime classes. Add it to your `tailwind.config.js`:
+
+```js
+module.exports = {
+  darkMode: 'class',
+  content: [
+   './**/**/*.{html,js,rs}',
+    './static/tailyew-safelist.html',
+  ],
+};
+```
+
+To copy the safelist file into your project:
+
+```bash
+mkdir -p vendor/tailyew
+cp ~/.cargo/registry/src/*/tailyew-*/tailyew-safelist.html static/
+```
+
+### ⚠️ Alternative: Manually Add Classes
+
+You can also manually define all TailYew utility classes in the `safelist` key inside `tailwind.config.js`. This approach is more error-prone and not recommended unless you're customizing heavily.
+
+---
+
+## 📂 TL;DR Setup
+
+```bash
+# Install TailYew
+cargo add tailyew
+
+
+cp ~/.cargo/registry/src/*/tailyew-*/tailyew-safelist.html static/
+
+# Update Tailwind config
+// tailwind.config.js
+content: [
+  './**/**/*.{html,js,rs}',
+  './static/tailyew-safelist.html',
+]
+
+# Run your app
+```
+
+---
+
+# 🛠️ Project Goals
 
 | Goal                     | Status |
 | ------------------------ | ------ |
 | 🧹 Atomic Components      | ✅ Atoms → Molecules → Organisms |
 | ⚙️ Yew-Native Rust Code    | ✅ No JavaScript needed |
 | 🎨 Tailwind-First Styling  | ✅ Utility-first classes |
-| 🌗 Dark Mode Friendly      | ✅ Fully supported |
+| 🍗 Dark Mode Friendly      | ✅ Fully supported |
 | 📙 Typed Prop APIs         | ✅ Rust ergonomics |
 
 ---
@@ -182,25 +192,5 @@ We welcome contributions! ❤️
 
 # 📜 License
 
-MIT License — see [LICENSE](./LICENSE).
-
----
-
-# 🎯 TL;DR for Setup
-
-```bash
-# Install TailYew
-cargo add tailyew
-
-# Copy TailYew files (if not using starter)
-mkdir -p vendor/tailyew
-cp -r ~/.cargo/registry/src/*/tailyew-*/src vendor/tailyew/
-cp ~/.cargo/registry/src/*/tailyew-*/tailyew-safelist.html vendor/tailyew/
-
-# Add to tailwind.config.js
-'./vendor/tailyew/**/*.rs',
-'./vendor/tailyew/tailyew-safelist.html',
-
-# Start building 🚀
-```
+MIT License — see [LICENSE](./LICENSE)
 

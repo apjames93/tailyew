@@ -26,7 +26,10 @@ TailYew comes with battle-tested components including:
 
 Check out our [starter kit](https://github.com/apjames93/tailyew-starter) to get up and running quickly
 
-If you're integrating manually or want to poke around, start with our [crate README](https://github.com/apjames93/tailyew/blob/main/crates/tailyew/README.md) for install instructions and usage examples.
+### 📦 Crate Info
+
+- [TailYew on crates.io](https://crates.io/crates/tailyew)
+- [TailYew API Docs](https://docs.rs/tailyew)
 
 > Bonus: The starter kit is the fastest path to a working TailYew setup. The README is your DIY route if you're feeling brave. Either way, you've got options.
 
