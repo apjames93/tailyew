@@ -1,9 +1,9 @@
 // frontend/src/pages/demo_page.rs
 
 use crate::templates::demos::{
-    AComponentDemoSection, AccordionDemoSection, AppBarDemoSection, BarChartDemoSection,
-    BubbleChartDemoSection, ButtonDemoSection, CardDemoSection, CheckboxDemoSection,
-    CircularProgressDemoSection, CodeBlockDemoSection, ColorInputDemoSection,
+    AComponentDemoSection, AccordionDemoSection, AppBarDemoSection, AvatarDemoSection,
+    BarChartDemoSection, BubbleChartDemoSection, ButtonDemoSection, CardDemoSection,
+    CheckboxDemoSection, CircularProgressDemoSection, CodeBlockDemoSection, ColorInputDemoSection,
     CopyToClipboardDemoSection, DownloadButtonDemoSection, FileInputDemoSection,
     FormBuilderDemoSection, FormDemoSection, FormModalDemoSection, GettingStarted,
     HeroHeaderDemoSection, ImageDemoSection, InitThemeDemoSection, InputDemoSection,
@@ -42,6 +42,12 @@ const DEMO_LINKS: &[DemoLink] = &[
         name: "A",
         route: "a",
         render: || html! { <AComponentDemoSection /> },
+    },
+    DemoLink {
+        ctype: "atoms",
+        name: "Avatar",
+        route: "avatar",
+        render: || html! { <AvatarDemoSection /> },
     },
     DemoLink {
         ctype: "atoms",

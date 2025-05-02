@@ -35,3 +35,6 @@ pub use code_block::*;
 
 pub mod image;
 pub use image::*;
+
+pub mod avatar;
+pub use avatar::*;

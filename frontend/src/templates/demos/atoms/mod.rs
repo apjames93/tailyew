@@ -27,3 +27,6 @@ pub use code_block_demo_section::*;
 
 pub mod image_demo_section;
 pub use image_demo_section::*;
+
+pub mod avatar_demo_section;
+pub use avatar_demo_section::*;
