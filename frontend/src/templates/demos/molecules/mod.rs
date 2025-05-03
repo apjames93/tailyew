@@ -33,3 +33,6 @@ pub use markdown_demo_section::*;
 
 pub mod download_button_demo_section;
 pub use download_button_demo_section::*;
+
+pub mod avatar_group_demo_section;
+pub use avatar_group_demo_section::*;
