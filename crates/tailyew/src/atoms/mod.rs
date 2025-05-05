@@ -38,3 +38,6 @@ pub use image::*;
 
 pub mod avatar;
 pub use avatar::*;
+
+pub mod badge;
+pub use badge::*;

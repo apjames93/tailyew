@@ -2,18 +2,18 @@
 
 use crate::templates::demos::{
     AComponentDemoSection, AccordionDemoSection, AppBarDemoSection, AvatarDemoSection,
-    AvatarGroupDemoSection, BarChartDemoSection, BubbleChartDemoSection, ButtonDemoSection,
-    CardDemoSection, CheckboxDemoSection, CircularProgressDemoSection, CodeBlockDemoSection,
-    ColorInputDemoSection, CopyToClipboardDemoSection, DownloadButtonDemoSection,
-    FileInputDemoSection, FormBuilderDemoSection, FormDemoSection, FormModalDemoSection,
-    GettingStarted, HeroHeaderDemoSection, ImageDemoSection, InitThemeDemoSection,
-    InputDemoSection, JsonInputDemoSection, LiDemoSection, LineChartDemoSection,
-    LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection,
-    NavBarDemoSection, NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection,
-    PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection,
-    ScatterPlotDemoSection, SelectDemoSection, SidebarDemoSection, SpacerDemoSection,
-    StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection, TooltipDemoSection,
-    TypoDemoSection, UlDemoSection,
+    AvatarGroupDemoSection, BadgeDemoSection, BarChartDemoSection, BubbleChartDemoSection,
+    ButtonDemoSection, CardDemoSection, CheckboxDemoSection, CircularProgressDemoSection,
+    CodeBlockDemoSection, ColorInputDemoSection, CopyToClipboardDemoSection,
+    DownloadButtonDemoSection, FileInputDemoSection, FormBuilderDemoSection, FormDemoSection,
+    FormModalDemoSection, GettingStarted, HeroHeaderDemoSection, ImageDemoSection,
+    InitThemeDemoSection, InputDemoSection, JsonInputDemoSection, LiDemoSection,
+    LineChartDemoSection, LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection,
+    ModalDemoSection, NavBarDemoSection, NestedListDemoSection, NotificationDemoSection,
+    PhoneInputDemoSection, PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection,
+    RangeInputDemoSection, ScatterPlotDemoSection, SelectDemoSection, SidebarDemoSection,
+    SpacerDemoSection, StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection,
+    TooltipDemoSection, TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
 use std::collections::HashMap;
@@ -49,6 +49,12 @@ const DEMO_LINKS: &[DemoLink] = &[
         name: "Avatar",
         route: "avatar",
         render: || html! { <AvatarDemoSection /> },
+    },
+    DemoLink {
+        ctype: "atoms",
+        name: "Badge",
+        route: "badge",
+        render: || html! { <BadgeDemoSection /> },
     },
     DemoLink {
         ctype: "atoms",

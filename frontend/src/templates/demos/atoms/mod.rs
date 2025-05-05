@@ -30,3 +30,6 @@ pub use image_demo_section::*;
 
 pub mod avatar_demo_section;
 pub use avatar_demo_section::*;
+
+pub mod badge_demo_section;
+pub use badge_demo_section::*;
