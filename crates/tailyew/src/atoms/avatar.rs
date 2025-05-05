@@ -21,6 +21,10 @@ pub struct AvatarProps {
     /// Optional additional classes
     #[prop_or_default]
     pub class: Classes,
+
+    /// Optional click callback
+    #[prop_or_default]
+    pub on_click: Option<Callback<MouseEvent>>,
 }
 
 #[function_component(Avatar)]
@@ -31,9 +35,10 @@ pub fn avatar(props: &AvatarProps) -> Html {
         alt,
         size,
         class,
+        on_click,
     } = props.clone();
 
-    let base_classes = classes!(
+    let mut base_classes = classes!(
         "inline-flex",
         "items-center",
         "justify-center",
@@ -48,17 +53,25 @@ pub fn avatar(props: &AvatarProps) -> Html {
         class,
     );
 
+    if on_click.is_some() {
+        base_classes.push("cursor-pointer");
+    }
+
     if let Some(src) = src {
         html! {
             <img
                 src={src}
                 alt={alt.unwrap_or_else(|| "Avatar".to_string())}
-                class={classes!(base_classes, "object-cover")}
+                class={classes!(base_classes.clone(), "object-cover")}
+                onclick={on_click}
             />
         }
     } else {
         html! {
-            <div class={base_classes}>
+            <div
+                class={base_classes}
+                onclick={on_click}
+            >
                 { fallback.unwrap_or_else(|| "?".into()) }
             </div>
         }
