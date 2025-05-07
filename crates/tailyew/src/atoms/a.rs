@@ -5,12 +5,27 @@ use yew::prelude::*;
 pub struct AProps {
     pub href: String,
     pub children: Children,
+
     #[prop_or_default]
     pub target: Option<String>,
+
     #[prop_or_default]
     pub class: Classes,
+
     #[prop_or_default]
     pub onclick: Option<Callback<MouseEvent>>,
+
+    #[prop_or_default]
+    pub aria_label: Option<String>,
+
+    #[prop_or_default]
+    pub aria_describedby: Option<String>,
+
+    #[prop_or_default]
+    pub role: Option<String>,
+
+    #[prop_or_default]
+    pub tabindex: Option<i16>,
 }
 
 #[function_component(A)]
@@ -21,6 +36,10 @@ pub fn a(props: &AProps) -> Html {
         target,
         class,
         onclick,
+        aria_label,
+        aria_describedby,
+        role,
+        tabindex,
     } = props;
 
     let merged_classes = classes!(
@@ -35,7 +54,7 @@ pub fn a(props: &AProps) -> Html {
         "transition-colors",
         "duration-200",
         "underline",
-        class.clone(), // now safely a `Classes`
+        class.clone(),
     );
 
     let on_click_handler = onclick.clone().map(|cb| {
@@ -52,6 +71,10 @@ pub fn a(props: &AProps) -> Html {
             rel={if target.as_deref() == Some("_blank") { Some("noopener noreferrer") } else { None }}
             class={merged_classes}
             onclick={on_click_handler}
+            aria-label={aria_label.clone()}
+            aria-describedby={aria_describedby.clone()}
+            role={role.clone()}
+            tabindex={tabindex.map(|i| i.to_string())}
         >
             { for children.iter() }
         </a>

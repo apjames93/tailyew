@@ -6,7 +6,6 @@ use yew::prelude::*;
 
 use crate::templates::demos::DemoComponent;
 
-// ✅ Load the same file for both rendering and display
 const USAGE_CODE: &str = include_str!("./a_component_usage.rs");
 
 #[function_component(AComponentDemoSection)]
@@ -22,6 +21,10 @@ pub fn a_component_demo_section() -> Html {
                 "target".into(),
                 "class".into(),
                 "onclick".into(),
+                "aria_label".into(),
+                "aria_describedby".into(),
+                "role".into(),
+                "tabindex".into(),
             ],
         },
         Column {
@@ -32,6 +35,10 @@ pub fn a_component_demo_section() -> Html {
                 "Option<String>".into(),
                 "Classes".into(),
                 "Option<Callback<MouseEvent>>".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
+                "Option<i16>".into(),
             ],
         },
         Column {
@@ -42,6 +49,10 @@ pub fn a_component_demo_section() -> Html {
                 "Optional target attribute (e.g. \"_blank\").".into(),
                 "Additional Tailwind or custom class names.".into(),
                 "Optional click handler that prevents default behavior.".into(),
+                "Screen reader label override for the link.".into(),
+                "ID of element that describes this link's context.".into(),
+                "Optional ARIA role (e.g. \"button\").".into(),
+                "Controls focus navigation order.".into(),
             ],
         },
     ];
