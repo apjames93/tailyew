@@ -1,14 +1,15 @@
----
-
 # ✨ TailYew
-
-> A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and written fully in Rust.
-
 ![Crates.io](https://img.shields.io/crates/v/tailyew)
+![Downloads](https://img.shields.io/crates/d/tailyew)
 ![Docs.rs](https://img.shields.io/docsrs/tailyew)
 ![License](https://img.shields.io/crates/l/tailyew)
+![CI](https://github.com/apjames93/tailyew/actions/workflows/tailyew.yaml/badge.svg)
+![WASM Ready](https://img.shields.io/badge/WASM-ready-blueviolet)
+![Powered by Yew](https://img.shields.io/badge/Yew-0.21-blue)
+![Components](https://img.shields.io/badge/components-50%2B-blue)
+[![Demo](https://img.shields.io/badge/live-demo-0C66F0?logo=vercel&logoColor=white)](https://tailyew.com)
 
----
+> A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and written fully in Rust.
 
 ## 🚀 Why TailYew?
 
@@ -16,24 +17,32 @@ TailYew helps you build fast, beautiful, **dark-mode ready** Yew apps — with m
 
 - 🌗 **Dark mode** with Tailwind's `dark:` utilities
 - 🧹 **Reusable components**: Buttons, Modals, Forms, Accordions, Tabs
-- 📙 **Markdown rendering** with sanitization
-- 📊 **Charts** (Canvas-based Bubble and Line charts)
-- ✂️ **Clipboard, Popovers, Notifications, and more**
-- 🦠 **Pure Rust** — No JavaScript needed
+- 📙 **Markdown rendering** Auto-maps to TailYew components (`Typo`, `A`, `Image`, `CodeBlock`) and supports dynamic `FormBuilder` blocks
+- 📊 **Charts** — Canvas-based charts (Bar, Line, Bubble, Pie, Scatter) with no JS dependencies and theme-aware data visualizations
+- 🧾 **Composable Forms** — Input-driven and config-driven forms with built-in state, modals, validation, and accessibility
+- 🦠 **Pure Rust** — No JavaScript needed 
 - 📦 **Small bundle sizes** — thanks to WASM and Tailwind JIT
+- 📝 **A11y support** — ARIA roles, labels, and `aria-describedby` support (Ongoing improvement)
 
 🔎 Explore live examples 👉 [https://tailyew.com/demo/getting_started](https://tailyew.com/demo/getting_started)
 
 ---
 
-## 📸 Preview
+## 🧩 Component Coverage
 
-🌟 See demos, props, and usage:  
-👉 [https://tailyew.com](https://tailyew.com)
+> TailYew includes 50+ components. Below is a summary of a few key components— [see the full demo here »](https://tailyew.com)
 
+- **Atoms**: `Button`, `Input`, `Textarea`, `Typo`, `Checkbox`, `Select`
+- **Molecules**: `ModalButton`, `Popover`, `Accordion`, `Stepper`, `Markdown`
+- **Organisms**: `Table`, `Form`, `NavBar`, `Sidebar`, `Card`, `HeroHeader`
+- **Charts**: `BarChart`, `LineChart`, `BubbleChart`, `PieChart`, `ScatterPlot`
+- **Forms**: Self-managed `Form` and `FormBuilder` with fully composable inputs, modal support, and accessible feedback
+
+See all live: [https://tailyew.com](https://tailyew.com/)
 ---
 
-# 🧹 Quick Start
+
+# ⚡ Quick Start
 
 ## ✅ Option 1: Use the Starter Template (Recommended)
 
@@ -63,7 +72,7 @@ You get:
 In your `Cargo.toml`:
 
 ```toml
-tailyew = "0.1.15"
+tailyew = "0.1.20"
 ```
 
 ---
@@ -127,9 +136,8 @@ content: [
 | 🧹 Atomic Components      | ✅ Atoms → Molecules → Organisms |
 | ⚙️ Yew-Native Rust Code    | ✅ No JavaScript needed |
 | 🎨 Tailwind-First Styling  | ✅ Utility-first classes |
-| 🍗 Dark Mode Friendly      | ✅ Fully supported |
+| 🌗 Dark Mode Friendly      | ✅ Fully supported |
 | 📙 Typed Prop APIs         | ✅ Rust ergonomics |
-
 ---
 
 # 📁 Folder Structure

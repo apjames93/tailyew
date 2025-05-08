@@ -18,6 +18,9 @@ pub fn typo_demo_section() -> Html {
                 "class".into(),
                 "style".into(),
                 "id".into(),
+                "aria_label".into(),
+                "aria_describedby".into(),
+                "role".into(),
             ],
         },
         Column {
@@ -28,16 +31,22 @@ pub fn typo_demo_section() -> Html {
                 "Classes".into(),
                 "Option<String>".into(),
                 "Option<String>".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
             ],
         },
         Column {
             header: "Description".into(),
             values: vec![
                 "The content rendered inside the tag.".into(),
-                "Determines which semantic tag to render (H1–H5, P, Span).".into(),
+                "Determines which semantic tag to render (H1–H6, P, Span, etc.).".into(),
                 "Optional Tailwind or custom class overrides.".into(),
                 "Optional inline style applied to the element.".into(),
                 "Optional HTML ID for targeting or linking.".into(),
+                "Optional label for screen readers.".into(),
+                "ID of an element that describes this one.".into(),
+                "ARIA role override (e.g., alert, status, presentation).".into(),
             ],
         },
     ];

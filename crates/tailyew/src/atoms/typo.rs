@@ -34,6 +34,15 @@ pub struct TypoProps {
 
     #[prop_or_default]
     pub id: Option<String>,
+
+    #[prop_or_default]
+    pub aria_label: Option<String>,
+
+    #[prop_or_default]
+    pub aria_describedby: Option<String>,
+
+    #[prop_or_default]
+    pub role: Option<String>,
 }
 
 #[function_component(Typo)]
@@ -44,6 +53,9 @@ pub fn typo(props: &TypoProps) -> Html {
         class,
         style,
         id,
+        aria_label,
+        aria_describedby,
+        role,
     } = props;
 
     let base_classes = match tag {
@@ -63,42 +75,41 @@ pub fn typo(props: &TypoProps) -> Html {
 
     let all_classes = classes!(base_classes, class.clone());
 
+    // Smart default: auto-role alert for errors
+    let resolved_role = match (&tag, &role) {
+        (TagType::Error, None) => Some("alert".into()),
+        _ => role.clone(),
+    };
+
+    macro_rules! render_tag {
+        ($tag:ident) => {
+            html! {
+                <$tag
+                    class={all_classes.clone()}
+                    style={style.clone()}
+                    id={id.clone()}
+                    aria-label={aria_label.clone()}
+                    aria-describedby={aria_describedby.clone()}
+                    role={resolved_role.clone()}
+                >
+                    { for children.iter() }
+                </$tag>
+            }
+        };
+    }
+
     match tag {
-        TagType::H1 => {
-            html! { <h1 class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</h1> }
-        }
-        TagType::H2 => {
-            html! { <h2 class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</h2> }
-        }
-        TagType::H3 => {
-            html! { <h3 class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</h3> }
-        }
-        TagType::H4 => {
-            html! { <h4 class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</h4> }
-        }
-        TagType::H5 => {
-            html! { <h5 class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</h5> }
-        }
-        TagType::H6 => {
-            html! { <h6 class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</h6> }
-        }
-        TagType::BlockQuote => {
-            html! { <blockquote class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</blockquote> }
-        }
-        TagType::Emphasis => {
-            html! { <em class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</em> }
-        }
-        TagType::Strong => {
-            html! { <strong class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</strong> }
-        }
-        TagType::P => {
-            html! { <p class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</p> }
-        }
-        TagType::Error => {
-            html! { <p class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</p> }
-        }
-        TagType::Span => {
-            html! { <span class={all_classes} style={style.clone()} id={id.clone()}>{ for children.iter() }</span> }
-        }
+        TagType::H1 => render_tag!(h1),
+        TagType::H2 => render_tag!(h2),
+        TagType::H3 => render_tag!(h3),
+        TagType::H4 => render_tag!(h4),
+        TagType::H5 => render_tag!(h5),
+        TagType::H6 => render_tag!(h6),
+        TagType::BlockQuote => render_tag!(blockquote),
+        TagType::Emphasis => render_tag!(em),
+        TagType::Strong => render_tag!(strong),
+        TagType::P => render_tag!(p),
+        TagType::Error => render_tag!(p),
+        TagType::Span => render_tag!(span),
     }
 }
