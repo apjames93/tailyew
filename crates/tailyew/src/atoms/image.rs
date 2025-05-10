@@ -6,7 +6,7 @@ pub struct ImageProps {
     /// Image URL (required)
     pub src: AttrValue,
 
-    /// Optional alt text
+    /// Optional alt text ("" for decorative images)
     #[prop_or_default]
     pub alt: AttrValue,
 
@@ -21,6 +21,18 @@ pub struct ImageProps {
     /// Optional image width (CSS style)
     #[prop_or_default]
     pub width: Option<String>,
+
+    /// Optional ARIA label override
+    #[prop_or_default]
+    pub aria_label: Option<String>,
+
+    /// Optional ARIA describedby ID
+    #[prop_or_default]
+    pub aria_describedby: Option<String>,
+
+    /// Optional role (e.g. "presentation", "img")
+    #[prop_or_default]
+    pub role: Option<String>,
 }
 
 #[function_component(Image)]
@@ -39,12 +51,22 @@ pub fn image(props: &ImageProps) -> Html {
             .unwrap_or_default()
     );
 
+    // Auto role="presentation" for alt="" unless overridden
+    let resolved_role = if props.alt.is_empty() && props.role.is_none() {
+        Some("presentation".into())
+    } else {
+        props.role.clone()
+    };
+
     html! {
         <img
             src={props.src.clone()}
             alt={props.alt.clone()}
             class={classes!("max-w-full", "h-auto", props.class.clone())}
             style={style}
+            aria-label={props.aria_label.clone()}
+            aria-describedby={props.aria_describedby.clone()}
+            role={resolved_role}
         />
     }
 }

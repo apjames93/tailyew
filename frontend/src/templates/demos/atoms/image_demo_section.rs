@@ -1,19 +1,32 @@
-// frontend/src/templates/demos/image_demo_section.rs
-
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::Image;
+use tailyew::atoms::{Image, Typo};
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
 #[function_component(ImageDemoSection)]
 pub fn image_demo_section() -> Html {
     let example = html! {
-        <Image
-            src="/images/TailYew.png"
-            alt="TailYew Logo"
-            class="rounded shadow-md"
-            width={Some("200px".to_string())}
-        />
+        <div class="space-y-6">
+            <Image
+                src="/images/TailYew.png"
+                alt="TailYew Logo"
+                class="rounded shadow-md"
+                width={Some("200px".to_string())}
+            />
+
+            <Image
+                src="/images/TailYew.png"
+                alt="Sales performance chart"
+                aria_describedby="chart-desc"
+            />
+
+            <Image
+                src="/images/TailYew.png"
+                alt=""
+                class="opacity-50"
+                aria_label="Decorative swirl pattern"
+            />
+        </div>
     };
 
     let usage_code = r#"
@@ -22,6 +35,23 @@ pub fn image_demo_section() -> Html {
     alt="TailYew Logo"
     class="rounded shadow-md"
     width={Some("200px".to_string())}
+/>
+
+<Image
+    src="/images/chart.png"
+    alt="Sales performance chart"
+    aria_describedby="chart-desc"
+    width={Some("100%".to_string())}
+/>
+<p id="chart-desc" class="text-sm text-gray-500">
+    {"This chart shows monthly sales growth from January to December."}
+</p>
+
+<Image
+    src="/images/decorative.svg"
+    alt=""
+    aria_label="Decorative swirl pattern"
+    class="opacity-50"
 />
 "#;
 
@@ -34,6 +64,9 @@ pub fn image_demo_section() -> Html {
                 "class".into(),
                 "height".into(),
                 "width".into(),
+                "aria_label".into(),
+                "aria_describedby".into(),
+                "role".into(),
             ],
         },
         Column {
@@ -42,6 +75,9 @@ pub fn image_demo_section() -> Html {
                 "AttrValue".into(),
                 "AttrValue".into(),
                 "Classes".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
                 "Option<String>".into(),
                 "Option<String>".into(),
             ],
@@ -54,6 +90,9 @@ pub fn image_demo_section() -> Html {
                 "Tailwind utility classes for styling.".into(),
                 "Optional height (e.g., \"100px\").".into(),
                 "Optional width (e.g., \"200px\").".into(),
+                "Screen reader label (used when alt is empty or overridden).".into(),
+                "ID of an element that describes this image.".into(),
+                "Optional role attribute (e.g. \"presentation\").".into(),
             ],
         },
     ];
@@ -62,7 +101,13 @@ pub fn image_demo_section() -> Html {
         <DemoComponent
             title="Image Component"
             description={Some(html! {
-                <p>{ "The `Image` component wraps a standard <img> tag with sensible Tailwind defaults and optional sizing props." }</p>
+                <Typo>
+                    {"The "}
+                    <code>{"Image"}</code>
+                    {" component wraps a standard "}
+                    <code>{"<img>"}</code>
+                    {" tag with sensible Tailwind defaults, ARIA support, and optional sizing/styling."}
+                </Typo>
             })}
             example={example}
             usage_code={usage_code}
