@@ -1,9 +1,7 @@
 module.exports = {
   darkMode: 'class',
   content: [
-    "../crates/tailyew/src/**/*.rs",       // all Rust files in the crate
-    "./frontend/src/**/*.{rs,html,js}",    // only files in your actual project
-    "./index.html",                        // top-level entry file, if applicable
+    '../crates/tailyew/tailyew-safelist.html',
   ],
   theme: {
     extend: {

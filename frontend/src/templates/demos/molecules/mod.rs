@@ -36,3 +36,6 @@ pub use download_button_demo_section::*;
 
 pub mod avatar_group_demo_section;
 pub use avatar_group_demo_section::*;
+
+pub mod breadcrumbs_demo_section;
+pub use breadcrumbs_demo_section::*;

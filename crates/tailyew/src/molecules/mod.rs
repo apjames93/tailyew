@@ -39,3 +39,6 @@ pub use download_button::*;
 
 pub mod avatar_group;
 pub use avatar_group::*;
+
+pub mod breadcrumbs;
+pub use breadcrumbs::*;
