@@ -49,6 +49,7 @@ pub fn avatar(props: &AvatarProps) -> Html {
         "text-white",
         "font-semibold",
         "uppercase",
+        "aspect-square",
         size,
         class,
     );
@@ -71,8 +72,12 @@ pub fn avatar(props: &AvatarProps) -> Html {
             <div
                 class={base_classes}
                 onclick={on_click}
+                role="img"
+                aria-label={alt.clone().unwrap_or_else(|| "Avatar".to_string())}
             >
-                { fallback.unwrap_or_else(|| "?".into()) }
+                <span class="text-base leading-none text-center">
+                    { fallback.unwrap_or_else(|| "?".into()) }
+                </span>
             </div>
         }
     }
