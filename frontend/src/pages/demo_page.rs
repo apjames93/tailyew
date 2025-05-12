@@ -295,13 +295,13 @@ const DEMO_LINKS: &[DemoLink] = &[
         render: || html! { <ScatterPlotDemoSection /> },
     },
     DemoLink {
-        ctype: "charts",
+        ctype: "atoms",
         name: "Linear Progress",
         route: "linear_progress",
         render: || html! { <LinearProgressDemoSection /> },
     },
     DemoLink {
-        ctype: "charts",
+        ctype: "atoms",
         name: "Circular Progress",
         route: "circular_progress",
         render: || html! { <CircularProgressDemoSection /> },
