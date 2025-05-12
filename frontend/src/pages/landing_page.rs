@@ -1,5 +1,5 @@
 use crate::Route;
-use tailyew::atoms::{Button, ButtonType, Section, Spacer, TagType, Typo};
+use tailyew::atoms::{Button, ButtonType, CodeBlock, Section, Spacer, TagType, Typo};
 use tailyew::molecules::{Accordion, HeroHeader};
 use tailyew::organisms::{Card, TabItem, Tabs};
 use yew::prelude::*;
@@ -83,10 +83,8 @@ pub fn landing_page() -> Html {
                 <Typo tag={TagType::H2}>{ "Getting Started" }</Typo>
                 <Typo tag={TagType::P}>{ "Install TailYew, add it to your Yew app, and start building UIs today." }</Typo>
 
-                <div class="bg-gray-800 text-white p-4 rounded my-4 text-left text-sm overflow-x-auto">
-                    <pre><code>{r#"cargo add tailyew"#}</code></pre>
-                    <pre><code>{r#"use tailyew::atoms::Button;"#}</code></pre>
-                </div>
+                <CodeBlock>{r#"cargo add tailyew"#}</CodeBlock>
+                <CodeBlock>{r#"use tailyew::atoms::Button;"#}</CodeBlock>
             </Section>
 
             <Spacer />

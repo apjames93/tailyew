@@ -1,5 +1,5 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::{Button, ButtonType};
+use tailyew::atoms::{Button, ButtonType, TagType, Typo};
 use tailyew::molecules::HeroHeader;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
@@ -10,6 +10,7 @@ const HERO_IMAGE_URL: &str = "/images/TailYew.png";
 pub fn hero_header_demo_section() -> Html {
     let example = html! {
         <HeroHeader
+            id="hero-header-demo"
             title="Welcome to TailYew"
             subtitle={Some("Build elegant Rust+Yew apps with beautiful defaults".to_string())}
             background_image_url={Some(HERO_IMAGE_URL.to_string())}
@@ -24,14 +25,15 @@ pub fn hero_header_demo_section() -> Html {
 
     let usage_code = r#"
         <HeroHeader
-            title="Welcome to TailYew"
-            subtitle={Some("Build elegant Rust+Yew apps with beautiful defaults".to_string())}
-            background_image_url={Some("https://source.unsplash.com/1600x900/?technology".to_string())}
-            height={"60vh".to_string()}
+            id=\"hero-header-demo\"
+            title=\"Welcome to TailYew\"
+            subtitle={Some(\"Build elegant Rust+Yew apps with beautiful defaults\".to_string())}
+            background_image_url={Some(\"https://source.unsplash.com/1600x900/?technology\".to_string())}
+            height={\"60vh\".to_string()}
         >
-            <div class="mt-4 flex justify-center gap-4">
-                <Button button_type={ButtonType::Primary}>{ "Get Started" }</Button>
-                <Button button_type={ButtonType::Secondary}>{ "View Components" }</Button>
+            <div class=\"mt-4 flex justify-center gap-4\">
+                <Button button_type={ButtonType::Primary}>{ \"Get Started\" }</Button>
+                <Button button_type={ButtonType::Secondary}>{ \"View Components\" }</Button>
             </div>
         </HeroHeader>
     "#;
@@ -47,6 +49,10 @@ pub fn hero_header_demo_section() -> Html {
                 "subtitle_class".into(),
                 "height".into(),
                 "overlay_class".into(),
+                "text_color".into(),
+                "id".into(),
+                "aria_labelledby".into(),
+                "aria_describedby".into(),
                 "children".into(),
             ],
         },
@@ -59,6 +65,10 @@ pub fn hero_header_demo_section() -> Html {
                 "Option<String>".into(),
                 "Option<String>".into(),
                 "String".into(),
+                "Option<String>".into(),
+                "String".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
                 "Option<String>".into(),
                 "Children".into(),
             ],
@@ -73,6 +83,10 @@ pub fn hero_header_demo_section() -> Html {
                 "Override the subtitle text styles.".into(),
                 "Set the height of the header (e.g., 60vh).".into(),
                 "Overlay div style (defaults to semi-transparent black).".into(),
+                "Text color for title/subtitle, passed as inline style.".into(),
+                "Optional root `id` for the component.".into(),
+                "Custom `aria-labelledby` value for accessibility.".into(),
+                "Custom `aria-describedby` value for accessibility.".into(),
                 "Optional child content below subtitle.".into(),
             ],
         },
@@ -82,7 +96,7 @@ pub fn hero_header_demo_section() -> Html {
         <DemoComponent
             title="HeroHeader Component"
             description={Some(html! {
-                <p>{"The `HeroHeader` component renders a bold full-width section with an optional background image and overlay content. Great for landing pages or major section dividers."}</p>
+                <Typo tag={TagType::P}>{"The `HeroHeader` component renders a bold full-width section with an optional background image and overlay content. Great for landing pages or major section dividers."}</Typo>
             })}
             example={example}
             usage_code={usage_code}
