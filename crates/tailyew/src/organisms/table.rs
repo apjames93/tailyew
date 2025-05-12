@@ -1,5 +1,6 @@
 use crate::atoms::{TagType, Typo};
 use yew::prelude::*;
+use yew::virtual_dom::{VNode, VTag, VText};
 
 /// A flexible column definition supporting arbitrary Yew HTML for headers and cells
 #[derive(Clone, PartialEq)]
@@ -44,6 +45,16 @@ pub fn table(props: &TableProps) -> Html {
         })
     };
 
+    /// Helper: Wrap raw text in Typo for dark mode support
+    fn normalize_cell(cell: &Html) -> Html {
+        match cell {
+            Html::VText(text) => {
+                html! { <Typo tag={TagType::Span}>{ text.text.clone() }</Typo> }
+            }
+            _ => cell.clone(),
+        }
+    }
+
     html! {
         <div class="overflow-x-auto p-4 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-lg">
             <table class="min-w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
@@ -83,7 +94,7 @@ pub fn table(props: &TableProps) -> Html {
                             <tr key={index} class={classes!(row_classes)} onclick={if clickable { Some(onclick) } else { None }}>
                                 { for row.iter().enumerate().map(|(col_idx, cell)| html! {
                                     <td key={col_idx} class="py-2 px-4 border-b border-gray-300 dark:border-gray-600">
-                                        { cell.clone() }
+                                        { normalize_cell(cell) }
                                     </td>
                                 }) }
                             </tr>

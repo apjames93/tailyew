@@ -1,5 +1,6 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::{TagType, Typo};
+use tailyew::atoms::{Button, ButtonType, TagType, Typo};
+use tailyew::form::Checkbox;
 use tailyew::organisms::table::{Column, Table};
 use yew::prelude::*;
 
@@ -17,16 +18,24 @@ pub fn table_demo_section() -> Html {
 
     let columns = vec![
         Column {
-            header: "Name".into(),
-            values: vec!["Alice".into(), "Bob".into(), "Charlie".into()],
+            header: html! { "Name" },
+            values: vec![html! { "Alice" }, html! { "Bob" }, html! { "Charlie" }],
         },
         Column {
-            header: "Role".into(),
-            values: vec!["Admin".into(), "Editor".into(), "Viewer".into()],
+            header: html! { "Status" },
+            values: vec![
+                html! { <Checkbox id="chk1" label="Active" checked={true} /> },
+                html! { <Checkbox id="chk2" label="Inactive" checked={false} /> },
+                html! { <Checkbox id="chk3" label="Pending" checked={true} /> },
+            ],
         },
         Column {
-            header: "Status".into(),
-            values: vec!["Active".into(), "Inactive".into(), "Active".into()],
+            header: html! { "Actions" },
+            values: vec![
+                html! { <Button button_type={ButtonType::Primary}>{ "Edit" }</Button> },
+                html! { <Button button_type={ButtonType::Secondary}>{ "View" }</Button> },
+                html! { <Button button_type={ButtonType::Danger}>{ "Delete" }</Button> },
+            ],
         },
     ];
 
@@ -46,36 +55,46 @@ pub fn table_demo_section() -> Html {
     let usage_code = r#"
 let columns = vec![
     Column {
-        header: "Name".into(),
-        values: vec!["Alice".into(), "Bob".into(), "Charlie".into()],
+        header: html! { "Name" },
+        values: vec![
+            html! { "Alice" },
+            html! { "Bob" },
+            html! { "Charlie" },
+        ],
     },
     Column {
-        header: "Role".into(),
-        values: vec!["Admin".into(), "Editor".into(), "Viewer".into()],
+        header: html! { "Status" },
+        values: vec![
+            html! { <Checkbox id="chk1" label="Active" checked={true} /> },
+            html! { <Checkbox id="chk2" label="Inactive" checked={false} /> },
+            html! { <Checkbox id="chk3" label="Pending" checked={true} /> },
+        ],
     },
     Column {
-        header: "Status".into(),
-        values: vec!["Active".into(), "Inactive".into(), "Active".into()],
+        header: html! { "Actions" },
+        values: vec![
+            html! { <Button button_type={ButtonType::Primary}>{ "Edit" }</Button> },
+            html! { <Button button_type={ButtonType::Secondary}>{ "View" }</Button> },
+            html! { <Button button_type={ButtonType::Danger}>{ "Delete" }</Button> },
+        ],
     },
 ];
-
-<Table columns={columns} row_click_callback={Some(on_row_click)} />
 "#;
 
     let props_table = vec![
         Column {
-            header: "Prop".into(),
-            values: vec!["columns".into(), "row_click_callback".into()],
+            header: html! { "Prop" },
+            values: vec![html! { "columns" }, html! { "row_click_callback" }],
         },
         Column {
-            header: "Type".into(),
-            values: vec!["Vec<Column>".into(), "Option<Callback<usize>>".into()],
+            header: html! { "Type" },
+            values: vec![html! { "Vec<Column>" }, html! { "Option<Callback<usize>>" }],
         },
         Column {
-            header: "Description".into(),
+            header: html! { "Description" },
             values: vec![
-                "Each column with header and its row values.".into(),
-                "Optional click handler when a row is clicked.".into(),
+                html! { "Each column with header and its row values." },
+                html! { "Optional click handler when a row is clicked." },
             ],
         },
     ];
@@ -84,7 +103,9 @@ let columns = vec![
         <DemoComponent
             title="Table Component"
             description={Some(html! {
-                <p>{"The `Table` component displays structured data in rows and columns. Supports row clicks and is styled for both light and dark modes."}</p>
+                <Typo tag={TagType::P}>
+                    {"The `Table` component displays structured data in rows and columns. Supports plain text, rich HTML (buttons, checkboxes), and row click handlers. Fully styled for light and dark modes."}
+                </Typo>
             })}
             example={example}
             usage_code={usage_code}
