@@ -41,7 +41,7 @@ pub fn nav_bar(props: &NavBarProps) -> Html {
             )}
             role="navigation"
         >
-            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
                 { for children.iter() }
             </div>
         </nav>

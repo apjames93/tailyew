@@ -1,13 +1,23 @@
 use crate::{
-    atoms::{Button, ButtonType},
+    atoms::{Button, ButtonType, Typo},
     organisms::{NestedItem, NestedList},
 };
 use yew::prelude::*;
+
+#[derive(PartialEq, Clone, Default)]
+pub enum SidebarPosition {
+    #[default]
+    Left,
+    Right,
+    Static,
+}
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct SidebarButton {
     pub icon: Html,
     pub list: Vec<NestedItem>,
+    #[prop_or(html! { {"Menu"} })]
+    pub open_text: Html,
 }
 
 #[derive(Properties, PartialEq, Clone)]
@@ -18,6 +28,8 @@ pub struct SidebarProps {
     pub auto_close: bool,
     #[prop_or_default]
     pub top_offset_class: Classes,
+    #[prop_or_default]
+    pub position: SidebarPosition,
 }
 
 #[function_component(Sidebar)]
@@ -27,114 +39,120 @@ pub fn sidebar(props: &SidebarProps) -> Html {
         on_select,
         auto_close,
         top_offset_class,
+        position,
     } = props.clone();
 
     let active_index = use_state(|| None::<usize>);
 
+    let side_class = match position {
+        SidebarPosition::Left => "left-0",
+        SidebarPosition::Right => "right-0",
+        SidebarPosition::Static => "relative",
+    };
+
+    let overlay = if active_index.is_some() && !matches!(position, SidebarPosition::Static) {
+        let close = {
+            let active_index = active_index.clone();
+            Callback::from(move |_| active_index.set(None))
+        };
+
+        html! {
+            <div
+                class="fixed inset-0 z-30 bg-transparent"
+                onclick={close}
+            />
+        }
+    } else {
+        html! {}
+    };
+
     html! {
         <>
-            // Overlay when any drawer is open
-            {
-                if active_index.is_some() {
-                    let close_sidebar = {
-                        let active_index = active_index.clone();
-                        Callback::from(move |_| active_index.set(None))
-                    };
-                    html! {
-                        <div
-                            class="fixed inset-0 bg-black bg-opacity-40 z-30 transition-opacity duration-300"
-                            onclick={close_sidebar}
-                        />
-                    }
+            { overlay }
+
+            <div
+            class={classes!(
+                if matches!(position, SidebarPosition::Static) { "" } else { "fixed z-40 h-screen" },
+                "top-0",
+                side_class,
+                "bg-white",
+                "dark:bg-gray-900",
+                "border-r",
+                "border-gray-200",
+                "dark:border-gray-700",
+                "transition-all",
+                "duration-300",
+                "flex",
+                "flex-col",
+                "items-stretch",
+                "overflow-y-auto",
+                if matches!(position, SidebarPosition::Static) {
+                    "h-full"
                 } else {
-                    html! {}
-                }
-            }
-
-
-            <div class="relative flex">
-                // Sidebar Toggle Buttons
-                <div
-                    class={classes!(
-                        "fixed", "left-0", "z-50", "w-14", "h-screen",
-                        "bg-white", "dark:bg-gray-900",
-                        "border-r", "border-gray-200", "dark:border-gray-700",
-                        "flex", "flex-col", "items-center", "space-y-2",
-                        top_offset_class.clone(),
-                    )}
-                >
-                    {
-                        for icon_list.iter().enumerate().map(|(i, btn)| {
-                            let is_active = *active_index == Some(i);
-                            let set_active = {
-                                let active_index = active_index.clone();
-                                Callback::from(move |_| {
-                                    if is_active {
-                                        active_index.set(None)
-                                    } else {
-                                        active_index.set(Some(i))
-                                    }
-                                })
-                            };
-
-                            html! {
-                                <Button
-                                    button_type={ButtonType::Ghost}
-                                    class={classes!("p-2", if is_active { "bg-gray-200 dark:bg-gray-800" } else { "" })}
-                                    onclick={set_active}
-                                >
-                                    { btn.icon.clone() }
-                                </Button>
-                            }
-                        })
-                    }
-                </div>
-
-                // Sidebar Drawers
+                    ""
+                },
+                if active_index.is_some() { "w-64" } else { "w-14" },
+                top_offset_class.clone(),
+            )}
+            >
                 {
                     for icon_list.iter().enumerate().map(|(i, btn)| {
-                        let is_open = *active_index == Some(i);
+                        let is_active = *active_index == Some(i);
 
-                        let close_sidebar = {
+                        let toggle = {
                             let active_index = active_index.clone();
-                            Callback::from(move |_| active_index.set(None))
-                        };
-
-                        let item_on_select = {
-                            let on_select = on_select.clone();
-                            let close_sidebar = close_sidebar.clone();
-                            Callback::from(move |value: AttrValue| {
-                                on_select.emit(value.clone());
-                                if auto_close {
-                                    close_sidebar.emit(());
+                            Callback::from(move |_| {
+                                if is_active {
+                                    active_index.set(None)
+                                } else {
+                                    active_index.set(Some(i))
                                 }
                             })
                         };
 
-                        let drawer_classes = classes!(
-                            "fixed",
-                            "inset-y-0",
-                            "left-14",
-                            "w-64",
-                            "bg-white",
-                            "dark:bg-gray-900",
-                            "border-r",
-                            "border-gray-200",
-                            "dark:border-gray-700",
-                            "overflow-y-auto",
-                            "p-4",
-                            "z-40",
-                            "transition-transform",
-                            "duration-300",
-                            "ease-in-out",
-                            top_offset_class.clone(),
-                            if is_open { "translate-x-0" } else { "-translate-x-full" }
-                        );
+                        let on_select_internal = {
+                            let on_select = on_select.clone();
+                            let active_index = active_index.clone();
+                            Callback::from(move |value: AttrValue| {
+                                on_select.emit(value.clone());
+                                if auto_close {
+                                    active_index.set(None);
+                                }
+                            })
+                        };
 
                         html! {
-                            <div class={drawer_classes}>
-                                <NestedList list={btn.list.clone()} on_select={item_on_select} />
-                            </div>
+                            <>
+                                <Button
+                                    button_type={ButtonType::Ghost}
+                                    class="flex items-center gap-2 p-2 px-4 w-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    onclick={toggle.clone()}
+                                >
+                                    { btn.icon.clone() }
+                                    {
+                                        if is_active {
+                                            match &btn.open_text {
+                                                Html::VText(text) => html! { <Typo>{ text.text.clone() }</Typo> },
+                                                other => other.clone(),
+                                            }
+                                        } else {
+                                            html! {}
+                                        }
+                                    }
+                                </Button>
+
+                                {
+                                    if is_active {
+                                        html! {
+                                            <div class="pl-4 pr-2 py-2">
+                                                <NestedList list={btn.list.clone()} on_select={on_select_internal.clone()} />
+                                            </div>
+                                        }
+                                    } else {
+                                        html! {}
+                                    }
+                                }
+                            </>
                         }
                     })
                 }

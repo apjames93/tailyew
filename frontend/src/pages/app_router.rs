@@ -1,11 +1,8 @@
-// frontend/src/pages/app_router.rs
-
-use crate::templates::NavBar;
+use crate::templates::{DemoSidebar, NavBar};
 use crate::{switch, Route};
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-/// Define a new component `AppRouter` that wraps the router and handles state management.
 #[function_component(AppRouter)]
 pub fn app_router() -> Html {
     html! {
@@ -14,15 +11,14 @@ pub fn app_router() -> Html {
             // AppBar (fixed)
             <NavBar />
 
-            // Main content
-            <div
-                class="flex-1"
-                style="
-                    padding-top: 74px;       /* nav height */
-                    padding-left: 56px;      /* sidebar toggle bar (w-14 = 3.5rem = 56px) */
-                "
-            >
-                <Switch<Route> render={switch} />
+            // Sidebar Drawer + Buttons
+            <DemoSidebar />
+
+            // Main content area with sidebar offset + top padding
+            <div class="flex-1 pt-[74px] pl-14"> // pl-14 = 56px to match sidebar toggle
+                <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+                    <Switch<Route> render={switch} />
+                </div>
             </div>
 
             // Optional Footer
