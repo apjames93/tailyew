@@ -1,3 +1,4 @@
+use regex::Regex;
 use serde::Deserialize;
 use std::fmt;
 use web_sys::HtmlInputElement;
@@ -18,40 +19,43 @@ pub enum InputType {
 
 impl fmt::Display for InputType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let value = match self {
-            InputType::Text => "text",
-            InputType::Number => "number",
-            InputType::Password => "password",
-            InputType::Email => "email",
-            InputType::Date => "date",
-            InputType::Time => "time",
-            InputType::Search => "search",
-            InputType::Hidden => "hidden",
-        };
-        write!(f, "{}", value)
+        write!(
+            f,
+            "{}",
+            match self {
+                InputType::Text => "text",
+                InputType::Number => "number",
+                InputType::Password => "password",
+                InputType::Email => "email",
+                InputType::Date => "date",
+                InputType::Time => "time",
+                InputType::Search => "search",
+                InputType::Hidden => "hidden",
+            }
+        )
     }
 }
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct InputProps {
-    pub placeholder: String,
-    pub label: String,
-    pub id: String,
+    pub placeholder: AttrValue,
+    pub label: AttrValue,
+    pub id: AttrValue,
 
     #[prop_or_default]
     pub input_type: InputType,
 
     #[prop_or_default]
-    pub default_value: String,
+    pub default_value: AttrValue,
 
     #[prop_or_default]
-    pub min: Option<String>,
+    pub min: Option<AttrValue>,
 
     #[prop_or_default]
-    pub max: Option<String>,
+    pub max: Option<AttrValue>,
 
-    #[prop_or(Some(".*".to_string()))]
-    pub pattern: Option<String>,
+    #[prop_or_default]
+    pub error_title: Option<AttrValue>,
 
     #[prop_or(false)]
     pub required: bool,
@@ -64,6 +68,21 @@ pub struct InputProps {
 
     #[prop_or(false)]
     pub disabled: bool,
+
+    #[prop_or_default]
+    pub pattern: Option<AttrValue>,
+
+    #[prop_or_default]
+    pub autocomplete: Option<AttrValue>,
+
+    #[prop_or_default]
+    pub aria_describedby: Option<AttrValue>,
+
+    #[prop_or_default]
+    pub aria_label: Option<AttrValue>,
+
+    #[prop_or_default]
+    pub aria_labelledby: Option<AttrValue>,
 }
 
 #[function_component(Input)]
@@ -76,24 +95,62 @@ pub fn input(props: &InputProps) -> Html {
         default_value,
         min,
         max,
-        pattern,
+        error_title,
         required,
         class,
         on_change,
         disabled,
+        pattern,
+        autocomplete,
+        aria_describedby,
+        aria_label,
+        aria_labelledby,
     } = props.clone();
 
-    let value = use_state(|| default_value.clone());
+    let value = use_state(|| default_value.to_string());
+    let validation_error = use_state(|| None::<String>);
+    let form_pattern = use_state(|| Some(String::from(".*"))); // fallback to valid
 
     let oninput = {
         let value = value.clone();
+        let validation_error = validation_error.clone();
         let on_change = on_change.clone();
+        let pattern = pattern.clone();
+        let error_title = error_title.clone();
+        let form_pattern = form_pattern.clone();
+
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into();
             let new_val = input.value();
             value.set(new_val.clone());
+
             if let Some(cb) = &on_change {
-                cb.emit(new_val);
+                cb.emit(new_val.clone());
+            }
+
+            if let Some(pat) = &pattern {
+                match Regex::new(pat.as_str()) {
+                    Ok(re) => {
+                        if re.is_match(&new_val) {
+                            validation_error.set(None);
+                            form_pattern.set(Some(".*".into()));
+                        } else {
+                            validation_error.set(Some(
+                                error_title
+                                    .clone()
+                                    .unwrap_or_else(|| "Invalid format.".into())
+                                    .to_string(),
+                            ));
+                            form_pattern.set(Some("^$a".into())); // always fail
+                        }
+                    }
+                    Err(err) => {
+                        validation_error.set(Some(format!("Invalid regex: {}", err)));
+                        form_pattern.set(Some("^$a".into())); // always fail
+                    }
+                }
+            } else {
+                form_pattern.set(Some(".*".into()));
             }
         })
     };
@@ -127,6 +184,23 @@ pub fn input(props: &InputProps) -> Html {
         "dark:text-gray-300"
     );
 
+    let title = validation_error
+        .as_ref()
+        .cloned()
+        .or_else(|| error_title.map(|s| s.to_string()))
+        .unwrap_or_default();
+
+    // a11y fallbacks
+    let effective_aria_label = aria_label.unwrap_or_else(|| label.clone());
+    let effective_aria_labelledby = aria_labelledby.unwrap_or_else(|| id.clone());
+    let effective_aria_describedby = aria_describedby.or_else(|| {
+        if !title.is_empty() {
+            Some(id.clone())
+        } else {
+            None
+        }
+    });
+
     let input_element = html! {
         <input
             id={id.clone()}
@@ -138,9 +212,16 @@ pub fn input(props: &InputProps) -> Html {
             oninput={oninput}
             min={min}
             max={max}
-            pattern={pattern.clone().unwrap_or_default()}
+            title={title}
             required={required}
             disabled={disabled}
+            pattern={form_pattern.as_ref().cloned().unwrap_or_else(|| ".*".to_string())}
+            autocomplete={autocomplete}
+            aria-invalid={AttrValue::from(validation_error.is_some().to_string())}
+            aria-required={AttrValue::from(required.to_string())}
+            aria-describedby={effective_aria_describedby}
+            aria-label={effective_aria_label}
+            aria-labelledby={effective_aria_labelledby}
         />
     };
 
@@ -149,7 +230,7 @@ pub fn input(props: &InputProps) -> Html {
     } else {
         html! {
             <div class="flex flex-col mb-4">
-                <label for={id.clone()} class={label_classes}>{ label }</label>
+                <label for={id} class={label_classes}>{ label }</label>
                 { input_element }
             </div>
         }

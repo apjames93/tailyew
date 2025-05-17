@@ -111,6 +111,15 @@ pub fn form_demo_section() -> Html {
             // Original full form
             <Form onsubmit_callback={onsubmit_callback.clone()}>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Input
+                        id="username"
+                        label="Username"
+                        placeholder="e.g. buddy_guy"
+                        input_type={InputType::Text}
+                        pattern={Some("^[a-z0-9_-]{3,16}$")}
+                        error_title={Some("Use 3–16 lowercase letters, numbers, underscores, or dashes.")}
+                        required=true
+                    />
                     <Input id="email" label="Email" input_type={InputType::Email} placeholder="Enter email" />
                     <Input id="password" label="Password" input_type={InputType::Password} placeholder="Enter password" />
                     <Input id="search" label="Search" input_type={InputType::Search} placeholder="Search..." />
