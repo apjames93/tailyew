@@ -2,7 +2,9 @@
 
 use tailyew::{
     atoms::{CodeBlock, Section, TagType, Typo},
+    molecules::CopyToClipboard,
     organisms::{Column, Table},
+    ButtonType,
 };
 
 use yew::prelude::*;
@@ -34,7 +36,17 @@ pub fn demo_component(props: &DemoComponentProps) -> Html {
             </div>
 
             // Usage Code Block
-            <Typo tag={TagType::H3} class="mt-8">{"Usage Example"}</Typo>
+            <div class="mt-8 flex items-center justify-between">
+                <Typo tag={TagType::H3}>{"Usage Example"}</Typo>
+                <CopyToClipboard
+                    value={props.usage_code.clone()}
+                    copy_text={"Copy Example"}
+                    copied_text={"Copied!"}
+                    button_type={ButtonType::Ghost}
+                    copied_button_type={ButtonType::Primary}
+                    class="text-sm"
+                />
+            </div>
             <CodeBlock>
                 { props.usage_code.clone() }
             </CodeBlock>
