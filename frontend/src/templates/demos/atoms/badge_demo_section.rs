@@ -6,19 +6,28 @@ use yew::prelude::*;
 #[function_component(BadgeDemoSection)]
 pub fn badge_demo_section() -> Html {
     let example = html! {
-        <div class="flex items-center gap-8 text-gray-800 dark:text-white">
+        <div class="flex flex-wrap gap-8 text-gray-800 dark:text-white">
+            // Count badge
             <Badge badge_content={Some(String::from("4"))} color={classes!("bg-blue-600")}>
                 <Avatar src={Some(String::from("/images/TailYew.png"))} alt={Some(String::from("TailYew Logo"))} />
             </Badge>
 
+            // Dot badge
             <Badge is_dot=true color={classes!("bg-emerald-500")}>
                 <Typo class="px-4 py-2 border rounded">{"Notifications"}</Typo>
             </Badge>
 
-            <Badge is_dot=true color={classes!("bg-red-500")}>
+            // Max limit badge (e.g. 1000 → 99+)
+            <Badge badge_content={Some(String::from("1000"))} max={99} color={classes!("bg-green-600")}>
                 <Button>{"Inbox"}</Button>
             </Badge>
 
+            // Text badge
+            <Badge badge_content={Some(String::from("New"))} color={classes!("bg-purple-500")}>
+                <Button>{"Inbox"}</Button>
+            </Badge>
+
+            // Show zero explicitly
             <Badge badge_content={Some(String::from("0"))} show_zero=true color={classes!("bg-yellow-500")}>
                 <Button>{"Inbox"}</Button>
             </Badge>
