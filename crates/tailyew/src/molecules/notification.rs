@@ -34,11 +34,17 @@ pub fn notification(props: &NotificationProps) -> Html {
     } = props.clone();
 
     let is_visible = use_state(|| visible);
+    let last_visible = use_state(|| visible);
 
+    // Sync internal state when parent `visible` changes
     {
         let is_visible = is_visible.clone();
-        use_effect_with(visible, move |visible| {
-            is_visible.set(*visible);
+        let last_visible = last_visible.clone();
+        use_effect_with(visible, move |new_visible| {
+            if *new_visible != *last_visible {
+                is_visible.set(*new_visible);
+                last_visible.set(*new_visible);
+            }
             || ()
         });
     }

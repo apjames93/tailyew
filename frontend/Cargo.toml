@@ -17,6 +17,9 @@ serde_json = { workspace = true }
 yew = { workspace = true }
 web-sys = { workspace = true }
 wasm-bindgen = { workspace = true }
+gloo-net = { workspace = true }
+gloo-timers = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
 
 tailyew = { path = "../crates/tailyew" }
 

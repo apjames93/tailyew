@@ -66,6 +66,9 @@ pub struct InputProps {
     #[prop_or_default]
     pub on_change: Option<Callback<String>>,
 
+    #[prop_or_default]
+    pub on_focus: Option<Callback<FocusEvent>>,
+
     #[prop_or(false)]
     pub disabled: bool,
 
@@ -83,6 +86,9 @@ pub struct InputProps {
 
     #[prop_or_default]
     pub aria_labelledby: Option<AttrValue>,
+
+    #[prop_or_default]
+    pub node_ref: NodeRef,
 }
 
 #[function_component(Input)]
@@ -99,12 +105,14 @@ pub fn input(props: &InputProps) -> Html {
         required,
         class,
         on_change,
+        on_focus,
         disabled,
         pattern,
         autocomplete,
         aria_describedby,
         aria_label,
         aria_labelledby,
+        node_ref,
     } = props.clone();
 
     let value = use_state(|| default_value.to_string());
@@ -222,6 +230,8 @@ pub fn input(props: &InputProps) -> Html {
             aria-describedby={effective_aria_describedby}
             aria-label={effective_aria_label}
             aria-labelledby={effective_aria_labelledby}
+            onfocus={on_focus}
+            ref={node_ref}
         />
     };
 

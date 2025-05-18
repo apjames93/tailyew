@@ -82,12 +82,11 @@ jobs:
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
-
-  
+ 
   deploy:
     name: Deploy Crate
     needs: [build-and-check, check-cargo-changed]
-    if: needs.check-cargo-changed.outputs.changed == 'true' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && needs.check-cargo-changed.outputs.changed == 'true' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
 
     steps:
