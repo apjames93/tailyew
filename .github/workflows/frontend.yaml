@@ -67,7 +67,7 @@ jobs:
     name: 🚀 Deploy Frontend
     runs-on: ubuntu-22.04
     needs: build-and-check
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: ⬇️ Checkout repository

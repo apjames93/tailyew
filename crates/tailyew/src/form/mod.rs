@@ -39,3 +39,6 @@ pub use form_modal::*;
 
 pub mod form_builder;
 pub use form_builder::*;
+
+pub mod search_input;
+pub use search_input::*;

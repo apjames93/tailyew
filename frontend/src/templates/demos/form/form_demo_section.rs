@@ -1,4 +1,5 @@
 use crate::templates::demos::DemoComponent;
+use std::rc::Rc;
 use tailyew::atoms::{Button, ButtonType, TagType, Typo};
 use tailyew::form::*;
 use tailyew::organisms::table::Column;
@@ -60,6 +61,7 @@ pub fn form_demo_section() -> Html {
                 "gender",
                 "file_upload",
                 "phone",
+                "language",
             ];
             for field in fields {
                 let value = e_input_value(field, &e);
@@ -70,6 +72,21 @@ pub fn form_demo_section() -> Html {
             form_values.set(values);
         })
     };
+
+    let language_options = Rc::new(vec![
+        Item {
+            label: "Rust".into(),
+            value: "rust".into(),
+        },
+        Item {
+            label: "Go".into(),
+            value: "go".into(),
+        },
+        Item {
+            label: "TypeScript".into(),
+            value: "typescript".into(),
+        },
+    ]);
 
     let options = vec![
         SelectOption {
@@ -120,6 +137,14 @@ pub fn form_demo_section() -> Html {
                         error_title={Some("Use 3–16 lowercase letters, numbers, underscores, or dashes.")}
                         required=true
                     />
+                    <SearchInput
+                        id="language"
+                        label="Language"
+                        placeholder="Choose a language"
+                        items={language_options.clone()}
+                        required={true}
+                    />
+
                     <Input id="email" label="Email" input_type={InputType::Email} placeholder="Enter email" />
                     <Input id="password" label="Password" input_type={InputType::Password} placeholder="Enter password" />
                     <Input id="search" label="Search" input_type={InputType::Search} placeholder="Search..." />

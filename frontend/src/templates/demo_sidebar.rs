@@ -12,8 +12,9 @@ use crate::templates::demos::{
     MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection, NavBarDemoSection,
     NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection, PieChartDemoSection,
     PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection, ScatterPlotDemoSection,
-    SelectDemoSection, SidebarDemoSection, SpacerDemoSection, StepperDemoSection, TableDemoSection,
-    TabsDemoSection, TextareaDemoSection, TooltipDemoSection, TypoDemoSection, UlDemoSection,
+    SearchInputDemoSection, SelectDemoSection, SidebarDemoSection, SpacerDemoSection,
+    StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection, TooltipDemoSection,
+    TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
 use std::collections::HashMap;
@@ -196,6 +197,12 @@ pub const DEMO_LINKS: &[DemoLink] = &[
         name: "Input",
         route: "input",
         render: || html! { <InputDemoSection /> },
+    },
+    DemoLink {
+        ctype: "forms",
+        name: "Search Input",
+        route: "search_input",
+        render: || html! { <SearchInputDemoSection /> },
     },
     DemoLink {
         ctype: "forms",

@@ -91,8 +91,17 @@ pub fn form(props: &FormProps) -> Html {
         let onsubmit_callback = onsubmit_callback.clone();
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
+
+            // Validate the form before emitting
+            if let Some(target) = e.target() {
+                if let Ok(form) = target.dyn_into::<HtmlFormElement>() {
+                    if !form.check_validity() {
+                        return;
+                    }
+                }
+            }
+
             onsubmit_callback.emit(e);
-            // No HTML reset here!
         })
     };
 
