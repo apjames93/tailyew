@@ -92,6 +92,8 @@ pub fn copy_to_clipboard_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/copy_to_clipboard_demo_section.rs"
+            github_source_path="molecules/copy_to_clipboard.rs"
             title="CopyToClipboard Component"
             description={Some(html! {
                 <p>{"The `CopyToClipboard` component renders a button that copies text to the clipboard. It supports custom labels, icons, styles, and copy feedback."}</p>

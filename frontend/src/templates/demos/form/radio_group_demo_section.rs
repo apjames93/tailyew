@@ -79,6 +79,8 @@ pub fn radio_group_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/radio_group_demo_section.rs"
+            github_source_path="form/radio_group.rs"
             title="RadioGroup Component"
             description={Some(html! {
                 <p>{"The `RadioGroup` component renders a set of radio buttons from a list of options. It supports controlled state and an optional `on_change` callback."}</p>

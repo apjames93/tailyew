@@ -117,6 +117,8 @@ pub fn select_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/select_demo_section.rs"
+            github_source_path="form/select.rs"
             title="Select Component"
             description={Some(html! {
                 <>

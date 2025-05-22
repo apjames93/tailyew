@@ -41,6 +41,8 @@ pub fn ul_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/ul_demo_section.rs"
+            github_source_path="atoms/ul.rs"
             title="Ul Component"
             description={Some(html! {
                 <p>{"The `Ul` component wraps an unordered list with customizable spacing and marker style using Tailwind classes."}</p>

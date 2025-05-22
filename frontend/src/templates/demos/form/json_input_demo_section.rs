@@ -131,6 +131,8 @@ pub fn json_input_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/json_input_demo_section.rs"
+            github_source_path="form/json_input.rs"
             title="JsonInput Component"
             description={Some(html! {
                 <p>{"WIP: The `JsonInput` component renders editable key-value pairs and nested JSON structures. Below are examples showing empty, flat, and nested inputs."}</p>

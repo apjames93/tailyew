@@ -29,6 +29,8 @@ pub fn scatter_plot_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="charts/scatter_plot_demo_section.rs"
+            github_source_path="charts/scatter_plot_component.rs"
             title="ScatterPlotComponent"
             description={Some(html! {
                 <p>{"The `ScatterPlotComponent` renders a canvas-based scatter plot using a list of colored data points. Axes and tick marks are included for scale."}</p>

@@ -95,6 +95,8 @@ pub fn badge_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/badge_demo_section.rs"
+            github_source_path="atoms/badge.rs"
             title="Badge Component"
             description={Some(html! {
                 <p>{ "The `Badge` component displays content or a dot over its child, supporting max counts, position, dot variant, and color control." }</p>

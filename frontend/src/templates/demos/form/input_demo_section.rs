@@ -127,6 +127,8 @@ pub fn input_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/input_demo_section.rs"
+            github_source_path="form/input.rs"
             title="Input Component"
             description={Some(html! {
                 <p>{"The `Input` component provides accessible, validated text inputs with optional Rust regex validation via the `pattern` prop. Error messages are shown via `title`, and the component integrates cleanly into native HTML5 form validation."}</p>

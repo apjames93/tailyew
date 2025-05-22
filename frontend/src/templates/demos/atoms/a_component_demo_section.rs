@@ -59,6 +59,8 @@ pub fn a_component_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/a_component_demo_section.rs"
+            github_source_path="atoms/a.rs"
             title="Anchor (A) Component"
             description={Some(html! {
                 <p>{"The `A` component wraps a standard HTML anchor tag with Tailwind styles and optional props like `target`, `class`, and `onclick`."}</p>

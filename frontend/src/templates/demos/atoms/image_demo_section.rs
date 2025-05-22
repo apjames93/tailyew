@@ -99,6 +99,8 @@ pub fn image_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/image_demo_section.rs"
+            github_source_path="atoms/image.rs"
             title="Image Component"
             description={Some(html! {
                 <Typo>

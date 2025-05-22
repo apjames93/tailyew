@@ -88,6 +88,8 @@ pub fn textarea_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/textarea_demo_section.rs"
+            github_source_path="form/textarea.rs"
             title="Textarea Component"
             description={Some(html! {
                 <p>{"The `Textarea` component is a styled multiline input field with full Tailwind support. Ideal for comments, messages, and larger text blocks."}</p>

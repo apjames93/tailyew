@@ -402,6 +402,8 @@ pub fn search_input_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/search_input_demo_section.rs"
+            github_source_path="form/search_input.rs"
             title="SearchInput Component"
             description={Some(html! {
                 <p>

@@ -30,6 +30,8 @@ pub fn spacer_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/spacer_demo_section.rs"
+            github_source_path="atoms/spacer.rs"
             title="Spacer Component"
             description={Some(html! {
                 <p>{"The `Spacer` component creates vertical or horizontal space in layouts. Useful for consistent spacing between UI elements."}</p>

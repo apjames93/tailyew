@@ -79,6 +79,8 @@ pub fn range_input_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/range_input_demo_section.rs"
+            github_source_path="form/range_input.rs"
             title="RangeInput Component"
             description={Some(html! {
                 <p>{"The `RangeInput` component renders a stylized slider with a live-updating value display. Supports min, max, step, and custom change handling."}</p>

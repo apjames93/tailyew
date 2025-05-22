@@ -15,7 +15,7 @@ pub fn app_router() -> Html {
             <DemoSidebar />
 
             // Main content area with sidebar offset + top padding
-            <div class="flex-1 pt-[74px] pl-14"> // pl-14 = 56px to match sidebar toggle
+            <div class="flex-1 pt-20 pl-14"> // pl-14 = 56px to match sidebar toggle
                 <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
                     <Switch<Route> render={switch} />
                 </div>

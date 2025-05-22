@@ -83,6 +83,8 @@ let log_click = Callback::from(|_| web_sys::console::log_1(&"Avatar clicked!".in
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/avatar_demo_section.rs"
+            github_source_path="atoms/avatar.rs"
             title="Avatar Component"
             description={Some(html! {
                 <p>{ "The `Avatar` component renders a circular user image or fallback content with full Tailwind and dark mode support. It can also accept an optional `on_click` callback." }</p>

@@ -92,6 +92,8 @@ pub fn app_bar_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/app_bar_demo_section.rs"
+            github_source_path="molecules/app_bar.rs"
             title="AppBar Component"
             description={Some(html! {
                 <p>{"The `AppBar` provides a responsive navigation bar with logo, centered title, and a mobile-friendly drawer. The logo and title can be made clickable with optional callbacks."}</p>

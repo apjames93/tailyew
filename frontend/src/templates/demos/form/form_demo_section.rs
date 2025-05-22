@@ -242,6 +242,8 @@ pub fn form_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/form_demo_section.rs"
+            github_source_path="form/form_container.rs"
             title="Form Component"
             description={Some(html! {<p>{"The `Form` component wraps children and handles validation, layout, and submit logic. Demonstrated here with every form input component, and a minimal form showing `extra_footer_buttons`."}</p>})}
             example={example}

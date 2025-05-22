@@ -97,6 +97,8 @@ html! {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/modal_demo_section.rs"
+            github_source_path="molecules/modal.rs"
             title="Modal Component"
             description={Some(html! {
                 <p>{"The `Modal` component creates a centered dialog with optional close behavior via overlay, escape key, or close button. It supports configurable sizes and can be styled freely inside."}</p>

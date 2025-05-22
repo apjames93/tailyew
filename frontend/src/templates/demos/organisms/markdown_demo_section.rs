@@ -70,6 +70,8 @@ pub fn markdown_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="organisms/markdown_demo_section.rs"
+            github_source_path="organisms/markdown.rs"
             title="Markdown Component"
             description={Some(html! {
               <p>{"The `Markdown` component renders sanitized markdown as styled HTML using `pulldown-cmark`. It supports inline styles, block elements, code formatting, and dynamic TailYew forms."}</p>

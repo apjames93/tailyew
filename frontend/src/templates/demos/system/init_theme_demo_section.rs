@@ -59,6 +59,8 @@ pub fn init_theme_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="system/init_theme_demo_section.rs"
+            github_source_path="system/init_theme.rs"
             title="InitTheme Component"
             description={Some(html! {
                 <p>{ "Use the `InitTheme` component to wrap your Yew application and apply consistent theming and layout. Supports Tailwind utility class overrides and system-based light/dark themes." }</p>

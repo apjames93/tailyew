@@ -115,6 +115,8 @@ pub fn sidebar_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="organisms/sidebar_demo_section.rs"
+            github_source_path="organisms/sidebar.rs"
             title="Sidebar Component"
             description={Some(html! {
                 <p>

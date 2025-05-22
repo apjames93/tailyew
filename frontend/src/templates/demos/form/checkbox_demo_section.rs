@@ -65,6 +65,8 @@ pub fn checkbox_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/checkbox_demo_section.rs"
+            github_source_path="form/checkbox.rs"
             title="Checkbox Component"
             description={Some(html! {
                 <p>{"The `Checkbox` component is a stylized toggle input with optional label and description. Supports controlled state and `on_change` callbacks."}</p>

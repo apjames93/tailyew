@@ -29,6 +29,8 @@ pub fn linear_progress_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/linear_progress_demo_section.rs"
+            github_source_path="atoms/linear_progress.rs"
             title="LinearProgressIndicator"
             description={Some(html! {
                 <p>{"The `LinearProgressIndicator` renders a horizontal progress bar that supports animated width, color gradients, and custom styles."}</p>

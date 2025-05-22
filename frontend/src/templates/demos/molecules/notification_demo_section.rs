@@ -114,6 +114,8 @@ pub fn notification_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/notification_demo_section.rs"
+            github_source_path="molecules/notification.rs"
             title="Notification Component"
             description={Some(html! {
                 <p>{"The `Notification` component displays contextual messages like success, error, or warning. You can optionally dismiss them and trigger custom callbacks on close."}</p>

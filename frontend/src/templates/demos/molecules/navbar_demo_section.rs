@@ -64,6 +64,8 @@ use tailyew::atoms::{Typo, TagType, Button, ButtonType};
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/navbar_demo_section.rs"
+            github_source_path="molecules/navbar.rs"
             title="NavBar Component"
             description={Some(html! {
                 <p>{ "The `NavBar` component provides a styled, responsive container for navigation content like logos, links, and action buttons. Position it at the top, bottom, or inline in your layout." }</p>

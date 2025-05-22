@@ -53,6 +53,8 @@ pub fn typo_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/typo_demo_section.rs"
+            github_source_path="atoms/typo.rs"
             title="Typo Component"
             description={Some(html! {
                 <p>{"The `Typo` component renders semantic HTML tags (like H1–H5, P, or Span) with opinionated styling and customization."}</p>

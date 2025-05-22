@@ -65,6 +65,8 @@ pub fn phone_input_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/phone_input_demo_section.rs"
+            github_source_path="form/phone_input.rs"
             title="PhoneInput Component"
             description={Some(html! {
                 <p>{"The `PhoneInput` component renders a telephone input with built-in validation based on a regex pattern, and real-time feedback on invalid formats."}</p>

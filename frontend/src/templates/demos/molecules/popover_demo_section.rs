@@ -104,6 +104,8 @@ html! {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/popover_demo_section.rs"
+            github_source_path="molecules/popover.rs"
             title="Popover Component"
             description={Some(html! {
                 <p>{"The `Popover` component displays content when triggered by another element. Useful for tooltips, menus, or additional info panels."}</p>
