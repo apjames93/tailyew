@@ -10,7 +10,7 @@ pub fn copy_to_clipboard_demo_section() -> Html {
     let example = html! {
         <div class="max-w-xl space-y-4">
             <CopyToClipboard value="abc123xyz456token789" />
-            
+
             <CopyToClipboard
                 value="this-was-hidden"
                 button_type={ButtonType::Secondary}

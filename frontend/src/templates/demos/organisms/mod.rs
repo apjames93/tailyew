@@ -15,3 +15,6 @@ pub use nested_list_demo_section::*;
 
 pub mod sidebar_demo_section;
 pub use sidebar_demo_section::*;
+
+pub mod markdown_demo_section;
+pub use markdown_demo_section::*;

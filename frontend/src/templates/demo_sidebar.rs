@@ -345,7 +345,7 @@ pub const DEMO_LINKS: &[DemoLink] = &[
         render: || html! { <CodeBlockDemoSection /> },
     },
     DemoLink {
-        ctype: "molecules",
+        ctype: "organisms",
         name: "Markdown",
         route: "markdown",
         render: || html! { <MarkdownDemoSection /> },

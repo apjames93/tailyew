@@ -1,4 +1,4 @@
-use crate::atoms::{Li, MarkerType, Typo, Ul};
+use crate::atoms::{Li, MarkerType, Ul};
 use crate::molecules::Accordion;
 use yew::prelude::*;
 

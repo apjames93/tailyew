@@ -1,6 +1,3 @@
-#![allow(unused_imports)]
-#![allow(dead_code)]
-
 pub mod card;
 pub use card::*;
 
@@ -18,3 +15,6 @@ pub use nested_list::*;
 
 pub mod sidebar;
 pub use sidebar::*;
+
+pub mod markdown;
+pub use markdown::*;

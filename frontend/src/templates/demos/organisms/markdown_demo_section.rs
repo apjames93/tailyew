@@ -1,6 +1,6 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::molecules::Markdown;
 use tailyew::organisms::table::Column;
+use tailyew::organisms::Markdown;
 use tailyew::{e_checkbox_checked, e_input_value};
 use yew::prelude::*;
 
