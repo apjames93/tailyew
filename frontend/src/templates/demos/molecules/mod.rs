@@ -39,3 +39,6 @@ pub use avatar_group_demo_section::*;
 
 pub mod breadcrumbs_demo_section;
 pub use breadcrumbs_demo_section::*;
+
+pub mod code_block_demo_section;
+pub use code_block_demo_section::*;

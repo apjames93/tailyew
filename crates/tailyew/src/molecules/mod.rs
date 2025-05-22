@@ -42,3 +42,6 @@ pub use avatar_group::*;
 
 pub mod breadcrumbs;
 pub use breadcrumbs::*;
+
+pub mod code_block;
+pub use code_block::*;

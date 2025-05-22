@@ -1,7 +1,7 @@
 // frontend/src/templates/demos/code_block_demo_section.rs
 
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::CodeBlock;
+use tailyew::molecules::CodeBlock;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 

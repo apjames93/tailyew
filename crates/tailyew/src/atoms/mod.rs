@@ -30,9 +30,6 @@ pub use container::*;
 pub mod spacer;
 pub use spacer::*;
 
-pub mod code_block;
-pub use code_block::*;
-
 pub mod image;
 pub use image::*;
 

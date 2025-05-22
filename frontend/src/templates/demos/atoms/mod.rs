@@ -22,9 +22,6 @@ pub use typo_demo_section::*;
 pub mod ul_demo_section;
 pub use ul_demo_section::*;
 
-pub mod code_block_demo_section;
-pub use code_block_demo_section::*;
-
 pub mod image_demo_section;
 pub use image_demo_section::*;
 

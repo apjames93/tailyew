@@ -1,4 +1,5 @@
-use tailyew::atoms::{Button, ButtonType, CodeBlock, Section, TagType, Typo};
+use tailyew::atoms::{Button, ButtonType, Section, TagType, Typo};
+use tailyew::molecules::CodeBlock;
 use yew::prelude::*;
 
 #[function_component(GettingStarted)]
