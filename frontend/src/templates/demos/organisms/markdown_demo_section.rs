@@ -1,6 +1,6 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::molecules::Markdown;
 use tailyew::organisms::table::Column;
+use tailyew::organisms::Markdown;
 use tailyew::{e_checkbox_checked, e_input_value};
 use yew::prelude::*;
 
@@ -70,6 +70,8 @@ pub fn markdown_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="organisms/markdown_demo_section.rs"
+            github_source_path="organisms/markdown.rs"
             title="Markdown Component"
             description={Some(html! {
               <p>{"The `Markdown` component renders sanitized markdown as styled HTML using `pulldown-cmark`. It supports inline styles, block elements, code formatting, and dynamic TailYew forms."}</p>

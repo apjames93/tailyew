@@ -94,6 +94,8 @@ pub fn hero_header_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/hero_header_demo_section.rs"
+            github_source_path="molecules/hero_header.rs"
             title="HeroHeader Component"
             description={Some(html! {
                 <Typo tag={TagType::P}>{"The `HeroHeader` component renders a bold full-width section with an optional background image and overlay content. Great for landing pages or major section dividers."}</Typo>

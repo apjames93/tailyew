@@ -92,6 +92,8 @@ pub fn card_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="organisms/card_demo_section.rs"
+            github_source_path="organisms/card.rs"
             title="Card Component"
             description={Some(html! {
                 <p>{"The `Card` component is a reusable, responsive layout block that can include an image, title, description, and interactive children."}</p>

@@ -231,6 +231,8 @@ pub fn form_builder_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/form_builder_demo_section.rs"
+            github_source_path="form/form_builder.rs"
             title="FormBuilder Component"
             description={Some(html! {
                 <p>{"The `FormBuilder` allows creating fully dynamic, config-driven forms using TailYew components. It supports both inline and modal forms, customizable fields, success/error feedback, and flexible footer buttons."}</p>

@@ -69,6 +69,8 @@ pub fn breadcrumbs_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/breadcrumbs_demo_section.rs"
+            github_source_path="molecules/breadcrumbs.rs"
             title="Breadcrumbs Component"
             description={Some(html! {
                 <p>{ "The `Breadcrumbs` component displays a navigation trail using `A`, `Typo`, or `Button`. It supports custom separators and styled segments." }</p>

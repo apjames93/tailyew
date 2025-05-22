@@ -1,6 +1,6 @@
 use crate::atoms::{TagType, Typo};
 use yew::prelude::*;
-use yew::virtual_dom::{VNode, VTag, VText};
+// use yew::virtual_dom::{VNode, VTag, VText};
 
 /// A flexible column definition supporting arbitrary Yew HTML for headers and cells
 #[derive(Clone, PartialEq)]

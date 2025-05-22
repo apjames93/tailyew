@@ -30,6 +30,8 @@ pub fn pie_chart_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="charts/pie_chart_demo_section.rs"
+            github_source_path="charts/pie_chart_component.rs"
             title="PieChartComponent"
             description={Some(html! {
                 <p>{"The `PieChartComponent` renders a canvas-based pie chart with a legend. Each slice is drawn based on its relative value, and color-coded for clarity."}</p>

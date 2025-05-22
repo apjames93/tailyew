@@ -29,6 +29,8 @@ pub fn line_chart_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="charts/line_chart_demo_section.rs"
+            github_source_path="charts/line_chart_component.rs"
             title="LineChartComponent"
             description={Some(html! {
                 <p>{"The `LineChartComponent` renders one or more connected line plots on a canvas using (x, y) data points and displays a color-coded legend."}</p>

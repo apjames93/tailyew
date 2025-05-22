@@ -66,6 +66,8 @@ let steps = vec![
 
     html! {
         <DemoComponent
+            github_demo_path="organisms/stepper_demo_section.rs"
+            github_source_path="organisms/stepper.rs"
             title="Stepper Component"
             description={Some(html! {
                 <p>{"The `Stepper` visually guides users through a multi-step process. Supports interactive steps and optional navigation buttons."}</p>

@@ -26,6 +26,8 @@ pub fn bar_chart_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="charts/bar_chart_demo_section.rs"
+            github_source_path="charts/bar_chart_component.rs"
             title="BarChartComponent"
             description={Some(html! {
                 <p>{"The `BarChartComponent` renders a canvas-based bar chart with labeled axes and a custom legend. It supports dynamic data input and color styling per bar."}</p>

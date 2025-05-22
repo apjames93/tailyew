@@ -125,6 +125,8 @@ pub fn form_modal_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/form_modal_demo_section.rs"
+            github_source_path="form/form_modal.rs"
             title="FormModal Component"
             description={Some(html! {
                 <p>{"The `FormModal` combines `Form` and `ModalButton`, handling submission, state, and flexible modal footers. You can configure auto-close, attach callbacks, and display validation messages."}</p>

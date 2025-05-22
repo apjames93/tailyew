@@ -111,6 +111,8 @@ pub fn download_button_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/download_button_demo_section.rs"
+            github_source_path="molecules/download_button.rs"
             title="DownloadButton Component"
             description={Some(html! {
                 <p>{"The `DownloadButton` allows users to download content from a given URL or dynamically generated JSON. It supports multiple file formats using the `FileType` enum."}</p>

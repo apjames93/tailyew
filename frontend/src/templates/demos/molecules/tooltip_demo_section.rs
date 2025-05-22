@@ -67,6 +67,8 @@ pub fn tooltip_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/tooltip_demo_section.rs"
+            github_source_path="molecules/tooltip.rs"
             title="Tooltip Component"
             description={Some(html! {
                 <p>{ "The `Tooltip` component appears when hovering over a trigger element. You can configure its position (top, right, bottom, left)." }</p>

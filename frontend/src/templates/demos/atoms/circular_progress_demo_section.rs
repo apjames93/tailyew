@@ -32,6 +32,8 @@ pub fn circular_progress_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/circular_progress_demo_section.rs"
+            github_source_path="atoms/circular_progress.rs"
             title="CircularProgressIndicator"
             description={Some(html! {
                 <p>{"The `CircularProgressIndicator` component shows a spinning loader with customizable size and color."}</p>

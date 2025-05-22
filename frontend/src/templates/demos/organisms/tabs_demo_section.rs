@@ -73,6 +73,8 @@ let items = vec![
 
     html! {
         <DemoComponent
+            github_demo_path="organisms/tabs_demo_section.rs"
+            github_source_path="organisms/tabs.rs"
             title="Tabs Component"
             description={Some(html! {
                 <p>{"The `Tabs` component enables navigation between multiple content sections using a horizontal tab interface. Supports accessibility and Tailwind styling."}</p>

@@ -59,6 +59,8 @@ pub fn color_input_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/color_input_demo_section.rs"
+            github_source_path="form/color_input.rs"
             title="ColorInput Component"
             description={Some(html! {
                 <p>{"The `ColorInput` component renders a color picker input with a preview and optional callback. Great for theme or brand color customization."}</p>

@@ -28,6 +28,8 @@ pub fn bubble_chart_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="charts/bubble_chart_demo_section.rs"
+            github_source_path="charts/bubble_chart_component.rs"
             title="BubbleChartComponent"
             description={Some(html! {
                 <p>{"The `BubbleChartComponent` renders a dynamic scatter plot using `<canvas>`, with bubbles positioned by (x, y), colored individually, and sized via `radius`."}</p>

@@ -113,6 +113,8 @@ html! {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/avatar_group_demo_section.rs"
+            github_source_path="molecules/avatar_group.rs"
             title="AvatarGroup Component"
             description={Some(html! {
                 <p>{ "The `AvatarGroup` stacks multiple avatars with overlapping styles. Supports fallback text, image avatars, and overflow counts like +2." }</p>

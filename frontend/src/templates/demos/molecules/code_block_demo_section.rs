@@ -1,7 +1,7 @@
 // frontend/src/templates/demos/code_block_demo_section.rs
 
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::CodeBlock;
+use tailyew::molecules::CodeBlock;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
@@ -39,6 +39,8 @@ pub fn code_block_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/code_block_demo_section.rs"
+            github_source_path="molecules/code_block.rs"
             title="CodeBlock Component"
             description={Some(html! {
                 <p>{ "The `CodeBlock` component renders a pre-styled <pre><code> block using Tailwind. It’s great for documentation and usage examples." }</p>

@@ -339,13 +339,13 @@ pub const DEMO_LINKS: &[DemoLink] = &[
         render: || html! { <ModalDemoSection /> },
     },
     DemoLink {
-        ctype: "atoms",
+        ctype: "molecules",
         name: "CodeBlock",
         route: "code_block",
         render: || html! { <CodeBlockDemoSection /> },
     },
     DemoLink {
-        ctype: "molecules",
+        ctype: "organisms",
         name: "Markdown",
         route: "markdown",
         render: || html! { <MarkdownDemoSection /> },

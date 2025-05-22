@@ -43,6 +43,8 @@ pub fn button_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="atoms/button_demo_section.rs"
+            github_source_path="atoms/button.rs"
             title="Button Component"
             description={Some(html! {
                 <p>{"The `Button` component supports multiple styles and behaviors for your app."}</p>

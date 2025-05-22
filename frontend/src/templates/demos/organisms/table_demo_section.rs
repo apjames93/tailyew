@@ -101,6 +101,8 @@ let columns = vec![
 
     html! {
         <DemoComponent
+            github_demo_path="organisms/table_demo_section.rs"
+            github_source_path="organisms/table.rs"
             title="Table Component"
             description={Some(html! {
                 <Typo tag={TagType::P}>

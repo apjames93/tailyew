@@ -79,6 +79,8 @@ let nested_items = vec![
 
     html! {
         <DemoComponent
+            github_demo_path="organisms/nested_list_demo_section.rs"
+            github_source_path="organisms/nested_list.rs"
             title="NestedList Component"
             description={Some(html! {
                 <p>{"The `NestedList` component renders a recursive list with support for collapsible sublists using Accordions. Useful for nested navigation, categories, or drill-down structures."}</p>

@@ -63,6 +63,8 @@ pub fn file_input_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="form/file_input_demo_section.rs"
+            github_source_path="form/file_input.rs"
             title="FileInput Component"
             description={Some(html! {
                 <p>{"The `FileInput` component provides a styled file picker with live filename preview and customizable file type restrictions."}</p>

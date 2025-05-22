@@ -28,9 +28,6 @@ pub use tooltip_demo_section::*;
 pub mod navbar_demo_section;
 pub use navbar_demo_section::*;
 
-pub mod markdown_demo_section;
-pub use markdown_demo_section::*;
-
 pub mod download_button_demo_section;
 pub use download_button_demo_section::*;
 
@@ -39,3 +36,6 @@ pub use avatar_group_demo_section::*;
 
 pub mod breadcrumbs_demo_section;
 pub use breadcrumbs_demo_section::*;
+
+pub mod code_block_demo_section;
+pub use code_block_demo_section::*;

@@ -31,9 +31,6 @@ pub use copy_to_clipboard::*;
 pub mod navbar;
 pub use navbar::*;
 
-pub mod markdown;
-pub use markdown::*;
-
 pub mod download_button;
 pub use download_button::*;
 
@@ -42,3 +39,6 @@ pub use avatar_group::*;
 
 pub mod breadcrumbs;
 pub use breadcrumbs::*;
+
+pub mod code_block;
+pub use code_block::*;

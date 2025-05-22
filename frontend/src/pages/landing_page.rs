@@ -1,6 +1,6 @@
 use crate::Route;
-use tailyew::atoms::{Button, ButtonType, CodeBlock, Section, Spacer, TagType, Typo};
-use tailyew::molecules::{Accordion, HeroHeader};
+use tailyew::atoms::{Button, ButtonType, Section, Spacer, TagType, Typo};
+use tailyew::molecules::{Accordion, CodeBlock, HeroHeader};
 use tailyew::organisms::{Card, TabItem, Tabs};
 use yew::prelude::*;
 use yew_router::prelude::Link;

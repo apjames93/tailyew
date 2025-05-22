@@ -184,6 +184,8 @@ pub fn modal_button_demo_section() -> Html {
 
     html! {
         <DemoComponent
+            github_demo_path="molecules/modal_button_demo_section.rs"
+            github_source_path="molecules/modal_button.rs"
             title="ModalButton Component"
             description={Some(html! {
                 <p>{"The `ModalButton` component wraps a trigger and modal in one. You can provide custom footer buttons using a `Callback<Callback<()>>` that receives a modal-closing function."}</p>
