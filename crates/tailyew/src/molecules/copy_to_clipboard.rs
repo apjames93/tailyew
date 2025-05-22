@@ -29,6 +29,9 @@ pub struct CopyToClipboardProps {
     /// Optional extra classes for the button
     #[prop_or_default]
     pub class: Classes,
+
+    #[prop_or_default]
+    pub children: Children,
 }
 
 #[function_component(CopyToClipboard)]
@@ -40,6 +43,7 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
         button_type,
         copied_button_type,
         class,
+        children,
     } = props.clone();
 
     let copied = use_state(|| false);
@@ -80,7 +84,11 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
             onclick={onclick}
             class={class}
         >
-            { current_label }
+            { if children.is_empty() {
+                html! { current_label }
+            } else {
+                html! { for children.iter() }
+            }}
         </Button>
     }
 }
