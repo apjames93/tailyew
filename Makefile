@@ -58,8 +58,26 @@ release-check:
 publish-tailyew:
 	@echo "🚀 Publishing tailyew to crates.io..."
 	cargo check -p tailyew
-	make pretty
 	cd crates/tailyew && cargo publish --allow-dirty
+
+
+# ---------------------------------------
+# Create-Tailyew-App Commands
+# ---------------------------------------
+
+CTYA := crates/create-tailyew-app
+
+.PHONY: release-check-create-tailyew-app publish-create-tailyew-app
+
+release-check-create-tailyew-app:
+	@echo "🔎 Dry‐running create-tailyew-app"
+	cd $(CTYA) && cargo check
+	cd $(CTYA) && cargo publish --dry-run
+
+publish-create-tailyew-app:
+	@echo "🚀 Publishing create-tailyew-app to crates.io…"
+	cd $(CTYA) && cargo check
+	cd $(CTYA) && cargo publish
 
 # ---------------------------------------
 # Frontend Docs Site Commands

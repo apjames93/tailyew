@@ -1,0 +1,37 @@
+# Cargo.toml
+
+[package]
+name = "create-tailyew-app"
+version = "0.1.0"
+edition = "2021"
+description = "TailYew frontend app using the tailyew component system"
+license = "MIT OR Apache-2.0"
+
+[lib]
+# Needed for wasm-pack or trunk builds
+crate-type = ["cdylib"]
+
+[dependencies]
+
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+
+tailyew = "0.1.27"
+yew-router = "0.18.0"
+yew = { version = "0.21", features = ["csr", "ssr"] }
+gloo = "0.11.0"
+wasm-bindgen = "0.2.95"
+wasm-bindgen-futures = "0.4.45"
+js-sys = "0.3.72"
+
+web-sys = { version = "0.3.69", features = [
+  "console",
+  "HtmlFormElement",
+  "HtmlInputElement",
+  "HtmlSelectElement",
+  "HtmlDocument",
+  "HtmlCanvasElement",
+  "CanvasRenderingContext2d",
+  "Clipboard",       
+]}
