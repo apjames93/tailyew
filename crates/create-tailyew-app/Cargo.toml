@@ -1,6 +1,6 @@
 [package]
 name         = "create-tailyew-app"
-version      = "0.1.0"
+version      = "0.1.1"
 edition      = "2021"
 authors      = ["Alex James <apjames93@gmail.com>"]
 description  = "CLI to scaffold a new Tailyew Yew+Tailwind project"
@@ -9,7 +9,7 @@ readme       = "README.md"
 repository   = "https://github.com/apjames93/tailyew"
 homepage     = "https://tailyew.com/"
 documentation= "https://tailyew.com"
-keywords     = ["cli", "yew", "tailwind", "scaffold", "wasm", "ui"]
+keywords     = ["cli", "yew", "tailwind", "scaffold", "spa"]
 categories   = ["command-line-utilities", "web-programming", "wasm"]
 
 

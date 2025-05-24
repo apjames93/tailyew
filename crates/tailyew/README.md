@@ -42,28 +42,32 @@ See all live: [https://tailyew.com](https://tailyew.com/)
 ---
 
 
-# ⚡ Quick Start
+## ⚡ Quick Start
 
-## ✅ Option 1: Use the Starter Template (Recommended)
+### ✅ Option 1: Scaffold via CLI (Recommended)
+
+We now provide a zero-config CLI to bootstrap a TailYew SPA in seconds:
 
 ```bash
-git clone https://github.com/apjames93/tailyew-starter my-app
+# 1) Install the scaffolding tool
+cargo install create-tailyew-app
+
+# 2) Scaffold your project (this creates `my-app/` for you)
+create-tailyew-app my-app
+
+# 3) Change into it
 cd my-app
 
-cargo install wasm-pack cargo-watch
-brew install binaryen
-npm install # for tailwindcss and local js server for development
+# 4) Start the dev server
+make run-frontend
+````
 
-make hot-run
-```
+You’ll get:
 
-Then open 👉 [http://localhost:8080](http://localhost:8080)
-
-You get:
-
-- Hot reloading
-- Preconfigured TailwindCSS
-- All TailYew components ready to use
+* A fully working Yew/WASM + Tailwind starter
+* `npm install` already run for you
+* `cargo-watch` installed for hot-reload
+* A prompt (or `make run-frontend`) to launch at [http://localhost:8080](http://localhost:8080)
 
 ---
 
@@ -72,7 +76,7 @@ You get:
 In your `Cargo.toml`:
 
 ```toml
-tailyew = "0.1.27"
+tailyew = "0.1.28"
 ```
 
 ---
