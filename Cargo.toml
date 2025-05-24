@@ -4,8 +4,12 @@
 resolver = "2"
 members = [
   "frontend",
-  "crates/tailyew"
-  ]
+  "crates/tailyew",
+]
+
+exclude = [
+  "crates/create-tailyew-app",
+]
 
 [workspace.dependencies]
 # Serialization and data types

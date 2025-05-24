@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+members = [
+  "frontend",
+]
+
+[workspace.package]
+# Add this if you want consistent metadata
+edition = "2021"
+
+[workspace.dependencies]
+
+serde = { version = "1.0.215", features = ["derive"] }
+serde_json = "1.0.133"
+uuid = { version = "1.11.0", features = ["serde", "v4"] }

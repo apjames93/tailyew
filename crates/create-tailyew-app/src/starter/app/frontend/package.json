@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "serve": "^14.2.4",
+    "tailwindcss": "^3.4.3"
+  },
+  "name": "tailyew-starter",
+  "description": "**A zero-config starter template for building Rust frontends with [Yew](https://yew.rs/) + [Tailwind CSS](https://tailwindcss.com/), powered by the [TailYew](https://github.com/tailyew/tailyew) component system.**",
+  "version": "1.0.0",
+  "main": "tailwind.config.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
