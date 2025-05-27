@@ -1,5 +1,6 @@
 use crate::atoms::{TagType, Typo};
 use crate::icons::ArrowDownIcon;
+use wasm_bindgen::JsCast;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -9,6 +10,9 @@ pub struct AccordionProps {
 
     #[prop_or_default]
     pub class: Classes,
+
+    #[prop_or_default]
+    pub trigger_classes: Classes,
 
     #[prop_or_default]
     pub content_class: Classes,
@@ -31,6 +35,7 @@ pub fn accordion(props: &AccordionProps) -> Html {
     let AccordionProps {
         title,
         class,
+        trigger_classes,
         content_class,
         heading_tag,
         default_open,
@@ -43,12 +48,39 @@ pub fn accordion(props: &AccordionProps) -> Html {
 
     let toggle_open = {
         let is_open = is_open.clone();
-        Callback::from(move |_| is_open.set(!*is_open))
+        Callback::from(move |e: MouseEvent| {
+            let target = e.target();
+            if let Some(el) = target {
+                let tag = el
+                    .dyn_ref::<web_sys::Element>()
+                    .map(|el| el.tag_name().to_ascii_lowercase());
+                if matches!(
+                    tag.as_deref(),
+                    Some("input" | "textarea" | "button" | "select")
+                ) {
+                    // Click was inside an interactive field, don't toggle
+                    return;
+                }
+            }
+            is_open.set(!*is_open);
+        })
     };
 
     let on_keypress = {
         let is_open = is_open.clone();
         Callback::from(move |e: KeyboardEvent| {
+            let tag = e.target().and_then(|t| {
+                t.dyn_ref::<web_sys::Element>()
+                    .map(|el| el.tag_name().to_ascii_lowercase())
+            });
+            if matches!(
+                tag.as_deref(),
+                Some("input" | "textarea" | "button" | "select")
+            ) {
+                // Ignore keypresses in interactive elements
+                return;
+            }
+
             if e.key() == "Enter" || e.key() == " " {
                 e.prevent_default();
                 is_open.set(!*is_open);
@@ -70,7 +102,7 @@ pub fn accordion(props: &AccordionProps) -> Html {
         )
     };
 
-    let trigger_classes = if compact {
+    let base_trigger_classes = if compact {
         classes!(
             "w-full",
             "bg-gray-200",
@@ -84,7 +116,8 @@ pub fn accordion(props: &AccordionProps) -> Html {
             "justify-between",
             "rounded-lg",
             "shadow-md",
-            "transition"
+            "transition",
+            trigger_classes.clone()
         )
     } else {
         classes!(
@@ -99,7 +132,8 @@ pub fn accordion(props: &AccordionProps) -> Html {
             "justify-between",
             "items-center",
             "transition",
-            "duration-200"
+            "duration-200",
+            trigger_classes.clone()
         )
     };
 
@@ -166,13 +200,13 @@ pub fn accordion(props: &AccordionProps) -> Html {
             <div
                 role="button"
                 tabindex="0"
-                class={trigger_classes}
+                class={base_trigger_classes}
                 onclick={toggle_open}
                 onkeypress={on_keypress}
                 aria-expanded={(*is_open).to_string()}
                 aria-controls="accordion-panel"
             >
-                <Typo tag={heading_tag}>{ title }</Typo>
+                <Typo class={"w-full text-left"} tag={heading_tag}>{ title }</Typo>
                 {
                     if let Some(icon) = arrow {
                         icon
