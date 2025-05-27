@@ -49,9 +49,9 @@ pub fn json_input_demo_section() -> Html {
                         label="Flat JSON"
                         display_buttons={true}
                         initial_value={Some(json!({
-                            "name": "buddy",
-                            "email": "guy@example.com",
-                            "role": "admin"
+                            "1": "1",
+                            "2": "2",
+                            "3": "3"
                         }))}
                     />
 
