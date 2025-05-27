@@ -68,6 +68,8 @@ pub fn input_demo_section() -> Html {
                 "aria_label",
                 "aria_labelledby",
                 "aria_describedby",
+                "node_ref",
+                "validate",
             ]
             .into_iter()
             .map(Html::from)
@@ -93,6 +95,8 @@ pub fn input_demo_section() -> Html {
                 "Option<AttrValue>",
                 "Option<AttrValue>",
                 "Option<AttrValue>",
+                "NodeRef",
+                "Option<Callback<String, Option<String>>>",
             ]
             .into_iter()
             .map(Html::from)
@@ -118,6 +122,8 @@ pub fn input_demo_section() -> Html {
                 "ARIA label (e.g., for screen readers).",
                 "ARIA labelledby reference ID.",
                 "ARIA describedby reference ID.",
+                "Node reference for DOM access.",
+                "Callback for custom validation.",
             ]
             .into_iter()
             .map(Html::from)

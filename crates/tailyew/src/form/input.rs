@@ -89,6 +89,9 @@ pub struct InputProps {
 
     #[prop_or_default]
     pub node_ref: NodeRef,
+
+    #[prop_or_default]
+    pub validate: Option<Callback<String, Option<String>>>,
 }
 
 #[function_component(Input)]
@@ -113,6 +116,7 @@ pub fn input(props: &InputProps) -> Html {
         aria_label,
         aria_labelledby,
         node_ref,
+        validate,
     } = props.clone();
 
     let value = use_state(|| default_value.to_string());
@@ -126,6 +130,7 @@ pub fn input(props: &InputProps) -> Html {
         let pattern = pattern.clone();
         let error_title = error_title.clone();
         let form_pattern = form_pattern.clone();
+        let validate = validate.clone();
 
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into();
@@ -136,29 +141,42 @@ pub fn input(props: &InputProps) -> Html {
                 cb.emit(new_val.clone());
             }
 
-            if let Some(pat) = &pattern {
-                match Regex::new(pat.as_str()) {
-                    Ok(re) => {
-                        if re.is_match(&new_val) {
-                            validation_error.set(None);
-                            form_pattern.set(Some(".*".into()));
-                        } else {
-                            validation_error.set(Some(
-                                error_title
-                                    .clone()
-                                    .unwrap_or_else(|| "Invalid format.".into())
-                                    .to_string(),
-                            ));
-                            form_pattern.set(Some("^$a".into())); // always fail
-                        }
-                    }
-                    Err(err) => {
-                        validation_error.set(Some(format!("Invalid regex: {}", err)));
-                        form_pattern.set(Some("^$a".into())); // always fail
+            // Custom validate callback (takes precedence over pattern)
+            if let Some(validate_fn) = &validate {
+                if let Some(error) = validate_fn.emit(new_val.clone()) {
+                    validation_error.set(Some(error));
+                    form_pattern.set(Some("^$a".into())); // always fail
+                } else {
+                    validation_error.set(None);
+                    form_pattern.set(Some(".*".into()));
+                }
+                return;
+            }
+
+            // Otherwise fallback to pattern-based validation
+            match pattern.as_ref().map(|p| Regex::new(p.as_str())) {
+                Some(Ok(re)) => {
+                    if re.is_match(&new_val) {
+                        validation_error.set(None);
+                        form_pattern.set(Some(".*".into()));
+                    } else {
+                        validation_error.set(Some(
+                            error_title
+                                .clone()
+                                .unwrap_or_else(|| "Invalid format.".into())
+                                .to_string(),
+                        ));
+                        form_pattern.set(Some("^$a".into()));
                     }
                 }
-            } else {
-                form_pattern.set(Some(".*".into()));
+                Some(Err(err)) => {
+                    validation_error.set(Some(format!("Invalid regex: {}", err)));
+                    form_pattern.set(Some("^$a".into()));
+                }
+                None => {
+                    validation_error.set(None);
+                    form_pattern.set(Some(".*".into()));
+                }
             }
         })
     };
