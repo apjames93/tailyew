@@ -11,6 +11,7 @@ pub enum ModalSize {
     Small,
     Medium,
     Large,
+    Fullscreen,
 }
 
 #[derive(Properties, PartialEq, Clone)]
@@ -84,6 +85,7 @@ pub fn modal(props: &ModalProps) -> Html {
         ModalSize::Small => "w-1/4",
         ModalSize::Medium => "w-1/2",
         ModalSize::Large => "w-3/4",
+        ModalSize::Fullscreen => "w-screen h-screen p-0 rounded-none",
     };
 
     html! {
@@ -95,8 +97,10 @@ pub fn modal(props: &ModalProps) -> Html {
         >
             <div
                 class={format!(
-                    "bg-white dark:bg-gray-800 {} p-6 rounded-lg shadow-xl transform transition-transform duration-300 ease-in-out scale-100 focus:outline-none max-h-[80vh] overflow-y-auto",
-                    modal_size_class
+                    "bg-white dark:bg-gray-800 {} {} transform transition-transform duration-300 ease-in-out scale-100 focus:outline-none {}",
+                    modal_size_class,
+                    if *size == ModalSize::Fullscreen { "" } else { "shadow-xl max-h-[80vh] overflow-y-auto" },
+                    if *size == ModalSize::Fullscreen { "" } else { "p-6 rounded-lg" }
                 )}
                 role="dialog"
                 aria-labelledby="modal-title"

@@ -1,7 +1,8 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::molecules::ModalButton;
+use tailyew::molecules::ModalSize;
 use tailyew::organisms::table::Column;
-use tailyew::{Button, ButtonType, Typo};
+use tailyew::{Button, ButtonType, TagType, Typo};
 use yew::prelude::*;
 
 #[function_component(ModalButtonDemoSection)]
@@ -28,15 +29,27 @@ pub fn modal_button_demo_section() -> Html {
     };
 
     let feedback_message = if *confirmed {
-        html! { <Typo class="text-green-600 text-sm font-medium">{"✅ You confirmed the action."}</Typo> }
+        html! { <Typo>{"You confirmed the action."}</Typo> }
     } else if *declined {
-        html! { <Typo class="text-red-600 text-sm font-medium">{"❌ You declined the action."}</Typo> }
+        html! { <Typo tag={TagType::Error}>{"You declined the action."}</Typo> }
     } else {
         html! {}
     };
 
     let example = html! {
         <div class="space-y-4">
+            <ModalButton
+                modal_size={ModalSize::Fullscreen}
+                button_text={"Fullscreen Modal".to_string()}
+                modal_title={"Informational Modal".to_string()}
+                modal_content={html! {
+                    <div class="text-sm space-y-2">
+                        <Typo>{"This modal was triggered by a button click."}</Typo>
+                        <Typo>{"You can open a fullscreen modal by setting the `modal_size` prop to `ModalSize::Fullscreen`."}</Typo>
+                    </div>
+                }}
+            />
+
             <ModalButton
                 button_text={"Open Info Modal".to_string()}
                 modal_title={"Informational Modal".to_string()}
