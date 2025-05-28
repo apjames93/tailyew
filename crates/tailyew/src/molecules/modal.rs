@@ -88,6 +88,23 @@ pub fn modal(props: &ModalProps) -> Html {
         ModalSize::Fullscreen => "w-screen h-screen p-0 rounded-none",
     };
 
+    // Used for modal body height
+    let body_max_height = match size {
+        ModalSize::Fullscreen => "max-h-[calc(100vh-80px)]",
+        _ => "max-h-[70vh]",
+    };
+
+    let modal_scroll_class = match size {
+        ModalSize::Fullscreen => "h-screen",
+        _ => "shadow-xl max-h-[80vh]",
+    };
+
+    let modal_padding_class = if *size == ModalSize::Fullscreen {
+        "p-2"
+    } else {
+        "p-6 rounded-lg"
+    };
+
     html! {
         <div
             class="fixed inset-0 bg-gray-800 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-70 flex justify-center items-center z-50"
@@ -97,10 +114,10 @@ pub fn modal(props: &ModalProps) -> Html {
         >
             <div
                 class={format!(
-                    "bg-white dark:bg-gray-800 {} {} transform transition-transform duration-300 ease-in-out scale-100 focus:outline-none {}",
+                    "bg-white dark:bg-gray-800 flex flex-col {} {} transform transition-transform duration-300 ease-in-out scale-100 focus:outline-none {}",
                     modal_size_class,
-                    if *size == ModalSize::Fullscreen { "" } else { "shadow-xl max-h-[80vh] overflow-y-auto" },
-                    if *size == ModalSize::Fullscreen { "" } else { "p-6 rounded-lg" }
+                    modal_scroll_class,
+                    modal_padding_class
                 )}
                 role="dialog"
                 aria-labelledby="modal-title"
@@ -108,8 +125,9 @@ pub fn modal(props: &ModalProps) -> Html {
                 tabindex="0"
                 onclick={Callback::from(|e: MouseEvent| e.stop_propagation())}
             >
-                <div class="flex justify-between items-center border-b pb-4 border-gray-200 dark:border-gray-700 mb-4">
-                    <Typo tag={TagType::H2}>{ title.clone() }</Typo>
+                // -- STICKY HEADER --
+                <div class="flex justify-between items-center border-b pb-4 border-gray-200 dark:border-gray-700 mb-4 sticky top-0 z-10 bg-white dark:bg-gray-800">
+                    <Typo tag={TagType::H2} class="text-lg">{ title.clone() }</Typo>
                     <Button
                         onclick={on_close_click}
                         button_type={ButtonType::Icon}
@@ -118,7 +136,8 @@ pub fn modal(props: &ModalProps) -> Html {
                     </Button>
                 </div>
 
-                <div class="mt-4 text-gray-700 dark:text-gray-300" id="modal-description">
+                // -- SCROLLABLE BODY --
+                <div class={format!("mt-4 text-gray-700 dark:text-gray-300 overflow-y-auto {}", body_max_height)} id="modal-description">
                     { for (*children).iter() }
                 </div>
             </div>

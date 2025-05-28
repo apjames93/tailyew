@@ -1,6 +1,8 @@
 module.exports = {
   darkMode: 'class',
   content: [
+    // './src/**/*.{html,css,rs}',
+    // './static/**/*.{html,css}',
     '../crates/tailyew/tailyew-safelist.html',
   ],
   theme: {

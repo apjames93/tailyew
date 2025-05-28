@@ -5,6 +5,9 @@ use tailyew::organisms::table::Column;
 use tailyew::{Button, ButtonType, TagType, Typo};
 use yew::prelude::*;
 
+use tailyew::organisms::Markdown;
+const MARKDOWN_DOC: &str = include_str!("../organisms/markdown_demo.md");
+
 #[function_component(ModalButtonDemoSection)]
 pub fn modal_button_demo_section() -> Html {
     let confirmed = use_state(|| false);
@@ -44,29 +47,68 @@ pub fn modal_button_demo_section() -> Html {
                 modal_title={"Informational Modal".to_string()}
                 modal_content={html! {
                     <div class="text-sm space-y-2">
-                        <Typo>{"This modal was triggered by a button click."}</Typo>
-                        <Typo>{"You can open a fullscreen modal by setting the `modal_size` prop to `ModalSize::Fullscreen`."}</Typo>
+                        <Typo>{"This modal was triggered by a button click and is full screen."}</Typo>
+                        <Markdown content={MARKDOWN_DOC} />
                     </div>
                 }}
+            />
+
+
+            <ModalButton
+                button_text={"Open Confirm Modal full screen With Footer button".to_string()}
+                button_type={ButtonType::Secondary}
+                modal_size={ModalSize::Fullscreen}
+                modal_title={"Confirm Action".to_string()}
+                modal_content={html! {
+                    <div class="text-sm space-y-2">
+                        <Typo>{"Are you sure you want to confirm this action?"}</Typo>
+                        <Markdown content={MARKDOWN_DOC} />
+                    </div>
+                }}
+                footer={Some({
+                    let on_confirm = on_confirm.clone();
+                    Callback::from(move |close_modal: Callback<()>| {
+                        html! {
+                            <Button
+                                button_type={ButtonType::Primary}
+                                onclick={{
+                                    let close_modal = close_modal.clone();
+                                    let on_confirm = on_confirm.clone();
+                                    Callback::from(move |_| {
+                                        on_confirm.emit(());
+                                        close_modal.emit(());
+                                    })
+                                }}
+                            >
+                                { "Confirm" }
+                            </Button>
+                        }
+                    })
+                })}
             />
 
             <ModalButton
                 button_text={"Open Info Modal".to_string()}
                 modal_title={"Informational Modal".to_string()}
+                button_type={ButtonType::Danger}
                 modal_content={html! {
                     <div class="text-sm space-y-2">
                         <Typo>{"This modal was triggered by a button click."}</Typo>
                         <Typo>{"You can reuse this pattern anywhere you need a quick inline modal."}</Typo>
+                        <Markdown content={MARKDOWN_DOC} />
                     </div>
                 }}
             />
 
             <ModalButton
                 button_text={"Open Confirm Modal".to_string()}
-                button_type={ButtonType::Primary}
                 modal_title={"Confirm Action".to_string()}
+                button_type={ButtonType::Ghost}
                 modal_content={html! {
-                    <Typo class="text-sm">{"Are you sure you want to confirm this action?"}</Typo>
+                    <div class="text-sm space-y-2">
+                        <Typo>{"Are you sure you want to confirm this action?"}</Typo>
+                        <Markdown content={MARKDOWN_DOC} />
+                    </div>
                 }}
                 footer={Some({
                     let on_confirm = on_confirm.clone();
@@ -92,10 +134,13 @@ pub fn modal_button_demo_section() -> Html {
 
             <ModalButton
                 button_text={"Open Confirm + Decline Modal".to_string()}
-                button_type={ButtonType::Secondary}
+                button_type={ButtonType::Button}
                 modal_title={"Two-Action Modal".to_string()}
                 modal_content={html! {
-                    <Typo class="text-sm">{"Choose whether to proceed or cancel."}</Typo>
+                    <div class="text-sm space-y-2">
+                        <Markdown content={MARKDOWN_DOC} />
+                        <Typo>{"Choose whether to proceed or cancel."}</Typo>
+                    </div>
                 }}
                 footer={Some({
                     let on_confirm = on_confirm.clone();
