@@ -1,6 +1,6 @@
 // frontend/src/pages/demo_page.rs
 
-use crate::templates::DEMO_LINKS;
+use crate::templates::all_demo_links;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
@@ -12,7 +12,7 @@ pub struct DemoPageProps {
 pub fn demo_page(props: &DemoPageProps) -> Html {
     let DemoPageProps { component } = props;
 
-    let content = DEMO_LINKS
+    let content = all_demo_links()
         .iter()
         .find(|link| link.route.eq_ignore_ascii_case(component))
         .map(|link| (link.render)())

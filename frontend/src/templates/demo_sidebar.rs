@@ -17,8 +17,10 @@ use crate::templates::demos::{
     TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
-use std::collections::HashMap;
-use tailyew::organisms::{NestedItem, Sidebar, SidebarButton};
+use tailyew::{
+    AtomIcon, BarChartIcon, FormIcon, PolylineIcon, NestedItem, AppsIcon, Sidebar,
+    SidebarButton, SystemIcon,
+};
 use yew::prelude::*;
 use yew_router::prelude::use_navigator;
 
@@ -27,375 +29,309 @@ pub struct DemoLink {
     pub name: &'static str,
     pub route: &'static str,
     pub render: fn() -> Html,
-    pub ctype: &'static str,
 }
 
-pub const DEMO_LINKS: &[DemoLink] = &[
-    // System-level or getting started
+pub const SYSTEM_LINKS: &[DemoLink] = &[
     DemoLink {
-        ctype: "system",
         name: "Getting Started",
         route: "getting_started",
         render: || html! { <GettingStarted /> },
     },
-    // Atoms (basic UI elements)
     DemoLink {
-        ctype: "atoms",
-        name: "A",
-        route: "a",
-        render: || html! { <AComponentDemoSection /> },
+        name: "Init Theme",
+        route: "init_theme",
+        render: || html! { <InitThemeDemoSection /> },
     },
-    DemoLink {
-        ctype: "atoms",
-        name: "Avatar",
-        route: "avatar",
-        render: || html! { <AvatarDemoSection /> },
-    },
-    DemoLink {
-        ctype: "atoms",
-        name: "Badge",
-        route: "badge",
-        render: || html! { <BadgeDemoSection /> },
-    },
-    DemoLink {
-        ctype: "atoms",
-        name: "Button",
-        route: "button",
-        render: || html! { <ButtonDemoSection /> },
-    },
-    DemoLink {
-        ctype: "atoms",
-        name: "Typo",
-        route: "typo",
-        render: || html! { <TypoDemoSection /> },
-    },
-    DemoLink {
-        ctype: "atoms",
-        name: "Li",
-        route: "li",
-        render: || html! { <LiDemoSection /> },
-    },
-    DemoLink {
-        ctype: "atoms",
-        name: "Ul",
-        route: "ul",
-        render: || html! { <UlDemoSection /> },
-    },
-    DemoLink {
-        ctype: "atoms",
-        name: "Spacer",
-        route: "spacer",
-        render: || html! { <SpacerDemoSection /> },
-    },
-    DemoLink {
-        ctype: "atoms",
-        name: "Image",
-        route: "image",
-        render: || html! { <ImageDemoSection /> },
-    },
-    // Molecules (interactive components composed of atoms)
-    DemoLink {
-        ctype: "molecules",
-        name: "Avatar Group",
-        route: "avatar_group",
-        render: || html! { <AvatarGroupDemoSection /> },
-    },
-    DemoLink {
-        ctype: "molecules",
-        name: "Accordion",
-        route: "accordion",
-        render: || html! { <AccordionDemoSection /> },
-    },
-    DemoLink {
-        ctype: "molecules",
-        name: "Breadcrumbs",
-        route: "breadcrumbs",
-        render: || html! { <BreadcrumbsDemoSection /> },
-    },
-    DemoLink {
-        ctype: "molecules",
-        name: "Modal Button",
-        route: "modal_button",
-        render: || html! { <ModalButtonDemoSection /> },
-    },
-    DemoLink {
-        ctype: "molecules",
-        name: "Copy to Clipboard",
-        route: "copy_to_clipboard",
-        render: || html! { <CopyToClipboardDemoSection /> },
-    },
-    DemoLink {
-        ctype: "molecules",
-        name: "Download Button",
-        route: "download_button",
-        render: || html! { <DownloadButtonDemoSection /> },
-    },
-    DemoLink {
-        ctype: "molecules",
-        name: "Tooltip",
-        route: "tooltip",
-        render: || html! { <TooltipDemoSection /> },
-    },
-    DemoLink {
-        ctype: "molecules",
-        name: "Popover",
-        route: "popover",
-        render: || html! { <PopoverDemoSection /> },
-    },
-    // Organisms (large composite structures)
-    DemoLink {
-        ctype: "organisms",
-        name: "Card",
-        route: "card",
-        render: || html! { <CardDemoSection /> },
-    },
-    DemoLink {
-        ctype: "organisms",
-        name: "Table",
-        route: "table",
-        render: || html! { <TableDemoSection /> },
-    },
-    DemoLink {
-        ctype: "organisms",
-        name: "Nested List",
-        route: "nested_list",
-        render: || html! { <NestedListDemoSection /> },
-    },
-    DemoLink {
-        ctype: "organisms",
-        name: "NavBar",
-        route: "navbar",
-        render: || html! { <NavBarDemoSection /> },
-    },
-    DemoLink {
-        ctype: "organisms",
-        name: "App Bar",
-        route: "app_bar",
-        render: || html! { <AppBarDemoSection /> },
-    },
-    DemoLink {
-        ctype: "organisms",
-        name: "Notification",
-        route: "notification",
-        render: || html! { <NotificationDemoSection /> },
-    },
-    DemoLink {
-        ctype: "organisms",
-        name: "Stepper",
-        route: "stepper",
-        render: || html! { <StepperDemoSection /> },
-    },
+];
+
+pub const FORM_LINKS: &[DemoLink] = &[
     // Forms
     DemoLink {
-        ctype: "forms",
         name: "Form",
         route: "form",
         render: || html! { <FormDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Input",
         route: "input",
         render: || html! { <InputDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Search Input",
         route: "search_input",
         render: || html! { <SearchInputDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Select",
         route: "select",
         render: || html! { <SelectDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Textarea",
         route: "textarea",
         render: || html! { <TextareaDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Form Modal",
         route: "form_modal",
         render: || html! { <FormModalDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Form Builder",
         route: "form_builder",
         render: || html! { <FormBuilderDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Checkbox",
         route: "checkbox",
         render: || html! { <CheckboxDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Radio Group",
         route: "radio_group",
         render: || html! { <RadioGroupDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Color Input",
         route: "color_input",
         render: || html! { <ColorInputDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Phone Input",
         route: "phone_input",
         render: || html! { <PhoneInputDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "Range Input",
         route: "range_input",
         render: || html! { <RangeInputDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "File Input",
         route: "file_input",
         render: || html! { <FileInputDemoSection /> },
     },
     DemoLink {
-        ctype: "forms",
         name: "JSON Input",
         route: "json_input",
         render: || html! { <JsonInputDemoSection /> },
     },
-    // Charts
+];
+
+pub const ATOM_LINKS: &[DemoLink] = &[
+    // Atoms (basic UI elements)
     DemoLink {
-        ctype: "charts",
-        name: "Bar Chart",
-        route: "bar_chart",
-        render: || html! { <BarChartDemoSection /> },
+        name: "A",
+        route: "a",
+        render: || html! { <AComponentDemoSection /> },
     },
     DemoLink {
-        ctype: "charts",
-        name: "Bubble Chart",
-        route: "bubble_chart",
-        render: || html! { <BubbleChartDemoSection /> },
+        name: "Avatar",
+        route: "avatar",
+        render: || html! { <AvatarDemoSection /> },
     },
     DemoLink {
-        ctype: "charts",
-        name: "Line Chart",
-        route: "line_chart",
-        render: || html! { <LineChartDemoSection /> },
+        name: "Badge",
+        route: "badge",
+        render: || html! { <BadgeDemoSection /> },
     },
     DemoLink {
-        ctype: "charts",
-        name: "Pie Chart",
-        route: "pie_chart",
-        render: || html! { <PieChartDemoSection /> },
+        name: "Button",
+        route: "button",
+        render: || html! { <ButtonDemoSection /> },
     },
     DemoLink {
-        ctype: "charts",
-        name: "Scatter Chart",
-        route: "scatter_chart",
-        render: || html! { <ScatterPlotDemoSection /> },
+        name: "Typo",
+        route: "typo",
+        render: || html! { <TypoDemoSection /> },
     },
     DemoLink {
-        ctype: "atoms",
+        name: "Li",
+        route: "li",
+        render: || html! { <LiDemoSection /> },
+    },
+    DemoLink {
+        name: "Ul",
+        route: "ul",
+        render: || html! { <UlDemoSection /> },
+    },
+    DemoLink {
+        name: "Spacer",
+        route: "spacer",
+        render: || html! { <SpacerDemoSection /> },
+    },
+    DemoLink {
+        name: "Image",
+        route: "image",
+        render: || html! { <ImageDemoSection /> },
+    },
+    DemoLink {
         name: "Linear Progress",
         route: "linear_progress",
         render: || html! { <LinearProgressDemoSection /> },
     },
     DemoLink {
-        ctype: "atoms",
         name: "Circular Progress",
         route: "circular_progress",
         render: || html! { <CircularProgressDemoSection /> },
     },
-    // Utilities / System
+];
+
+pub const MOLECULE_LINKS: &[DemoLink] = &[
     DemoLink {
-        ctype: "system",
-        name: "Init Theme",
-        route: "init_theme",
-        render: || html! { <InitThemeDemoSection /> },
+        name: "Avatar Group",
+        route: "avatar_group",
+        render: || html! { <AvatarGroupDemoSection /> },
     },
     DemoLink {
-        ctype: "molecules",
+        name: "Accordion",
+        route: "accordion",
+        render: || html! { <AccordionDemoSection /> },
+    },
+    DemoLink {
+        name: "Breadcrumbs",
+        route: "breadcrumbs",
+        render: || html! { <BreadcrumbsDemoSection /> },
+    },
+    DemoLink {
+        name: "Modal Button",
+        route: "modal_button",
+        render: || html! { <ModalButtonDemoSection /> },
+    },
+    DemoLink {
+        name: "Copy to Clipboard",
+        route: "copy_to_clipboard",
+        render: || html! { <CopyToClipboardDemoSection /> },
+    },
+    DemoLink {
+        name: "Download Button",
+        route: "download_button",
+        render: || html! { <DownloadButtonDemoSection /> },
+    },
+    DemoLink {
+        name: "Tooltip",
+        route: "tooltip",
+        render: || html! { <TooltipDemoSection /> },
+    },
+    DemoLink {
+        name: "Popover",
+        route: "popover",
+        render: || html! { <PopoverDemoSection /> },
+    },
+    DemoLink {
         name: "Hero Header",
         route: "hero_header",
         render: || html! { <HeroHeaderDemoSection /> },
     },
     DemoLink {
-        ctype: "organisms",
-        name: "Tabs",
-        route: "tabs",
-        render: || html! { <TabsDemoSection /> },
-    },
-    DemoLink {
-        ctype: "molecules",
         name: "Modal",
         route: "modal",
         render: || html! { <ModalDemoSection /> },
     },
     DemoLink {
-        ctype: "molecules",
         name: "CodeBlock",
         route: "code_block",
         render: || html! { <CodeBlockDemoSection /> },
     },
+];
+
+pub const ORGANISM_LINKS: &[DemoLink] = &[
     DemoLink {
-        ctype: "organisms",
+        name: "Card",
+        route: "card",
+        render: || html! { <CardDemoSection /> },
+    },
+    DemoLink {
+        name: "Table",
+        route: "table",
+        render: || html! { <TableDemoSection /> },
+    },
+    DemoLink {
+        name: "Nested List",
+        route: "nested_list",
+        render: || html! { <NestedListDemoSection /> },
+    },
+    DemoLink {
+        name: "NavBar",
+        route: "navbar",
+        render: || html! { <NavBarDemoSection /> },
+    },
+    DemoLink {
+        name: "App Bar",
+        route: "app_bar",
+        render: || html! { <AppBarDemoSection /> },
+    },
+    DemoLink {
+        name: "Notification",
+        route: "notification",
+        render: || html! { <NotificationDemoSection /> },
+    },
+    DemoLink {
+        name: "Stepper",
+        route: "stepper",
+        render: || html! { <StepperDemoSection /> },
+    },
+    DemoLink {
+        name: "Tabs",
+        route: "tabs",
+        render: || html! { <TabsDemoSection /> },
+    },
+    DemoLink {
         name: "Markdown",
         route: "markdown",
         render: || html! { <MarkdownDemoSection /> },
     },
     DemoLink {
-        ctype: "organisms",
         name: "Sidebar",
         route: "sidebar",
         render: || html! { <SidebarDemoSection /> },
     },
 ];
 
-fn build_nested_sidebar_links() -> Vec<NestedItem> {
-    // Group DemoLinks by component type
-    let mut grouped: HashMap<&str, Vec<NestedItem>> = HashMap::new();
+pub const CHART_LINKS: &[DemoLink] = &[
+    DemoLink {
+        name: "Bar Chart",
+        route: "bar_chart",
+        render: || html! { <BarChartDemoSection /> },
+    },
+    DemoLink {
+        name: "Bubble Chart",
+        route: "bubble_chart",
+        render: || html! { <BubbleChartDemoSection /> },
+    },
+    DemoLink {
+        name: "Line Chart",
+        route: "line_chart",
+        render: || html! { <LineChartDemoSection /> },
+    },
+    DemoLink {
+        name: "Pie Chart",
+        route: "pie_chart",
+        render: || html! { <PieChartDemoSection /> },
+    },
+    DemoLink {
+        name: "Scatter Chart",
+        route: "scatter_chart",
+        render: || html! { <ScatterPlotDemoSection /> },
+    },
+];
 
-    for link in DEMO_LINKS {
-        let item = NestedItem::with_html(html! { link.name }, link.route);
-        grouped.entry(link.ctype).or_default().push(item);
-    }
+pub fn all_demo_links() -> Vec<&'static DemoLink> {
+    SYSTEM_LINKS
+        .iter()
+        .chain(ATOM_LINKS.iter())
+        .chain(MOLECULE_LINKS.iter())
+        .chain(ORGANISM_LINKS.iter())
+        .chain(CHART_LINKS.iter())
+        .chain(FORM_LINKS.iter())
+        .collect()
+}
 
-    // Define the order of groups
-    let group_order = vec![
-        "system",
-        "atoms",
-        "molecules",
-        "organisms",
-        "charts",
-        "forms",
-    ];
-
-    // Compose NestedItems grouped and ordered
-    let mut sidebar_items = Vec::new();
-    for group in group_order {
-        if let Some(children) = grouped.remove(group) {
-            // Capitalize group label
-            let title = match group {
-                "system" => "System",
-                "atoms" => "Atoms",
-                "molecules" => "Molecules",
-                "organisms" => "Organisms",
-                "charts" => "Charts",
-                "forms" => "Forms",
-                _ => group,
-            };
-            sidebar_items.push(NestedItem::with_children(title, children));
-        }
-    }
-
-    sidebar_items
+fn build_nested_sidebar_links(_title: &str, links: &[DemoLink]) -> Vec<NestedItem> {
+    links
+        .iter()
+        .map(|link| NestedItem::with_html(html! { &link.name }, link.route))
+        .collect()
 }
 
 #[function_component(DemoSidebar)]
@@ -420,14 +356,35 @@ pub fn demo_sidebar() -> Html {
             top_offset_class={classes!("top-16")}
             icon_list={vec![
                 SidebarButton {
-                    open_text: html! { "Components" },
-                    icon: html! {
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                    },
-                    list: build_nested_sidebar_links(),
-                }
+                    open_text: html! { "System" },
+                    icon: html! { <SystemIcon /> },
+                    list: build_nested_sidebar_links("system", SYSTEM_LINKS),
+                },
+                SidebarButton {
+                    open_text: html! { "Atoms" },
+                    icon: html! { <AtomIcon /> },
+                    list: build_nested_sidebar_links("atoms", ATOM_LINKS),
+                },
+                SidebarButton {
+                    open_text: html! { "Molecules" },
+                    icon: html! { <PolylineIcon /> },
+                    list: build_nested_sidebar_links("molecules", MOLECULE_LINKS),
+                },
+                SidebarButton {
+                    open_text: html! { "Organisms" },
+                    icon: html! { <AppsIcon /> },
+                    list: build_nested_sidebar_links("organisms", ORGANISM_LINKS),
+                },
+                SidebarButton {
+                    open_text: html! { "Charts" },
+                    icon: html! { <BarChartIcon /> },
+                    list: build_nested_sidebar_links("charts", CHART_LINKS),
+                },
+                SidebarButton {
+                    open_text: html! { "Forms" },
+                    icon: html! { <FormIcon /> },
+                    list: build_nested_sidebar_links("forms", FORM_LINKS),
+                },
             ]}
         />
     }
