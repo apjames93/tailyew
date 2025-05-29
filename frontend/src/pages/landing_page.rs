@@ -38,10 +38,14 @@ pub fn landing_page() -> Html {
                 subtitle={Some("A component system for Yew, styled with Tailwind. Build fast. Look great. Stay in Rust.".to_string())}
                 background_image_url={Some(HERO_IMAGE_URL.to_string())}
             >
-                <div class="flex justify-center space-x-4 mt-6">
-                    <Link<Route> to={Route::DemoPage { component: "getting_started".into() }}>
-                        <Button button_type={ButtonType::Secondary}>{ "Getting Started" }</Button>
-                    </Link<Route>>
+                <div class="flex flex-col items-center space-y-4 mt-6">
+
+                    // CTA Button
+                    <div class="flex space-x-4">
+                        <Link<Route> to={Route::DemoPage { component: "getting_started".into() }}>
+                            <Button button_type={ButtonType::Secondary}>{ "Getting Started" }</Button>
+                        </Link<Route>>
+                    </div>
                 </div>
             </HeroHeader>
 

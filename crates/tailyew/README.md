@@ -1,15 +1,16 @@
-# ✨ TailYew
-![Crates.io](https://img.shields.io/crates/v/tailyew)
+# ✨ TailYew  
+> A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and written fully in Rust.
+
+[![Crates.io](https://img.shields.io/crates/v/tailyew)](https://crates.io/crates/tailyew)
 ![Downloads](https://img.shields.io/crates/d/tailyew)
-![Docs.rs](https://img.shields.io/docsrs/tailyew)
+[![Docs.rs](https://img.shields.io/docsrs/tailyew)](https://docs.rs/tailyew)
 ![License](https://img.shields.io/crates/l/tailyew)
-![CI](https://github.com/apjames93/tailyew/actions/workflows/tailyew.yaml/badge.svg)
+[![CI](https://github.com/apjames93/tailyew/actions/workflows/tailyew.yaml/badge.svg)](https://github.com/apjames93/tailyew/actions)
 ![WASM Ready](https://img.shields.io/badge/WASM-ready-blueviolet)
 ![Powered by Yew](https://img.shields.io/badge/Yew-0.21-blue)
 ![Components](https://img.shields.io/badge/components-50%2B-blue)
 [![Demo](https://img.shields.io/badge/live-demo-0C66F0?logo=vercel&logoColor=white)](https://tailyew.com)
 
-> A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and written fully in Rust.
 
 ## 🚀 Why TailYew?
 
@@ -41,6 +42,10 @@ TailYew helps you build fast, beautiful, **dark-mode ready** Yew apps — with m
 See all live: [https://tailyew.com](https://tailyew.com/)
 ---
 
+> If you like this project, consider giving it a ⭐ — it helps others discover TailYew!  
+[![Star](https://img.shields.io/github/stars/apjames93/tailyew?style=social)](https://github.com/apjames93/tailyew/stargazers)
+
+---
 
 ## ⚡ Quick Start
 

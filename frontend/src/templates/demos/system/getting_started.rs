@@ -6,6 +6,8 @@ use yew::prelude::*;
 pub fn getting_started() -> Html {
     html! {
             <Section class="space-y-6">
+                <iframe src="https://ghbtns.com/github-btn.html?user=apjames93&repo=tailyew&type=star&count=true&size=large"
+                frameborder="0" scrolling="0" width="160" height="30" title="GitHub"></iframe>
                 <Typo tag={TagType::H2}>{"✨ Getting Started with `create-tailyew-app`"}</Typo>
                 <Typo tag={TagType::P}>{
                     "The easiest way to start building Rust frontends with TailYew is via our zero-config CLI."

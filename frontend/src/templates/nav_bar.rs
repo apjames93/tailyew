@@ -20,6 +20,13 @@ pub fn nav_bar() -> Html {
             "docs",
         ),
         NestedItem::with_html(html! { <ThemeToggle /> }, "theme_toggle"),
+        NestedItem::with_html(
+            html! {
+               <iframe src="https://ghbtns.com/github-btn.html?user=apjames93&repo=tailyew&type=star&count=true&size=large"
+               frameborder="0" scrolling="0" width="160" height="30" title="GitHub"></iframe>
+            },
+            "github",
+        ),
     ];
 
     html! {
@@ -28,6 +35,11 @@ pub fn nav_bar() -> Html {
           logo_url={Some("/images/logo.png")}
           position={AppBarPosition::Top}
           nested_list={nested_list}
+          logo_onclick={Callback::from(|_| {
+            let _ = web_sys::window()
+                .unwrap()
+                .open_with_url("https://github.com/apjames93/tailyew");
+        })}
       />
     }
 }

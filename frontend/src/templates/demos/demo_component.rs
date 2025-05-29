@@ -37,7 +37,7 @@ pub fn demo_component(props: &DemoComponentProps) -> Html {
         <div class="flex gap-4 text-sm items-center">
             <A
                 href={format!(
-                    "https://github.com/apjames93/tailyew/tree/main/frontend/src/templates/demos/{}",
+                    "https://github.com/apjames93/tailyew/tree/main/frontend/src/templates/demos/{}?utm_source=tailyew&utm_medium=demo&utm_campaign=component_docs",
                     github_demo_path.trim_start_matches('/')
                 )}
                 target={Some("_blank".to_string())}
@@ -47,7 +47,7 @@ pub fn demo_component(props: &DemoComponentProps) -> Html {
 
             <A
                 href={format!(
-                    "https://github.com/apjames93/tailyew/blob/main/crates/tailyew/src/{}",
+                    "https://github.com/apjames93/tailyew/blob/main/crates/tailyew/src/{}?utm_source=tailyew&utm_medium=demo&utm_campaign=component_docs",
                     github_source_path.trim_start_matches('/')
                 )}
                 target={Some("_blank".to_string())}

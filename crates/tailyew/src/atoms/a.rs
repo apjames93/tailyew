@@ -26,6 +26,9 @@ pub struct AProps {
 
     #[prop_or_default]
     pub tabindex: Option<i16>,
+
+    #[prop_or(true)]
+    pub include_referrer: bool,
 }
 
 #[function_component(A)]
@@ -40,6 +43,7 @@ pub fn a(props: &AProps) -> Html {
         aria_describedby,
         role,
         tabindex,
+        include_referrer,
     } = props;
 
     let merged_classes = classes!(
@@ -68,7 +72,13 @@ pub fn a(props: &AProps) -> Html {
         <a
             href={href.clone()}
             target={target.clone()}
-            rel={if target.as_deref() == Some("_blank") { Some("noopener noreferrer") } else { None }}
+            rel={if target.as_deref() == Some("_blank") && !include_referrer {
+                Some("noopener noreferrer")
+            } else if target.as_deref() == Some("_blank") {
+                Some("noopener")
+            } else {
+                None
+            }}
             class={merged_classes}
             onclick={on_click_handler}
             aria-label={aria_label.clone()}

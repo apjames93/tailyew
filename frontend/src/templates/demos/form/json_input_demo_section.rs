@@ -42,12 +42,13 @@ pub fn json_input_demo_section() -> Html {
 
             // 🔹 Example 2: Flat
             <section class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg space-y-4">
-                <Typo tag={TagType::H2}>{ "2. Pre-filled Flat JSON" }</Typo>
+                <Typo tag={TagType::H2}>{ "2. Pre-filled Flat JSON (require at least one)" }</Typo>
                 <Form onsubmit_callback={create_submit_handler("json_payload_flat", submitted_json_flat.clone())}>
                     <JsonInput
                         id="json_payload_flat"
                         label="Flat JSON"
                         display_buttons={true}
+                        require_at_least_one={true}
                         initial_value={Some(json!({
                             "1": "1",
                             "2": "2",
@@ -70,7 +71,7 @@ pub fn json_input_demo_section() -> Html {
                     <JsonInput
                         id="json_payload_nested"
                         label="Nested JSON"
-                        display_buttons={true}
+                        display_buttons={false}
                         initial_value={Some(json!({
                             "config": {
                                 "timeout": 30,
@@ -105,6 +106,9 @@ pub fn json_input_demo_section() -> Html {
                 "initial_value".into(),
                 "on_json_change".into(),
                 "display_buttons".into(),
+                "require_at_least_one".into(),
+                "disable_keys".into(),
+                "disable_values".into(),
             ],
         },
         Column {
@@ -114,6 +118,9 @@ pub fn json_input_demo_section() -> Html {
                 "String".into(),
                 "Option<Value>".into(),
                 "Option<Callback<Value>>".into(),
+                "bool".into(),
+                "bool".into(),
+                "bool".into(),
                 "bool".into(),
             ],
         },
@@ -125,6 +132,9 @@ pub fn json_input_demo_section() -> Html {
                 "Initial JSON value if any.".into(),
                 "Callback when JSON changes.".into(),
                 "Show add/remove buttons.".into(),
+                "Require at least one entry.".into(),
+                "Disable key input.".into(),
+                "Disable value input.".into(),
             ],
         },
     ];

@@ -21,6 +21,12 @@ pub struct JsonInputProps {
     pub on_json_change: Option<Callback<Value>>,
     #[prop_or(true)]
     pub display_buttons: bool,
+    #[prop_or(false)]
+    pub require_at_least_one: bool,
+    #[prop_or_default]
+    pub disable_keys: bool,
+    #[prop_or_default]
+    pub disable_values: bool,
 }
 
 #[function_component(JsonInput)]
@@ -98,9 +104,10 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                 // Remove callback
                 let remove_cb = {
                     let update_entries = update_entries.clone();
+                    let require_at_least_one = props.require_at_least_one;
                     Callback::from(move |_| {
                         update_entries.emit(Box::new(move |list: &mut Vec<JsonEntry>| {
-                            if list.len() > 1 {
+                            if !require_at_least_one ||list.len() > 1  {
                                 list.retain(|(uid, _, _)| *uid != id);
                             }
                         }));
@@ -162,6 +169,7 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                                 is_duplicate.then_some("border-yellow-400"),
                             )}
                             on_change={update_key_cb.clone()}
+                            disabled={props.disable_keys}
                         />
                         { if is_empty {
                             html! { <span class="text-xs text-red-500">{ "Key required" }</span> }
@@ -191,7 +199,10 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                                                 id={format!("nested-{}", id)}
                                                 label=""
                                                 initial_value={Some(val_clone.clone())}
-                                                display_buttons={true}
+                                                display_buttons={props.display_buttons}
+                                                require_at_least_one={props.require_at_least_one}
+                                                disable_keys={props.disable_keys}
+                                                disable_values={props.disable_values}
                                                 on_json_change={Callback::from({
                                                     let update_entries = update_entries.clone();
                                                     move |v| {
@@ -224,6 +235,7 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                                                         default_value={val_clone.as_str().unwrap_or(&val_clone.to_string()).to_string()}
                                                         required=true
                                                         on_change={update_value_cb.clone()}
+                                                        disabled={props.disable_values}
                                                     />
                                                 </div>
                                             }
@@ -237,7 +249,7 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                         }
 
                         // --- DELETE BUTTON ---
-                        { if props.display_buttons && total > 1 {
+                        { if props.display_buttons && (!props.require_at_least_one || total > 1) {
                             html! {
                                 <Button
                                     button_type={ButtonType::Danger}

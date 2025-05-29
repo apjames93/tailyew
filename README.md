@@ -2,126 +2,126 @@
 ![Docs.rs](https://img.shields.io/docsrs/tailyew)
 ![License](https://img.shields.io/crates/l/tailyew)
 
-# 🌬️ TailYew
-> A modern, reusable component library for [Yew](https://yew.rs) apps — powered by Tailwind CSS and built in Rust.
+# 🌬️ TailYew  
+> The Tailwind + Yew component system — built entirely in Rust.
 
-TailYew helps you ship fast, beautiful Yew apps using fully-styled, accessible components with dark mode, markdown rendering, charts, modals, and form elements — all built in idiomatic Rust.
+TailYew is an open-source component system for [Yew](https://yew.rs) apps, built using idiomatic Rust and styled with Tailwind CSS. This repo includes the component crate, full demo/docs site, and the scaffolding CLI.
 
-## 🧩 Component Highlights
-
-TailYew comes with battle-tested components including:
-
-- ✅ **Forms** – Input, Select, Checkbox, JSON, Phone, File
-- 📊 **Charts** – LineChart, BubbleChart (canvas-based)
-- 🧪 **Modals, Accordions, AppBar, Tabs**
-- 📙 **Markdown** – Parse + sanitize with `pulldown-cmark` and `ammonia`
-- ✂️ **Clipboard**, **Notifications**, **Popover**, **Section**, and more
-- 🌗 **Dark mode ready** — with Tailwind’s `dark:` utilities
-
-🔎 See them all at 👉 [https://tailyew.com/demo/getting_started](https://tailyew.com/demo/getting_started)
+> 🎯 This README is for **contributors**. If you want to use TailYew in your project, check the [crate README](./crates/tailyew/README.md) or the [create-tailyew-app CLI](https://crates.io/crates/create-tailyew-app) to get started.
 
 ---
 
-## 🧱 Using TailYew in Your Project
+## 🛠️ Local Setup
 
-Check out our [starter kit](https://github.com/apjames93/tailyew-starter) to get up and running quickly
+This repo is a monorepo with:
 
-### 📦 Crate Info
+- `crates/tailyew/` – the component crate (`tailyew`)
+- `frontend/` – the live demo and docs site (Yew + WASM)
+- `crates/create-tailyew-app/` – CLI for scaffolding new TailYew projects
 
-- [TailYew on crates.io](https://crates.io/crates/tailyew)
-- [TailYew API Docs](https://docs.rs/tailyew)
+You’ll need:
 
-> Bonus: The starter kit is the fastest path to a working TailYew setup. The README is your DIY route if you're feeling brave. Either way, you've got options.
-
-## 📚 Why TailYew?
-
-A modern, type-safe UI library that makes building frontends with Yew feel like working in systems like React + Tailwind — but with all the benefits of Rust.
-
-**TailYew is:**
-
-- 🔩 Composable: Built with Atomic Design principles (atoms → organisms)
-- 💅 Styled: Powered by Tailwind for utility-first control
-- 📦 Packaged: Designed as a crate you can use in any Yew project
-- 🧪 Tested: Built and tested inside a real Yew app in [the docs site](https://tailyew.com/demo/getting_started)
-- 🧰 [Tailyew Starter](https://github.com/apjames93/tailyew-starter) kit Developer-focused: Easy workflows via `make`, `cargo-watch`, `wasm-pack`
+- Rust + WASM toolchain (`rustup`, `wasm32-unknown-unknown`, etc.)
+- Node.js (for Tailwind CSS + dev server)
+- `make` (used for all common workflows)
 
 ---
 
-## 🗂️ Project Structure
+### ✅ Getting Started
+
+Clone the repo and enter it:
+
+```bash
+git clone https://github.com/apjames93/tailyew.git
+cd tailyew
+````
+
+Then:
+
+```bash
+# Install all Rust deps
+cargo check
+
+# Install required Node packages for the frontend
+cd frontend
+npm install
+cd ..
+
+# Run the full docs site with hot reload (frontend + component crate)
+make run-frontend
+```
+
+You can now open [http://localhost:8080](http://localhost:8080) and see the live docs site running.
+
+---
+
+## 🧪 Common Dev Commands
+
+```bash
+make run-frontend     # Run frontend + crate (hot reload)
+make pretty           # Format + lint everything
+make watch-docs       # Watch + build Rust docs (crates/tailyew/docs.rs)
+```
+
+Need to run something just in the frontend?
+
+```bash
+make fe-build
+make fe-run
+```
+
+Or just in the crate?
+
+```bash
+make tailyew-doc
+make tailyew-test
+```
+
+---
+
+## 🗂️ Folder Structure
 
 ```
 .
 ├── crates/
-│   └── tailyew/        # The reusable component library
-├── frontend/           # The docs & demo site (real Yew app)
-├── docs/               # Optional GitHub Pages markdown
-├── Makefile            # Root Makefile for all workflows
-```
-
-Inside `tailyew/src/`, we organize components by **Atomic Design**:
-
-```
-atoms/       # Basic elements like Input, Button
-molecules/   # Input groups, Select, etc.
-organisms/   # Layouts and multi-part components
-charts/      # Canvas & chart-based elements
-form/        # Form wrappers and logic
-icons/       # Shared SVG icon components
+│   ├── tailyew/               # Main component system crate
+│   └── create-tailyew-app/   # CLI to scaffold new apps
+├── frontend/                  # Demo/docs site (Yew + Tailwind)
+├── docs/                      # GitHub Pages markdown (optional)
+├── Makefile                   # Root orchestrator (delegates to subdirs)
 ```
 
 ---
 
-## ⚙️ Developer Workflow
+## ✅ Contribution Checklist
 
-Everything is wired up with Makefiles — no guessing.
+Before submitting a PR:
 
-```bash
-# 📐 Format and lint
-make pretty
-
-# 🔁 Rebuild frontend docs on crate or UI changes
-make run-frontend
-
-# 📚 Watch and rebuild Rust API docs
-make watch-docs
-
-```
-
-You can also run targets inside subdirectories:
-
-```bash
-make fe-build         # Run target from frontend/Makefile
-make tailyew-doc      # Run target from crates/tailyew/Makefile
-```
----
-
-### ✅ Contribution Checklist
-
-Before submitting a pull request:
-
-- Make sure `make release-check` passes
-- If it's a visual/UI change, include **before/after screenshots**
-- Update or add related demo pages in `frontend/src/pages/`
-- Test in both **light mode** and **dark mode**
+* ✅ Run `make pretty` (formats + lints)
+* ✅ Run `make release-check`
+* ✅ Test both **light mode** and **dark mode**
+* ✅ Update related demo pages in `frontend/src/pages/`
+* ✅ Include **before/after screenshots** for visual changes
 
 ---
 
-### 📄 Helpful Links
+## 📂 Helpful Links
 
-- 📥 [Open a Pull Request](https://github.com/apjames93/tailyew/compare)
-- 🐛 [Report a Bug](https://github.com/apjames93/tailyew/issues/new?template=bug_report.md)
-- 💡 [Propose a Feature](https://github.com/apjames93/tailyew/issues/new?template=feature_request.md)
+* 📥 [Open a Pull Request](https://github.com/apjames93/tailyew/compare)
+* 🐛 [Report a Bug](https://github.com/apjames93/tailyew/issues/new?template=bug_report.md)
+* 💡 [Propose a Feature](https://github.com/apjames93/tailyew/issues/new?template=feature_request.md)
 
 ---
 
-🙌 Thank you for helping grow the Rust UI ecosystem!
+## 🙌 Thank You
+
+Whether you're submitting a PR, filing an issue, or just exploring the project — thank you for helping us grow the Rust UI ecosystem.
 
 ---
 
 ## 🔗 Related
 
-- 🦀 [Yew Framework](https://yew.rs/)
-- 🎨 [Tailwind CSS](https://tailwindcss.com/)
-- 🚀 [TailYew Starter](https://github.com/apjames93/tailyew-starter)
+* 🦀 [Yew Framework](https://yew.rs/)
+* 🎨 [Tailwind CSS](https://tailwindcss.com/)
 
----
+```
