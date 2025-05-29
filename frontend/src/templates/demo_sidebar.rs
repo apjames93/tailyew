@@ -18,8 +18,8 @@ use crate::templates::demos::{
 };
 use crate::Route;
 use tailyew::{
-    AtomIcon, BarChartIcon, FormIcon, PolylineIcon, NestedItem, AppsIcon, Sidebar,
-    SidebarButton, SystemIcon,
+    AppsIcon, AtomIcon, BarChartIcon, FormIcon, NestedItem, PolylineIcon, Sidebar, SidebarButton,
+    SystemIcon,
 };
 use yew::prelude::*;
 use yew_router::prelude::use_navigator;
