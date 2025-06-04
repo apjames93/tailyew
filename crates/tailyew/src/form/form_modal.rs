@@ -106,7 +106,7 @@ pub fn form_modal(props: &FormModalProps) -> Html {
             loading={props.loading}
         >
             <ModalButton
-                button_text={props.modal_button.button_text.clone()}
+                trigger_children={html! { props.modal_button.button_text.clone() }}
                 button_type={props.modal_button.button_type.clone()}
                 modal_title={props.modal_button.modal_title.clone()}
                 modal_size={props.modal_button.modal_size}

@@ -4,28 +4,45 @@ use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
 pub struct ModalButtonProps {
-    pub button_text: String,
+    /// Content to render inside the trigger button (e.g., text or icons)
     #[prop_or_default]
+    pub trigger_children: Children,
+    /// Style for the trigger button
+    #[prop_or(ButtonType::Primary)]
     pub button_type: ButtonType,
+    /// Title for the modal dialog
     pub modal_title: String,
+    /// Content inside the modal body
     #[prop_or_default]
     pub modal_content: Html,
+    /// Controls initial open state of the modal
     #[prop_or_default]
     pub is_open: bool,
+    /// Callback when the modal is closed
     #[prop_or_default]
     pub on_modal_close: Option<Callback<()>>,
-
-    /// A callback that receives the `close_modal` handler and returns a block of buttons.
+    /// Footer content generator (receives a close callback)
     #[prop_or_default]
     pub footer: Option<Callback<Callback<()>, Html>>,
-
+    /// Size of the modal (e.g., Large, Medium, Small)
     #[prop_or(ModalSize::Large)]
     pub modal_size: ModalSize,
 }
 
 #[function_component(ModalButton)]
 pub fn modal_button(props: &ModalButtonProps) -> Html {
-    let modal_open = use_state(|| props.is_open);
+    let ModalButtonProps {
+        trigger_children,
+        button_type,
+        modal_title,
+        modal_content,
+        is_open,
+        on_modal_close,
+        footer,
+        modal_size,
+    } = props;
+
+    let modal_open = use_state(|| *is_open);
 
     let toggle_modal = {
         let modal_open = modal_open.clone();
@@ -34,7 +51,7 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
 
     let close_modal = {
         let modal_open = modal_open.clone();
-        let on_modal_close = props.on_modal_close.clone();
+        let on_modal_close = on_modal_close.clone();
         Callback::from(move |_| {
             modal_open.set(false);
             if let Some(cb) = on_modal_close.clone() {
@@ -43,26 +60,26 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
         })
     };
 
-    // Generate footer content dynamically
-    let footer_content = props.footer.as_ref().map(|cb| cb.emit(close_modal.clone()));
+    // Generate footer content dynamically if provided
+    let footer_content = footer.as_ref().map(|cb| cb.emit(close_modal.clone()));
 
     html! {
         <div>
             <Button
-                button_type={props.button_type.clone()}
-                onclick={toggle_modal}
+                button_type={button_type.clone()}
+                onclick={toggle_modal.clone()}
             >
-                { &*props.button_text }
+                { for trigger_children.iter() }
             </Button>
 
             <Modal
-                title={props.modal_title.clone()}
+                title={modal_title.clone()}
                 is_open={*modal_open}
                 on_close={close_modal.clone()}
-                size={props.modal_size}
+                size={*modal_size}
             >
                 <div class="space-y-6 text-sm text-gray-800 dark:text-gray-100">
-                    { props.modal_content.clone() }
+                    { modal_content.clone() }
 
                     {
                         if let Some(buttons) = footer_content {

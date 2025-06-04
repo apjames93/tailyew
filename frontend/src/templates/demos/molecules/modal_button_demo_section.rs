@@ -2,6 +2,7 @@ use crate::templates::demos::DemoComponent;
 use tailyew::molecules::ModalButton;
 use tailyew::molecules::ModalSize;
 use tailyew::organisms::table::Column;
+use tailyew::AddIcon;
 use tailyew::{Button, ButtonType, TagType, Typo};
 use yew::prelude::*;
 
@@ -43,7 +44,7 @@ pub fn modal_button_demo_section() -> Html {
         <div class="space-y-4">
             <ModalButton
                 modal_size={ModalSize::Fullscreen}
-                button_text={"Fullscreen Modal".to_string()}
+                trigger_children={html! { "Fullscreen Modal" }}
                 modal_title={"Informational Modal".to_string()}
                 modal_content={html! {
                     <div class="text-sm space-y-2">
@@ -55,7 +56,7 @@ pub fn modal_button_demo_section() -> Html {
 
 
             <ModalButton
-                button_text={"Open Confirm Modal full screen With Footer button".to_string()}
+                trigger_children={html! { "Open Confirm Modal full screen With Footer button" }}
                 button_type={ButtonType::Secondary}
                 modal_size={ModalSize::Fullscreen}
                 modal_title={"Confirm Action".to_string()}
@@ -88,7 +89,7 @@ pub fn modal_button_demo_section() -> Html {
             />
 
             <ModalButton
-                button_text={"Open Info Modal".to_string()}
+                trigger_children={html! { <AddIcon /> }}
                 modal_title={"Informational Modal".to_string()}
                 button_type={ButtonType::Danger}
                 modal_content={html! {
@@ -101,7 +102,7 @@ pub fn modal_button_demo_section() -> Html {
             />
 
             <ModalButton
-                button_text={"Open Confirm Modal".to_string()}
+                trigger_children={html! { "Open Confirm Modal" }}
                 modal_title={"Confirm Action".to_string()}
                 button_type={ButtonType::Ghost}
                 modal_content={html! {
@@ -133,7 +134,7 @@ pub fn modal_button_demo_section() -> Html {
             />
 
             <ModalButton
-                button_text={"Open Confirm + Decline Modal".to_string()}
+                trigger_children={html! { "Open Confirm + Decline Modal" }}
                 button_type={ButtonType::Button}
                 modal_title={"Two-Action Modal".to_string()}
                 modal_content={html! {
@@ -187,7 +188,7 @@ pub fn modal_button_demo_section() -> Html {
 
     let usage_code = r#"
 <ModalButton
-    button_text={"Open Confirm + Decline Modal".to_string()}
+    trigger_children={html! { "Open Confirm + Decline Modal" }}
     modal_title={"Two-Action Modal".to_string()}
     modal_content={html! { <p>{"Choose whether to proceed or cancel."}</p> }}
     footer={Some(Callback::from(move |close_modal: Callback<()>| {
@@ -205,7 +206,7 @@ pub fn modal_button_demo_section() -> Html {
         Column {
             header: "Prop".into(),
             values: vec![
-                "button_text".into(),
+                "trigger_children".into(),
                 "button_type".into(),
                 "modal_title".into(),
                 "modal_content".into(),
@@ -217,7 +218,7 @@ pub fn modal_button_demo_section() -> Html {
         Column {
             header: "Type".into(),
             values: vec![
-                "String".into(),
+                "Html".into(),
                 "ButtonType".into(),
                 "String".into(),
                 "Html".into(),
@@ -229,7 +230,7 @@ pub fn modal_button_demo_section() -> Html {
         Column {
             header: "Description".into(),
             values: vec![
-                "Text for the trigger button.".into(),
+                "Content for the trigger button.".into(),
                 "Type of the trigger button.".into(),
                 "Heading displayed in the modal.".into(),
                 "Main content inside the modal.".into(),
