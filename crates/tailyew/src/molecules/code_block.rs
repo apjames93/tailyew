@@ -1,6 +1,7 @@
-use crate::{ButtonType, CopyIcon, CopyToClipboard, FormBuilder, FormBuilderConfig};
-use yew::prelude::*;
-use yew::virtual_dom::VNode;
+use crate::{ButtonType, CopyIcon, CopyToClipboard, FormBuilder, RenderFieldProps};
+use serde::Deserialize;
+use web_sys::SubmitEvent;
+use yew::{prelude::*, virtual_dom::VNode};
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct CodeBlockProps {
@@ -12,10 +13,20 @@ pub struct CodeBlockProps {
     pub language: Option<String>,
     #[prop_or_default]
     pub onsubmit: Option<Callback<SubmitEvent>>,
-
-    /// Whether to show the "Copy" button
     #[prop_or(true)]
     pub show_copy: bool,
+}
+
+#[derive(Deserialize)]
+struct EmbeddedFormConfig {
+    #[serde(default)]
+    inputs: Vec<RenderFieldProps>,
+    #[serde(default)]
+    button_label: Option<String>,
+    #[serde(default)]
+    error_message: Option<String>,
+    #[serde(default)]
+    success_message: Option<String>,
 }
 
 #[function_component(CodeBlock)]
@@ -26,28 +37,30 @@ pub fn code_block(props: &CodeBlockProps) -> Html {
         language,
         onsubmit,
         show_copy,
-    } = props;
+    } = props.clone();
 
-    // Check for embedded form config
-    if let Some(lang) = language {
-        if lang == "form" {
-            if let Some(VNode::VText(vtext)) = children.iter().next() {
-                let json = vtext.text.to_string();
-                if let Ok(config) = serde_json::from_str::<FormBuilderConfig>(&json) {
+    // if the markdown fence says ` ```form `, try to parse the first text node as JSON:
+    if language.as_deref() == Some("form") {
+        if let Some(VNode::VText(vt)) = children.iter().next() {
+            let raw = vt.text.trim();
+            match serde_json::from_str::<EmbeddedFormConfig>(raw) {
+                Ok(cfg) => {
+                    // fallback onsubmit
+                    let submit_cb = onsubmit.clone().unwrap_or_else(|| Callback::from(|_| {}));
                     return html! {
                         <FormBuilder
-                            config={config}
-                            onsubmit={onsubmit.clone().unwrap_or_else(|| Callback::from(|_| {}))}
+                            onsubmit={submit_cb}
+                            inputs={cfg.inputs}
+                            button_label={cfg.button_label}
+                            error_message={cfg.error_message}
+                            success_message={cfg.success_message}
                         />
                     };
-                } else {
+                }
+                Err(err) => {
                     return html! {
-                        <pre class={classes!(
-                            "bg-red-100", "p-4", "rounded", "overflow-auto",
-                            "text-sm", "font-mono", "text-red-600",
-                            class.clone()
-                        )}>
-                            {"Invalid Form JSON"}
+                        <pre class="bg-red-100 p-4 rounded text-red-600">
+                            { format!("⚠️ could not parse Form JSON: {}", err) }
                         </pre>
                     };
                 }
@@ -55,20 +68,22 @@ pub fn code_block(props: &CodeBlockProps) -> Html {
         }
     }
 
-    // Extract raw text to copy
+    // otherwise fall back to a normal code‐block with a copy button
     let text_to_copy = children
         .iter()
-        .filter_map(|c| match c {
-            VNode::VText(t) => Some(t.text.to_string()),
-            _ => None,
+        .filter_map(|c| {
+            if let VNode::VText(t) = c {
+                Some(t.text.clone())
+            } else {
+                None
+            }
         })
-        .collect::<Vec<String>>()
+        .collect::<Vec<_>>()
         .join("");
 
-    // Show copy button in top-right
     html! {
         <div class="relative">
-            { if *show_copy {
+            { if show_copy {
                 html! {
                     <div class="absolute top-2 right-2 z-10">
                         <CopyToClipboard
@@ -82,19 +97,16 @@ pub fn code_block(props: &CodeBlockProps) -> Html {
                     </div>
                 }
             } else {
-                html! {}
+                html!{}
             }}
-
             <pre class={classes!(
-                "bg-gray-100", "dark:bg-gray-800",
-                "p-4", "rounded", "overflow-auto",
-                "text-sm", "font-mono",
-                "text-gray-800", "dark:text-gray-100",
-                class.clone()
+                "bg-gray-100","dark:bg-gray-800",
+                "p-4","rounded","overflow-auto",
+                "text-sm","font-mono",
+                "text-gray-800","dark:text-gray-100",
+                class
             )}>
-                <code>
-                    { for children.iter() }
-                </code>
+                <code>{ for children.iter() }</code>
             </pre>
         </div>
     }

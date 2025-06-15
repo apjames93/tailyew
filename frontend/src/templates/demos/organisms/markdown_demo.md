@@ -92,26 +92,31 @@ Final paragraph with multiple styles, an image inline ![Inline image](https://ye
   "button_label": "Submit Demo Form",
   "inputs": [
     {
-      "id": "email",
-      "label": "Email",
-      "input_type": { "Input": "Email" },
-      "placeholder": "Enter your email",
-      "required": true
+      "input": {
+        "id": "email",
+        "label": "Email",
+        "input_type": "Email",
+        "placeholder": "Enter your email",
+        "required": true
+      }
     },
     {
-      "id": "name",
-      "label": "Name",
-      "input_type": { "Input": "Text" },
-      "placeholder": "Your Name",
-      "required": true
+      "input": {
+        "id": "name",
+        "label": "Name",
+        "input_type": "Text",
+        "placeholder": "Your Name",
+        "required": true
+      }
     },
     {
-      "id": "accept",
-      "label": "Accept Terms",
-      "input_type": "Checkbox",
-      "required": true
+      "checkbox": {
+        "id": "accept",
+        "label": "Accept Terms",
+        "required": true
+      }
     }
-  ],
-  "modal": false
+  ]
 }
 ```
+
