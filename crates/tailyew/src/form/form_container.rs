@@ -1,36 +1,11 @@
 use crate::atoms::{Button, ButtonType};
 use crate::molecules::{Notification, NotificationTypes};
 use wasm_bindgen::JsCast;
-use web_sys::{EventTarget, HtmlFormElement, HtmlInputElement};
+use web_sys::HtmlFormElement;
 use yew::events::SubmitEvent;
 use yew::prelude::*;
 
-pub fn e_input_value(id: &str, e: &SubmitEvent) -> String {
-    let target: EventTarget = e.target().expect("Event should have a target.");
-    let form: HtmlFormElement = target.unchecked_into();
-    if let Some(input) = form.get_with_name(id) {
-        let input: HtmlInputElement = input.unchecked_into();
-        input.value()
-    } else {
-        web_sys::console::error_1(
-            &format!("Input element with name '{}' not found in form.", id).into(),
-        );
-        String::new()
-    }
-}
-
-pub fn e_checkbox_checked(id: &str, e: &SubmitEvent) -> bool {
-    let target = e.target().expect("Event should have a target.");
-    let form: HtmlFormElement = target.unchecked_into();
-    if let Some(input) = form.get_with_name(id) {
-        let input: HtmlInputElement = input.unchecked_into();
-        input.checked()
-    } else {
-        false
-    }
-}
-
-#[derive(Properties, PartialEq)]
+#[derive(Properties, PartialEq, Clone)]
 pub struct FormProps {
     pub children: Children,
     pub onsubmit_callback: Callback<SubmitEvent>,
@@ -52,7 +27,6 @@ pub struct FormProps {
 
     #[prop_or_default]
     pub error_message: Option<String>,
-
     #[prop_or_default]
     pub success_message: Option<String>,
 
@@ -70,11 +44,12 @@ pub fn form(props: &FormProps) -> Html {
         show_submit_button,
         loading,
         id,
-        error_message,
-        success_message,
+        error_message: prop_error,
+        success_message: prop_success,
         extra_footer_buttons,
-    } = props;
+    } = props.clone();
 
+    // Compute CSS classes for the <form>
     let form_classes = if form_class.is_empty() {
         classes!(
             "space-y-6",
@@ -87,41 +62,49 @@ pub fn form(props: &FormProps) -> Html {
         form_class.clone()
     };
 
+    // Wrap onsubmit to prevent default and validate
     let onsubmit_wrapper = {
         let onsubmit_callback = onsubmit_callback.clone();
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
-
-            // Validate the form before emitting
             if let Some(target) = e.target() {
-                if let Ok(form) = target.dyn_into::<HtmlFormElement>() {
-                    if !form.check_validity() {
+                if let Ok(form_el) = target.dyn_into::<HtmlFormElement>() {
+                    if !form_el.check_validity() {
                         return;
                     }
                 }
             }
-
             onsubmit_callback.emit(e);
         })
     };
 
     html! {
         <div>
-            if let Some(error) = error_message {
-                <Notification
-                    message={error.clone()}
-                    notification_type={NotificationTypes::Error}
-                    visible={true}
-                    fixed={false}
-                />
-            }
-            if let Some(success) = success_message {
-                <Notification
-                    message={success.clone()}
-                    notification_type={NotificationTypes::Success}
-                    visible={true}
-                    fixed={false}
-                />
+            {
+                // Show either error or success based on props
+                if let Some(err) = &prop_error {
+                    html! {
+                        <Notification
+                            message={err.clone()}
+                            notification_type={NotificationTypes::Error}
+                            visible={true}
+                            fixed={false}
+                            show_close={true}
+                        />
+                    }
+                } else if let Some(suc) = &prop_success {
+                    html! {
+                        <Notification
+                            message={suc.clone()}
+                            notification_type={NotificationTypes::Success}
+                            visible={true}
+                            fixed={false}
+                            show_close={true}
+                        />
+                    }
+                } else {
+                    html! {}
+                }
             }
 
             <form
@@ -131,24 +114,19 @@ pub fn form(props: &FormProps) -> Html {
             >
                 { for children.iter() }
 
-                if *show_submit_button || extra_footer_buttons.is_some() {
+                if show_submit_button || extra_footer_buttons.is_some() {
                     <div class="flex justify-end space-x-2 pt-2">
-                        {
-                            if let Some(cb) = &extra_footer_buttons {
-                                cb.emit(Callback::from(|_| {}))
-                            } else {
-                                html! {}
-                            }
-                        }
-
-                        if *show_submit_button {
+                        { if let Some(cb) = &extra_footer_buttons {
+                            cb.emit(Callback::from(|_| {}))
+                        } else {
+                            html! {}
+                        }}
+                        if show_submit_button {
                             <Button
                                 button_type={ButtonType::Submit}
-                                disabled={*loading}
+                                disabled={loading}
                                 class="ml-auto"
-                            >
-                                { button_label.clone() }
-                            </Button>
+                            >{ button_label.clone() }</Button>
                         }
                     </div>
                 }

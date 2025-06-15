@@ -39,3 +39,6 @@ pub use form_builder_demo_section::*;
 
 pub mod search_input_demo_section;
 pub use search_input_demo_section::*;
+
+pub mod form_inputs;
+pub use form_inputs::*;

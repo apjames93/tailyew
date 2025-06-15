@@ -26,12 +26,20 @@ impl ButtonType {
 pub struct ButtonProps {
     #[prop_or(ButtonType::Button)]
     pub button_type: ButtonType,
+
     #[prop_or_default]
     pub onclick: Option<Callback<MouseEvent>>,
+
     #[prop_or(false)]
     pub disabled: bool,
+
     #[prop_or_default]
     pub class: Classes,
+
+    /// Optional `form="..."` attribute so you can submit an external `<form id=…>`
+    #[prop_or_default]
+    pub form: Option<String>,
+
     #[prop_or_default]
     pub children: Children,
 }
@@ -43,6 +51,7 @@ pub fn button(props: &ButtonProps) -> Html {
         onclick,
         disabled,
         class,
+        form,
         children,
     } = props;
 
@@ -80,6 +89,8 @@ pub fn button(props: &ButtonProps) -> Html {
         class.clone()
     );
 
+    // If this is a submit‐type button, we let the form attribute handle submission,
+    // and we don't wire up an onclick
     let onclick_callback = if *button_type == ButtonType::Submit {
         None
     } else {
@@ -92,6 +103,8 @@ pub fn button(props: &ButtonProps) -> Html {
             type={button_type.as_str()}
             onclick={onclick_callback}
             disabled={*disabled}
+            // only emit `form="…"`, if Some
+            form={form.clone()}
         >
             { for children.iter() }
         </button>

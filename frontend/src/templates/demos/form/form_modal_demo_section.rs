@@ -1,83 +1,92 @@
-use crate::templates::demos::DemoComponent;
+use crate::templates::demos::{DemoComponent, FormInputs};
+use gloo_net::http::Request;
 use tailyew::form::*;
 use tailyew::{Button, ButtonType, ModalSize};
+use wasm_bindgen_futures::spawn_local;
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
 #[function_component(FormModalDemoSection)]
 pub fn form_modal_demo_section() -> Html {
-    let response = use_state(|| "".to_string());
+    // Response body text
+    let response_text = use_state(|| "".to_string());
+    // Notifications
     let error_message = use_state(|| None::<String>);
     let success_message = use_state(|| None::<String>);
 
+    // onsubmit callback: fetch from httpstat.us
     let onsubmit = {
-        let response = response.clone();
+        let response_text = response_text.clone();
         let error_message = error_message.clone();
         let success_message = success_message.clone();
 
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
-            let email = e_input_value("email", &e);
-            let phone = e_input_value("phone", &e);
-            let accepted = e_checkbox_checked("terms", &e);
+            // reset messages
+            error_message.set(None);
+            success_message.set(None);
+            // grab the status code from the form
+            let code = e_input_value("status", &e);
 
-            if !email.contains('@') {
-                error_message.set(Some("Email must contain '@'.".into()));
-                success_message.set(None);
-            } else {
-                response.set(format!(
-                    "email: {}\nphone: {}\nterms accepted: {}",
-                    email, phone, accepted
-                ));
-                error_message.set(None);
-                success_message.set(Some("Form submitted successfully.".into()));
-            }
+            let response_text = response_text.clone();
+            let error_message = error_message.clone();
+            let success_message = success_message.clone();
+
+            // Spawn async fetch
+            spawn_local(async move {
+                let url = format!("https://httpstat.us/{}", code);
+                match Request::get(&url)
+                    .header("Accept", "application/json")
+                    .send()
+                    .await
+                {
+                    Ok(resp) => {
+                        let status = resp.status();
+                        let text = resp.text().await.unwrap_or_default();
+                        response_text.set(text.clone());
+                        if (200..300).contains(&status) {
+                            success_message.set(Some(format!("Success {}: {}", status, text)));
+                        } else {
+                            error_message.set(Some(format!("Error {}: {}", status, text)));
+                        }
+                    }
+                    Err(err) => {
+                        error_message.set(Some(format!("Network error: {}", err)));
+                    }
+                }
+            });
         })
     };
 
+    // Reusable extra footer buttons for manual close
     let extra_buttons = |label: String| {
         Callback::from(move |close_modal: Callback<()>| {
             let cancel_label = label.clone();
-            let delete_label = label.clone();
-
             html! {
-                <>
-                    <Button
-                        button_type={ButtonType::Secondary}
-                        onclick={{
-                            let close_modal = close_modal.clone();
-                            Callback::from(move |_| {
-                                web_sys::console::log_1(&format!("{cancel_label} Cancel clicked").into());
-                                close_modal.emit(());
-                            })
-                        }}
-                    >
-                        { "Cancel" }
-                    </Button>
-                    <Button
-                        button_type={ButtonType::Danger}
-                        onclick={{
-                            let close_modal = close_modal.clone();
-                            Callback::from(move |_| {
-                                web_sys::console::log_1(&format!("{delete_label} Delete clicked").into());
-                                close_modal.emit(());
-                            })
-                        }}
-                    >
-                        { "Delete" }
-                    </Button>
-                </>
+                <Button
+                    button_type={ButtonType::Secondary}
+                    onclick={
+                        let close_modal = close_modal.clone();
+                        Callback::from(move |_| {
+                            web_sys::console::log_1(&format!("{cancel_label} Cancel clicked").into());
+                            close_modal.emit(());
+                        })
+                    }
+                >
+                    { "Cancel" }
+                </Button>
             }
         })
     };
 
     let example = html! {
         <div class="max-w-xl mx-auto space-y-8">
+            // Auto-close on 2xx, auto-closes modal
             <FormModal
                 modal_button={ModalButtonConfig {
-                    button_text: "Auto Close Form".into(),
+                    button_text: "Fetch and Auto-Close".into(),
                     button_type: ButtonType::Primary,
-                    modal_title: "Auto-Close on Success".into(),
+                    modal_title: "HTTP Fetch (Auto-Close)".into(),
                     modal_size: ModalSize::Large,
                     is_open: false,
                     on_modal_close: None,
@@ -85,40 +94,38 @@ pub fn form_modal_demo_section() -> Html {
                 onsubmit={onsubmit.clone()}
                 error_message={(*error_message).clone()}
                 success_message={(*success_message).clone()}
-                submit_label="Save"
+                submit_label={"Fetch"}
                 auto_close_on_success={true}
-                on_success={Some(Callback::from(|_| web_sys::console::log_1(&"✅ Success callback".into())))}
-                on_error={Some(Callback::from(|_| web_sys::console::log_1(&"❌ Error callback".into())))}
-                extra_footer_buttons={Some(extra_buttons("Auto Close".to_string()))}
+                on_success={Some(Callback::from(|_| web_sys::console::log_1(&"✅ Fetched successfully".into())))}
+                on_error={Some(Callback::from(|_| web_sys::console::log_1(&"❌ Fetch error".into())))}
+                extra_footer_buttons={Some(extra_buttons("Auto-Close".to_string()))}
             >
-                <Input id="email" label="Email" input_type={InputType::Email} placeholder="you@example.com" />
-                <PhoneInput id="phone" label="Phone" placeholder="123-456-7890" />
-                <Checkbox id="terms" label="I accept the terms" />
+                <FormInputs />
             </FormModal>
 
+            // Manual-close example
             <FormModal
                 modal_button={ModalButtonConfig {
-                    button_text: "Manual Close Form".into(),
+                    button_text: "Fetch (Manual Close)".into(),
                     button_type: ButtonType::Primary,
-                    modal_title: "Manual Modal Close".into(),
+                    modal_title: "HTTP Fetch (Manual)".into(),
                     modal_size: ModalSize::Large,
                     is_open: false,
                     on_modal_close: None,
                 }}
-                onsubmit={onsubmit}
+                onsubmit={onsubmit.clone()}
                 error_message={(*error_message).clone()}
                 success_message={(*success_message).clone()}
-                submit_label="Submit"
+                submit_label={"Fetch"}
                 auto_close_on_success={false}
-                extra_footer_buttons={Some(extra_buttons("Manual Close".to_string()))}
+                extra_footer_buttons={Some(extra_buttons("Manual".to_string()))}
             >
-                <Input id="email" label="Email" input_type={InputType::Email} placeholder="you@example.com" />
-                <PhoneInput id="phone" label="Phone" placeholder="123-456-7890" default_value="123-456-7890" />
-                <Checkbox id="terms" label="I accept the terms" />
+                <FormInputs />
             </FormModal>
 
+            // Display response body
             <div class="text-sm whitespace-pre-wrap text-gray-700 dark:text-gray-300 border rounded p-2">
-                { (*response).clone() }
+                { (*response_text).clone() }
             </div>
         </div>
     };
@@ -127,45 +134,33 @@ pub fn form_modal_demo_section() -> Html {
         <DemoComponent
             github_demo_path="form/form_modal_demo_section.rs"
             github_source_path="form/form_modal.rs"
-            title="FormModal Component"
+            title="FormModal HTTP Fetch Demo"
             description={Some(html! {
-                <p>{"The `FormModal` combines `Form` and `ModalButton`, handling submission, state, and flexible modal footers. You can configure auto-close, attach callbacks, and display validation messages."}</p>
+                <p>{"This demo shows how to drive success/error notifications from real HTTP responses using the httpstat.us API."}</p>
             })}
             example={example}
             usage_code={r#"
 <FormModal
-    button_text="Open Modal".into()
-    modal_title="Form Modal Example".into()
+    modal_button={ModalButtonConfig {
+        button_text: "Fetch and Auto-Close".into(),
+        button_type: ButtonType::Primary,
+        modal_title: "HTTP Fetch (Auto-Close)".into(),
+        modal_size: ModalSize::Large,
+        is_open: false,
+        on_modal_close: None,
+    }}
     onsubmit={onsubmit}
     error_message={error_message.clone()}
     success_message={success_message.clone()}
-    submit_label="Save"
+    submit_label="Fetch"
     auto_close_on_success={true}
     on_success={Some(on_success_cb)}
     on_error={Some(on_error_cb)}
-    extra_footer_buttons={Some(Callback::from(|close_modal: Callback<()>| {
-        html! {
-            <>
-                <Button
-                    button_type={ButtonType::Secondary}
-                    onclick={Callback::from(move |_| close_modal.emit(()))}
-                >
-                    { "Cancel" }
-                </Button>
-                <Button
-                    button_type={ButtonType::Danger}
-                    onclick={Callback::from(move |_| close_modal.emit(()))}
-                >
-                    { "Delete" }
-                </Button>
-            </>
-        }
-    }))}
+    extra_footer_buttons={Some(extra_buttons)}
 >
-    <Input id="email" label="Email" input_type={InputType::Email} />
-    <Checkbox id="terms" label="I accept the terms" />
+    <Input id="status" label="Status Code" input_type={InputType::Number} placeholder="Enter status code" />
 </FormModal>
-            "#}
+"#}
             props_table={None}
         />
     }
