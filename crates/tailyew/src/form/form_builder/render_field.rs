@@ -27,6 +27,11 @@ pub struct RenderFieldProps {
     pub state: Option<StateDropdownProps>,
     #[prop_or_default]
     pub search: Option<SearchInputProps>,
+
+    /// per-field wrapper classes
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
+    pub class: Classes,
 }
 
 #[function_component(RenderField)]
@@ -54,6 +59,6 @@ pub fn render_field(props: &RenderFieldProps) -> Html {
     } else if let Some(search_props) = props.search.clone() {
         html! { <SearchInput ..search_props /> }
     } else {
-        html! { <Typo tag={TagType::Error} >{"Unknown field type"}</Typo> }
+        html! { <Typo tag={TagType::Error}>{"Unknown field type"}</Typo> }
     }
 }

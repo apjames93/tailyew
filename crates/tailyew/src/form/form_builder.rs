@@ -1,231 +1,121 @@
-use crate::{form::*, ButtonType, ModalSize};
-use serde::Deserialize;
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
-#[derive(Clone, PartialEq, Properties, Deserialize)]
-pub struct FormBuilderConfig {
-    #[serde(default)]
-    pub button_label: Option<String>,
+use crate::{form::Form, FormModal, ModalButtonConfig};
 
-    #[serde(default)]
-    pub error_message: Option<String>,
+pub mod render_field;
+pub use render_field::*;
 
-    #[serde(default)]
-    pub success_message: Option<String>,
-
-    #[serde(default)]
-    pub inputs: Vec<InputFieldConfig>,
-
-    #[serde(default)]
-    pub modal: bool,
-
-    #[serde(default)]
-    pub modal_title: Option<String>,
-
-    #[serde(default)]
+/// Only the modal‐specific bits stay here:
+#[derive(Properties, PartialEq, Clone)]
+pub struct ModalConfig {
+    /// the button that opens the modal
+    pub modal_button: ModalButtonConfig,
+    /// auto-close on success?
     #[prop_or(true)]
     pub auto_close_on_success: bool,
+    /// callback when the form inside the modal succeeds
+    #[prop_or_default]
+    pub on_success: Option<Callback<()>>,
+    /// callback when the form inside the modal errors
+    #[prop_or_default]
+    pub on_error: Option<Callback<()>>,
 }
-
-#[derive(Clone, PartialEq, Deserialize)]
-pub struct InputFieldConfig {
-    pub id: String,
-    pub label: String,
-    pub input_type: FieldType,
-    pub placeholder: Option<String>,
-    pub default_value: Option<String>,
-    pub required: bool,
-    pub options: Option<Vec<SelectOption>>, // for select or radio group
-    pub col_span: Option<u8>,               // 1 or 2
-}
-
-#[derive(Clone, PartialEq, Deserialize)]
-pub enum FieldType {
-    Input(InputType),
-    Textarea,
-    Select,
-    RadioGroup,
-    Checkbox,
-    ColorInput,
-    FileInput,
-    PhoneInput,
-    RangeInput,
-    StateDropdown,
-}
-
 #[derive(Properties, PartialEq, Clone)]
 pub struct FormBuilderProps {
-    pub config: FormBuilderConfig,
+    /// your submit handler
     pub onsubmit: Callback<SubmitEvent>,
+
+    /// any extra footer buttons you want
     #[prop_or_default]
     pub extra_footer_buttons: Option<Callback<Callback<()>, Html>>,
+
+    /// if present, will render inside a modal
+    #[prop_or_default]
+    pub modal_config: Option<ModalConfig>,
+
+    /// text for your submit button (inline & modal)
+    #[prop_or_default]
+    pub button_label: Option<String>,
+
+    /// banner-level form error
+    #[prop_or_default]
+    pub error_message: Option<String>,
+
+    /// banner-level form success
+    #[prop_or_default]
+    pub success_message: Option<String>,
+
+    /// the full list of fields to render
+    pub inputs: Vec<RenderFieldProps>,
+
+    /// grid container classes (default: 2-col)
+    #[prop_or("grid grid-cols-1 sm:grid-cols-2 gap-4".into())]
+    pub container_class: Classes,
+
+    /// classes applied to *every* input wrapper
+    #[prop_or("col-span-1".into())]
+    pub input_class: Classes,
 }
 
 #[function_component(FormBuilder)]
 pub fn form_builder(props: &FormBuilderProps) -> Html {
     let FormBuilderProps {
-        config,
         onsubmit,
         extra_footer_buttons,
-    } = props;
+        modal_config,
+        button_label,
+        error_message,
+        success_message,
+        inputs,
+        container_class,
+        input_class,
+    } = props.clone();
 
-    let button_label = config
-        .button_label
-        .clone()
-        .unwrap_or_else(|| "Submit".to_string());
-    let modal_title = config
-        .modal_title
-        .clone()
-        .unwrap_or_else(|| button_label.clone());
+    let submit_text = button_label.unwrap_or_else(|| "Submit".into());
 
-    let success_message = use_state(|| None::<String>); // dynamic success
-
-    let internal_onsubmit = {
-        let success_message = success_message.clone();
-        let onsubmit = onsubmit.clone();
-        Callback::from(move |e: SubmitEvent| {
-            onsubmit.emit(e);
-            success_message.set(Some("Form submitted successfully.".to_string()));
-            // ✨ dynamic success
-        })
-    };
-
-    let form_content = html! {
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            { for config.inputs.iter().map(render_field) }
+    // build all the <RenderField/>s, merging per-field + global classes
+    let form_fields = html! {
+        <div class={container_class}>
+            { for inputs.into_iter().map(|rf| {
+                // combine the global `input_class` with any per-field `rf.class`
+                let wrapper = classes!(input_class.clone(), rf.class.clone());
+                html! {
+                    <div class={wrapper}>
+                        <RenderField ..rf />
+                    </div>
+                }
+            }) }
         </div>
     };
 
-    if config.modal {
+    if let Some(mc) = modal_config {
         html! {
             <FormModal
-                modal_button={ModalButtonConfig {
-                    button_text: button_label.clone(),
-                    button_type: ButtonType::Primary,
-                    modal_title,
-                    modal_size: ModalSize::Large,
-                    is_open: false,
-                    on_modal_close: None,
-                }}
-                onsubmit={internal_onsubmit}
-                loading={false}
-                error_message={config.error_message.clone()}
-                success_message={(*success_message).clone()}
-                submit_label={button_label}
+                modal_button={mc.modal_button}
+                onsubmit={onsubmit}
+                submit_label={submit_text.clone()}
+                error_message={error_message.clone()}
+                success_message={success_message.clone()}
                 extra_footer_buttons={extra_footer_buttons.clone()}
-                auto_close_on_success={config.auto_close_on_success}
+                auto_close_on_success={mc.auto_close_on_success}
+                on_success={mc.on_success}
+                on_error={mc.on_error}
             >
-                { form_content }
+                { form_fields }
             </FormModal>
         }
     } else {
         html! {
             <Form
-                onsubmit_callback={internal_onsubmit}
-                button_label={button_label}
-                error_message={config.error_message.clone()}
-                success_message={(*success_message).clone()}
+                onsubmit_callback={onsubmit}
+                button_label={submit_text.clone()}
+                error_message={error_message.clone()}
+                success_message={success_message.clone()}
                 extra_footer_buttons={extra_footer_buttons.clone()}
             >
-                { form_content }
+                { form_fields }
             </Form>
         }
-    }
-}
-
-fn render_field(field: &InputFieldConfig) -> Html {
-    let col_span = match field.col_span.unwrap_or(2) {
-        1 => "col-span-1",
-        _ => "col-span-2",
-    };
-
-    html! {
-        <div class={classes!(col_span)}>
-            {
-                match &field.input_type {
-                    FieldType::Input(input_type) => html! {
-                        <Input
-                            id={field.id.clone()}
-                            label={field.label.clone()}
-                            placeholder={field.placeholder.clone().unwrap_or_default()}
-                            input_type={input_type.clone()}
-                            default_value={field.default_value.clone().unwrap_or_default()}
-                            required={field.required}
-                        />
-                    },
-                    FieldType::Textarea => html! {
-                        <Textarea
-                            id={field.id.clone()}
-                            label={field.label.clone()}
-                            placeholder={field.placeholder.clone().unwrap_or_default()}
-                            default_value={field.default_value.clone().unwrap_or_default()}
-                            required={field.required}
-                        />
-                    },
-                    FieldType::Select => html! {
-                        <Select
-                            id={field.id.clone()}
-                            options={field.options.clone().unwrap_or_default()}
-                            default_value={field.default_value.clone().unwrap_or_default()}
-                            required={field.required}
-                        />
-                    },
-                    FieldType::RadioGroup => html! {
-                        <RadioGroup
-                            id={field.id.clone()}
-                            label={field.label.clone()}
-                            options={field.options.clone().unwrap_or_default()
-                                .into_iter()
-                                .map(|o| (o.value, o.label))
-                                .collect::<Vec<(String, String)>>()}
-                            default_value={field.default_value.clone().unwrap_or_default()}
-                        />
-                    },
-                    FieldType::Checkbox => html! {
-                        <Checkbox
-                            id={field.id.clone()}
-                            label={field.label.clone()}
-                            checked={field.default_value.clone().unwrap_or_default() == "true"}
-                            required={field.required}
-                        />
-                    },
-                    FieldType::ColorInput => html! {
-                        <ColorInput
-                            id={field.id.clone()}
-                            label={field.label.clone()}
-                            value={field.default_value.clone().unwrap_or("#000000".to_string())}
-                        />
-                    },
-                    FieldType::FileInput => html! {
-                        <FileInput
-                            id={field.id.clone()}
-                            label={field.label.clone()}
-                        />
-                    },
-                    FieldType::PhoneInput => html! {
-                        <PhoneInput
-                            id={field.id.clone()}
-                            label={field.label.clone()}
-                            placeholder={field.placeholder.clone().unwrap_or("123-456-7890".to_string())}
-                            default_value={field.default_value.clone().unwrap_or_default()}
-                        />
-                    },
-                    FieldType::RangeInput => html! {
-                        <RangeInput
-                            id={field.id.clone()}
-                            label={field.label.clone()}
-                            default_value={field.default_value.clone().unwrap_or("50".to_string())}
-                        />
-                    },
-                    FieldType::StateDropdown => html! {
-                        <StateDropdown
-                            id={field.id.clone()}
-                            default_value={field.default_value.clone().unwrap_or("CO".to_string())}
-                        />
-                    },
-                }
-            }
-        </div>
     }
 }
