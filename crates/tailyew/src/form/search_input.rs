@@ -1,44 +1,79 @@
+use crate::form_deserializer::*;
+use crate::SelectOption;
 use crate::{Input, InputType, Li, Typo, Ul, XIcon};
 use gloo_timers::callback::Timeout;
-use std::rc::Rc;
+use serde::Deserialize;
 use web_sys::{HtmlElement, HtmlInputElement};
 use yew::prelude::*;
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct Item {
-    pub label: String,
-    pub value: String,
-}
-
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Clone, Default, Deserialize)]
 pub struct SearchInputProps {
-    pub items: Rc<Vec<Item>>,
     #[prop_or_default]
-    pub default_selected: Option<Item>,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub id: AttrValue,
+
     #[prop_or_default]
+    #[serde(default)]
+    pub items: Vec<SelectOption>,
+
+    #[prop_or_default]
+    #[serde(default)]
+    pub default_selected: Option<SelectOption>,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
     pub placeholder: Option<AttrValue>,
+
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
     pub label: Option<AttrValue>,
-    #[prop_or_default]
-    pub id: Option<AttrValue>,
+
     #[prop_or(false)]
+    #[serde(default)]
     pub required: bool,
+
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
     pub class: Classes,
+
     #[prop_or_default]
+    #[serde(default, rename = "aria-label", deserialize_with = "de_option_attr")]
     pub aria_label: Option<AttrValue>,
+
     #[prop_or_default]
+    #[serde(
+        default,
+        rename = "aria-labelledby",
+        deserialize_with = "de_option_attr"
+    )]
     pub aria_labelledby: Option<AttrValue>,
+
     #[prop_or_default]
+    #[serde(
+        default,
+        rename = "aria-describedby",
+        deserialize_with = "de_option_attr"
+    )]
     pub aria_describedby: Option<AttrValue>,
+
     #[prop_or_default]
+    #[serde(skip)]
     pub on_select: Option<Callback<String>>,
+
     #[prop_or_default]
+    #[serde(skip)]
     pub on_fetch_more: Option<Callback<()>>,
+
     #[prop_or(300)]
+    #[serde(default)]
     pub debounce_ms: u32,
     #[prop_or("Please select a value from the list.".into())]
+    #[serde(default, deserialize_with = "de_attr")]
     pub error_title: AttrValue,
+
+    #[prop_or(false)]
+    #[serde(default)]
+    pub disabled: bool,
 }
 
 #[function_component(SearchInput)]
@@ -58,9 +93,10 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         aria_labelledby,
         aria_describedby,
         error_title,
+        disabled,
     } = props.clone();
 
-    let input_id = id.clone().unwrap_or_else(|| "search".into());
+    let input_id = id.clone();
     let selected_item = use_state(|| default_selected.clone());
     let search_text = use_state(|| {
         default_selected
@@ -71,7 +107,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
 
     let input_ref = use_node_ref();
     let dropdown_ref = use_node_ref();
-    let filtered = use_state(Vec::new);
+    let filtered = use_state(Vec::<SelectOption>::new);
     let show_dropdown = use_state(|| false);
     let timeout_handle = use_mut_ref(|| None::<Timeout>);
 
@@ -116,7 +152,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
             let on_fetch_more = on_fetch_more.clone();
 
             Timeout::new(debounce_ms, move || {
-                let mut matches: Vec<Item> = items
+                let mut matches: Vec<SelectOption> = items
                     .iter()
                     .filter(|item| {
                         item.label.to_lowercase().contains(&query)
@@ -148,7 +184,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         let input_ref = input_ref.clone();
         let apply_validity = apply_validity.clone();
 
-        Callback::from(move |item: Item| {
+        Callback::from(move |item: SelectOption| {
             selected_item.set(Some(item.clone()));
             filtered.set(vec![]);
             show_dropdown.set(false);
@@ -187,13 +223,14 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         Callback::from(move |_: FocusEvent| {
             show_dropdown.set(true);
 
-            let mut list: Vec<Item> = items.iter().cloned().collect();
+            let mut list: Vec<SelectOption> = items.to_vec();
             list.sort_by(|a, b| a.value.cmp(&b.value));
             list.dedup_by(|a, b| a.value == b.value);
             filtered.set(list);
         })
     };
 
+    // close dropdown on outside click
     {
         let show_dropdown = show_dropdown.clone();
         let dropdown_ref = dropdown_ref.clone();
@@ -215,6 +252,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         });
     }
 
+    // cancel outstanding timeout on unmount
     {
         let timeout_handle = timeout_handle.clone();
         use_effect(move || {
@@ -226,11 +264,11 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         });
     }
 
+    // ensure validity pattern is correct on mount/update
     {
         let input_ref = input_ref.clone();
         let apply_validity = apply_validity.clone();
         let selected_item = selected_item.clone();
-
         use_effect(move || {
             if let Some(input_el) = input_ref.cast::<HtmlInputElement>() {
                 apply_validity(&input_el, selected_item.is_some());
@@ -242,13 +280,9 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     let base_id = input_id.clone();
     let search_id = format!("search_{}", input_id);
 
-    // Use prefixed IDs for visible input only
-    let effective_aria_label = aria_label.clone();
-    let effective_aria_labelledby = aria_labelledby.clone();
-    let effective_aria_describedby = aria_describedby.clone();
-
     html! {
         <div class="relative space-y-2" ref={dropdown_ref}>
+            // hidden field to hold the actual value
             <input
                 type="hidden"
                 name={base_id.clone()}
@@ -259,6 +293,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 aria-labelledby={aria_labelledby.clone()}
             />
 
+            // the visible search input
             <Input
                 node_ref={input_ref.clone()}
                 id={search_id.clone()}
@@ -267,48 +302,66 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 default_value={(*search_text).clone()}
                 placeholder={placeholder.unwrap_or_default()}
                 class={class.clone()}
+                disabled={disabled}
+                autocomplete={"off"}
                 on_change={Some(oninput)}
                 on_focus={Some(on_focus)}
-                aria_label={Some(AttrValue::from(format!("search-{}", effective_aria_label.unwrap_or_default())))}
-                aria_labelledby={Some(AttrValue::from(format!("search-{}", effective_aria_labelledby.unwrap_or_default())))}
-                aria_describedby={Some(AttrValue::from(format!("search-{}", effective_aria_describedby.unwrap_or_default())))}
+                aria_label={Some(AttrValue::from(
+                    format!("search-{}", aria_label.unwrap_or_default())
+                ))}
+                aria_labelledby={Some(AttrValue::from(
+                    format!("search-{}", aria_labelledby.unwrap_or_default())
+                ))}
+                aria_describedby={Some(AttrValue::from(
+                    format!("search-{}", aria_describedby.unwrap_or_default())
+                ))}
             />
 
-            if *show_dropdown && !filtered.is_empty() {
-                <div class="relative transition-all duration-200 ease-out transform z-50 ">
-                    <div class="rounded-t border border-b-0 bg-white dark:bg-gray-900 dark:border-gray-700 px-4 pt-3 pb-1">
-                        <Typo>{"Select a value from the list"}</Typo>
-                    </div>
-                    <Ul class="absolute max-h-60 overflow-auto z-50 w-full bg-white shadow rounded-b border-t-0 border dark:bg-gray-900 dark:border-gray-700 transition-all duration-200 ease-in-out">
-                        {
-                            for filtered.iter().map(|item| {
-                                let on_click_item = on_click_item.clone();
-                                let item_clone = item.clone();
-                                html! {
-                                    <Li
-                                        class="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 transition-colors duration-150"
-                                        onclick={Callback::from(move |_| on_click_item.emit(item_clone.clone()))}
-                                    >
-                                        { item.label.clone() }
-                                    </Li>
-                                }
-                            })
-                        }
-                    </Ul>
-                </div>
+            {
+                if *show_dropdown && !filtered.is_empty() {
+                    html! {
+                        <div class="relative transition-all duration-200 ease-out transform z-50">
+                            <div class="rounded-t border border-b-0 bg-white dark:bg-gray-900 dark:border-gray-700 px-4 pt-3 pb-1">
+                                <Typo>{"Select a value from the list"}</Typo>
+                            </div>
+                            <Ul class="absolute max-h-60 overflow-auto z-50 w-full bg-white shadow rounded-b border-t-0 border dark:bg-gray-900 dark:border-gray-700 transition-all duration-200 ease-in-out">
+                                { for filtered.iter().map(|item| {
+                                    let on_click = on_click_item.clone();
+                                    let item_clone = item.clone();
+                                    html! {
+                                        <Li
+                                            class="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 transition-colors duration-150"
+                                            onclick={Callback::from(move |_| on_click.emit(item_clone.clone()))}
+                                        >
+                                            { item.label.clone() }
+                                        </Li>
+                                    }
+                                }) }
+                            </Ul>
+                        </div>
+                    }
+                } else {
+                    html! {}
+                }
             }
 
-            if let Some(item) = &*selected_item {
-                <Ul class="text-sm text-gray-700 dark:text-gray-300">
-                    <Li
-                        onclick={Some(on_clear_selection)}
-                        icon={html! { <XIcon size={12} /> }}
-                        with_icon={true}
-                        class="hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-50 dark:bg-gray-800 rounded px-4 py-2 flex items-center justify-left"
-                    >
-                        <Typo>{ format!("Selected: {}", item.label) }</Typo>
-                    </Li>
-                </Ul>
+            {
+                if let Some(item) = &*selected_item {
+                    html! {
+                        <Ul class="text-sm text-gray-700 dark:text-gray-300">
+                            <Li
+                                onclick={if disabled { None } else { Some(on_clear_selection) }}
+                                icon={if disabled { None } else { Some(html! { <XIcon size={12} /> }) }}
+                                with_icon={true}
+                                class="hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-50 dark:bg-gray-800 rounded px-4 py-2 flex items-center justify-left"
+                            >
+                                <Typo>{ format!("Selected: {}", item.label) }</Typo>
+                            </Li>
+                        </Ul>
+                    }
+                } else {
+                    html! {}
+                }
             }
         </div>
     }
