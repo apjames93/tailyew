@@ -1,4 +1,5 @@
 use super::select::{Select, SelectOption};
+use serde::Deserialize;
 use yew::prelude::*;
 
 const STATES: &[(&str, &str)] = &[
@@ -64,13 +65,16 @@ fn us_state_options() -> Vec<SelectOption> {
         .collect()
 }
 
-#[derive(Properties, PartialEq, Clone, Default)]
+#[derive(Properties, PartialEq, Clone, Default, Deserialize)]
 pub struct StateDropdownProps {
-    #[prop_or("CO".to_string())]
+    #[prop_or_default]
+    #[serde(default)]
     pub default_value: String,
-    #[prop_or("state".to_string())]
+    #[prop_or_default]
+    #[serde(default)]
     pub id: String,
     #[prop_or_default]
+    #[serde(skip)]
     pub on_change: Option<Callback<String>>,
 }
 
@@ -79,7 +83,7 @@ pub fn state_dropdown(props: &StateDropdownProps) -> Html {
     html! {
         <Select
             id={props.id.clone()}
-            label={Some("State".to_string())}
+            label={"State"}
             options={us_state_options()}
             default_value={props.default_value.clone()}
             on_change={props.on_change.clone()}

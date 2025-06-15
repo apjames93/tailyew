@@ -1,20 +1,29 @@
+use crate::form_deserializer::*;
 use regex::Regex;
+use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Clone, Default, Deserialize)]
 pub struct PhoneInputProps {
-    pub placeholder: String,
-    pub label: String,
-    pub id: String,
-
     #[prop_or_default]
-    pub default_value: String,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub id: AttrValue,
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub placeholder: AttrValue,
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub label: AttrValue,
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub default_value: AttrValue,
 
     #[prop_or(Some(r"^\d{3}-\d{3}-\d{4}$".to_string()))]
     pub pattern: Option<String>,
 
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
     pub class: Classes,
 }
 
@@ -45,7 +54,7 @@ pub fn phone_input(props: &PhoneInputProps) -> Html {
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into();
             let value = input.value();
-            phone_number.set(value.clone());
+            phone_number.set(value.clone().into());
 
             if let Some(re) = &*regex {
                 if re.is_match(&value) {

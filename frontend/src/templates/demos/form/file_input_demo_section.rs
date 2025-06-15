@@ -89,8 +89,8 @@ fn file_input_usage() -> Html {
             id="resume"
             label="Upload Resume"
             initial_file_name=""
-            accept={Some(".pdf,.docx")}
-            onchange={Some(onchange)}
+            accept={".pdf,.docx"}
+            onchange={onchange}
         />
     }
 }

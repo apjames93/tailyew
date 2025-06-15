@@ -1,16 +1,38 @@
+use crate::form_deserializer::{de_attr, de_classes};
+use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Clone, Default, Deserialize)]
 pub struct RadioGroupProps {
-    pub id: String,
-    pub label: String,
-    pub options: Vec<(String, String)>, // (value, label)
+    /// the shared name/id for the group
     #[prop_or_default]
-    pub default_value: String,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub id: AttrValue,
+
+    /// optional visual label for the whole group
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub label: AttrValue,
+
+    /// list of (value, label) pairs
+    #[prop_or_default]
+    #[serde(default)]
+    pub options: Vec<(String, String)>,
+
+    /// which value is selected by default
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub default_value: AttrValue,
+
+    /// any extra CSS classes to apply to the container
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
     pub class: Classes,
+
+    /// programmatic callback on change (not deserialized from JSON)
     #[prop_or_default]
+    #[serde(skip)]
     pub on_change: Option<Callback<String>>,
 }
 
@@ -25,23 +47,24 @@ pub fn radio_group(props: &RadioGroupProps) -> Html {
         on_change,
     } = props.clone();
 
-    let selected_value = use_state(|| default_value.clone());
+    // state for the selected value
+    let selected = use_state(|| default_value.clone());
 
+    // when any radio button changes
     let onchange = {
-        let selected_value = selected_value.clone();
+        let selected = selected.clone();
         let on_change = on_change.clone();
         Callback::from(move |e: Event| {
-            let input: HtmlInputElement = e.target_unchecked_into();
-            let new_value = input.value();
-            selected_value.set(new_value.clone());
-
+            let new_val = e.target_unchecked_into::<HtmlInputElement>().value();
+            selected.set(new_val.clone().into());
             if let Some(cb) = &on_change {
-                cb.emit(new_value);
+                cb.emit(new_val);
             }
         })
     };
 
-    let container_classes = classes!("flex", "flex-col", "space-y-4", class);
+    // merge your custom classes into the container
+    let container_classes = classes!("flex", "flex-col", "space-y-4", class.clone());
 
     let label_classes = classes!(
         "text-lg",
@@ -49,10 +72,8 @@ pub fn radio_group(props: &RadioGroupProps) -> Html {
         "text-gray-700",
         "dark:text-gray-300"
     );
-
-    let radio_item_classes = classes!("flex", "items-center", "space-x-2");
-
-    let radio_input_classes = classes!(
+    let item_classes = classes!("flex", "items-center", "space-x-2");
+    let input_classes = classes!(
         "h-4",
         "w-4",
         "text-primary",
@@ -63,35 +84,42 @@ pub fn radio_group(props: &RadioGroupProps) -> Html {
         "dark:border-gray-600",
         "dark:focus:ring-primary-dark"
     );
-
-    let option_label_classes = classes!("text-gray-700", "dark:text-gray-400");
+    let text_classes = classes!("text-gray-700", "dark:text-gray-400");
 
     html! {
         <div class={container_classes}>
-            <label class={label_classes}>{ label }</label>
+            { // only show a legend/label if non-empty
+              if !label.is_empty() {
+                html! { <label class={label_classes.clone()}>{ label.clone() }</label> }
+              } else {
+                html!{}
+              }
+            }
+
             <div class="flex flex-col space-y-2">
-                { for options.iter().map(|(value, option_label)| {
+                { for options.iter().map(|(value, text)| {
+                    let checked = *selected == *value;
                     html! {
-                        <div class={radio_item_classes.clone()}>
+                        <div class={item_classes.clone()}>
                             <input
                                 type="radio"
                                 id={format!("{}-{}", id, value)}
                                 name={id.clone()}
                                 value={value.clone()}
-                                checked={*selected_value == *value}
-                                aria-checked={(*selected_value == *value).to_string()}
+                                checked={checked}
+                                aria-checked={checked.to_string()}
                                 onchange={onchange.clone()}
-                                class={radio_input_classes.clone()}
+                                class={input_classes.clone()}
                             />
                             <label
                                 for={format!("{}-{}", id, value)}
-                                class={option_label_classes.clone()}
+                                class={text_classes.clone()}
                             >
-                                { option_label }
+                                { text }
                             </label>
                         </div>
                     }
-                })}
+                }) }
             </div>
         </div>
     }

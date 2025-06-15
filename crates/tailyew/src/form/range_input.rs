@@ -1,12 +1,19 @@
+use crate::form_deserializer::*;
+use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Clone, Default, Deserialize)]
 pub struct RangeInputProps {
-    pub id: String,
-    pub label: String,
     #[prop_or_default]
-    pub default_value: String,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub id: AttrValue,
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub label: AttrValue,
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub default_value: AttrValue,
     #[prop_or(String::from("0"))]
     pub min: String,
     #[prop_or(String::from("100"))]
@@ -14,8 +21,10 @@ pub struct RangeInputProps {
     #[prop_or(String::from("1"))]
     pub step: String,
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
     pub class: Classes,
     #[prop_or_default]
+    #[serde(skip)]
     pub on_change: Option<Callback<String>>,
 }
 
@@ -40,7 +49,7 @@ pub fn range_input(props: &RangeInputProps) -> Html {
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into();
             let new_value = input.value();
-            value.set(new_value.clone());
+            value.set(new_value.clone().into());
             if let Some(cb) = &on_change {
                 cb.emit(new_value);
             }

@@ -1,15 +1,33 @@
+use crate::form_deserializer::{de_attr, de_classes};
+use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Clone, Default, Deserialize)]
 pub struct ColorInputProps {
-    pub id: String,
-    pub label: String,
+    /// JSON string → AttrValue
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub id: AttrValue,
+
+    /// JSON string → AttrValue
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub label: AttrValue,
+
+    /// JSON string → AttrValue (defaults to "#000000")
     #[prop_or("#000000".into())]
-    pub value: String,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub value: AttrValue,
+
+    /// skipped during deserialization
     #[prop_or_default]
+    #[serde(skip)]
     pub on_change: Option<Callback<String>>,
+
+    /// can be either `"foo bar"` or `["foo","bar"]`
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
     pub class: Classes,
 }
 
@@ -21,7 +39,7 @@ pub fn color_input(props: &ColorInputProps) -> Html {
         value,
         on_change,
         class,
-    } = props;
+    } = props.clone();
 
     let color = use_state(|| value.clone());
 
@@ -31,7 +49,7 @@ pub fn color_input(props: &ColorInputProps) -> Html {
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into();
             let new_color = input.value();
-            color.set(new_color.clone());
+            color.set(new_color.clone().into());
             if let Some(cb) = &on_change {
                 cb.emit(new_color);
             }
@@ -54,7 +72,7 @@ pub fn color_input(props: &ColorInputProps) -> Html {
         "dark:bg-gray-800",
         "dark:border-gray-600",
         "dark:text-gray-200",
-        class.clone()
+        class.clone(),
     );
 
     let preview_classes = classes!(
@@ -66,7 +84,7 @@ pub fn color_input(props: &ColorInputProps) -> Html {
         "transition",
         "duration-150",
         "border-gray-300",
-        "dark:border-gray-600"
+        "dark:border-gray-600",
     );
 
     let label_classes = classes!(
@@ -80,13 +98,13 @@ pub fn color_input(props: &ColorInputProps) -> Html {
 
     html! {
         <div class="flex flex-col space-y-2">
-            <label for={id.to_string()} class={label_classes}>{ label.clone() }</label>
+            <label for={id.clone()} class={label_classes}>{ label.clone() }</label>
             <div class="flex items-center space-x-4">
                 <input
                     id={id.clone()}
                     name={id.clone()}
                     type="color"
-                    value={(*color).clone()}
+                    value={(*color).clone().to_string()}
                     class={input_classes}
                     oninput={handle_input}
                     aria-label={label.clone()}
@@ -94,8 +112,10 @@ pub fn color_input(props: &ColorInputProps) -> Html {
                 <span
                     class={preview_classes}
                     style={format!("background-color: {};", *color)}
-                ></span>
-                <p class={description_classes}>{ format!("Selected color: {}", *color) }</p>
+                />
+                <p class={description_classes}>
+                    { format!("Selected color: {}", *color) }
+                </p>
             </div>
         </div>
     }

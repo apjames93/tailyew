@@ -1,21 +1,32 @@
+use crate::form_deserializer::*;
+use serde::Deserialize;
 use web_sys::HtmlTextAreaElement;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Clone, Default, Deserialize)]
 pub struct TextareaProps {
-    pub id: String,
-    pub label: String,
     #[prop_or_default]
-    pub default_value: String,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub id: AttrValue,
     #[prop_or_default]
-    pub placeholder: String,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub label: AttrValue,
     #[prop_or_default]
-    pub class: Option<String>,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub default_value: AttrValue,
     #[prop_or_default]
-    pub container_class: Option<String>,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub placeholder: AttrValue,
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
+    pub class: Classes,
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
+    pub container_class: Classes,
     #[prop_or(false)]
     pub required: bool,
     #[prop_or_default]
+    #[serde(skip)]
     pub on_change: Option<Callback<String>>,
     #[prop_or(5)]
     pub rows: usize,
@@ -43,16 +54,14 @@ pub fn textarea(props: &TextareaProps) -> Html {
         Callback::from(move |e: InputEvent| {
             let textarea: HtmlTextAreaElement = e.target_unchecked_into();
             let val = textarea.value();
-            value.set(val.clone());
+            value.set(val.clone().into());
             if let Some(cb) = &on_change {
-                cb.emit(val);
+                cb.emit(val.clone());
             }
         })
     };
 
-    let div_class = container_class
-        .clone()
-        .unwrap_or_else(|| "flex flex-col space-y-2".into());
+    let div_class = classes!("flex", "flex-col", "space-y-2", container_class.clone());
 
     let textarea_classes = classes!(
         "px-4",

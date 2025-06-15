@@ -1,17 +1,32 @@
+use crate::form_deserializer::*;
+use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq)]
+#[derive(Properties, PartialEq, Clone, Default, Deserialize)]
 pub struct FileInputProps {
-    pub id: String,
-    pub label: String,
     #[prop_or_default]
-    pub initial_file_name: String,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub id: AttrValue,
+
     #[prop_or_default]
-    pub accept: Option<String>,
+    #[serde(default, deserialize_with = "de_attr")]
+    pub label: AttrValue,
+
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub initial_file_name: AttrValue,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub accept: AttrValue,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
     pub class: Classes,
+
     #[prop_or_default]
+    #[serde(skip)]
     pub onchange: Option<Callback<String>>,
 }
 
@@ -35,12 +50,12 @@ pub fn file_input(props: &FileInputProps) -> Html {
             let input: HtmlInputElement = e.target_unchecked_into();
             if let Some(file) = input.files().and_then(|files| files.get(0)) {
                 let name = file.name();
-                file_name.set(name.clone());
+                file_name.set(name.clone().into());
                 if let Some(cb) = onchange.clone() {
                     cb.emit(name);
                 }
             } else {
-                file_name.set(String::new());
+                file_name.set(String::new().into());
             }
         })
     };

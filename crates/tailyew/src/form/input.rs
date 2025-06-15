@@ -1,8 +1,102 @@
+use crate::form_deserializer::*;
 use regex::Regex;
 use serde::Deserialize;
 use std::fmt;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
+
+#[derive(Properties, PartialEq, Clone, Default, Deserialize)]
+pub struct InputProps {
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub id: AttrValue,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub label: AttrValue,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub placeholder: AttrValue,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_attr")]
+    pub default_value: AttrValue,
+
+    #[prop_or_default]
+    #[serde(default)]
+    pub input_type: InputType,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub min: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub max: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub pattern: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub error_title: Option<AttrValue>,
+
+    #[prop_or(false)]
+    #[serde(default)]
+    pub required: bool,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
+    pub class: Classes,
+
+    // Cannot deserialize these from JSON blobs:
+    #[prop_or_default]
+    #[serde(skip)]
+    pub on_change: Option<Callback<String>>,
+
+    #[prop_or_default]
+    #[serde(skip)]
+    pub on_focus: Option<Callback<FocusEvent>>,
+
+    #[prop_or(false)]
+    #[serde(default)]
+    pub disabled: bool,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub autocomplete: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(
+        default,
+        rename = "aria-describedby",
+        deserialize_with = "de_option_attr"
+    )]
+    pub aria_describedby: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, rename = "aria-label", deserialize_with = "de_option_attr")]
+    pub aria_label: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(
+        default,
+        rename = "aria-labelledby",
+        deserialize_with = "de_option_attr"
+    )]
+    pub aria_labelledby: Option<AttrValue>,
+
+    // Also skip NodeRef / validation callbacks:
+    #[prop_or_default]
+    #[serde(skip)]
+    pub node_ref: NodeRef,
+
+    #[prop_or_default]
+    #[serde(skip)]
+    pub validate: Option<Callback<String, Option<String>>>,
+}
 
 #[derive(Debug, PartialEq, Clone, Default, Deserialize)]
 pub enum InputType {
@@ -34,64 +128,6 @@ impl fmt::Display for InputType {
             }
         )
     }
-}
-
-#[derive(Properties, PartialEq, Clone)]
-pub struct InputProps {
-    pub placeholder: AttrValue,
-    pub label: AttrValue,
-    pub id: AttrValue,
-
-    #[prop_or_default]
-    pub input_type: InputType,
-
-    #[prop_or_default]
-    pub default_value: AttrValue,
-
-    #[prop_or_default]
-    pub min: Option<AttrValue>,
-
-    #[prop_or_default]
-    pub max: Option<AttrValue>,
-
-    #[prop_or_default]
-    pub error_title: Option<AttrValue>,
-
-    #[prop_or(false)]
-    pub required: bool,
-
-    #[prop_or_default]
-    pub class: Classes,
-
-    #[prop_or_default]
-    pub on_change: Option<Callback<String>>,
-
-    #[prop_or_default]
-    pub on_focus: Option<Callback<FocusEvent>>,
-
-    #[prop_or(false)]
-    pub disabled: bool,
-
-    #[prop_or_default]
-    pub pattern: Option<AttrValue>,
-
-    #[prop_or_default]
-    pub autocomplete: Option<AttrValue>,
-
-    #[prop_or_default]
-    pub aria_describedby: Option<AttrValue>,
-
-    #[prop_or_default]
-    pub aria_label: Option<AttrValue>,
-
-    #[prop_or_default]
-    pub aria_labelledby: Option<AttrValue>,
-
-    #[prop_or_default]
-    pub node_ref: NodeRef,
-
-    #[prop_or_default]
-    pub validate: Option<Callback<String, Option<String>>>,
 }
 
 #[function_component(Input)]
