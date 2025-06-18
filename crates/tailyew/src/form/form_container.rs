@@ -19,9 +19,6 @@ pub struct FormProps {
     #[prop_or(true)]
     pub show_submit_button: bool,
 
-    #[prop_or(false)]
-    pub loading: bool,
-
     #[prop_or_default]
     pub id: Option<String>,
 
@@ -42,14 +39,27 @@ pub fn form(props: &FormProps) -> Html {
         form_class,
         button_label,
         show_submit_button,
-        loading,
         id,
         error_message: prop_error,
         success_message: prop_success,
         extra_footer_buttons,
     } = props.clone();
 
-    // Compute CSS classes for the <form>
+    // 1) local loading state
+    let loading = use_state(|| false);
+
+    // 2) reset loading whenever error or success arrives
+    {
+        let loading = loading.clone();
+        let err = prop_error.clone();
+        let suc = prop_success.clone();
+        use_effect_with((err, suc), move |_| {
+            loading.set(false);
+            || ()
+        });
+    }
+
+    // 3) Compute CSS classes for the <form>
     let form_classes = if form_class.is_empty() {
         classes!(
             "space-y-6",
@@ -62,9 +72,10 @@ pub fn form(props: &FormProps) -> Html {
         form_class.clone()
     };
 
-    // Wrap onsubmit to prevent default and validate
+    // 4) Wrap onsubmit to set our loading flag and validate
     let onsubmit_wrapper = {
         let onsubmit_callback = onsubmit_callback.clone();
+        let loading = loading.clone();
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
             if let Some(target) = e.target() {
@@ -74,14 +85,16 @@ pub fn form(props: &FormProps) -> Html {
                     }
                 }
             }
+
+            loading.set(true);
             onsubmit_callback.emit(e);
         })
     };
 
     html! {
         <div>
+            //–– notifications
             {
-                // Show either error or success based on props
                 if let Some(err) = &prop_error {
                     html! {
                         <Notification
@@ -124,7 +137,7 @@ pub fn form(props: &FormProps) -> Html {
                         if show_submit_button {
                             <Button
                                 button_type={ButtonType::Submit}
-                                disabled={loading}
+                                disabled={*loading}
                                 class="ml-auto"
                             >{ button_label.clone() }</Button>
                         }
