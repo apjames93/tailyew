@@ -127,28 +127,28 @@ pub fn notification(props: &NotificationProps) -> Html {
                 "rounded-lg", "shadow-lg"
             )}
         >
-            // Centered content
-            <div class="flex items-center justify-center space-x-2">
-                { icon.map(|sym| html! { <Typo tag={TagType::Span} class={text_color}>{ sym }</Typo> }) }
-                <Typo tag={TagType::Span} class={classes!(text_color, "text-base", "font-medium", "text-center")}>
-                    { message }
-                </Typo>
-            </div>
+            <div class="flex items-start justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    { icon.map(|sym| html! { <Typo tag={TagType::Span} class={text_color}>{ sym }</Typo> }) }
+                    <Typo tag={TagType::Span} class={classes!(text_color, "text-base", "font-medium")}>
+                        { message }
+                    </Typo>
+                </div>
 
-            // Close button floats top-right
-            {
-                if show_close {
-                    html! {
-                        <Button
-                            onclick={on_close_click}
-                            button_type={ButtonType::Icon}
-                            class={classes!("absolute", "top-2", "right-2")}
-                        >
-                            <XIcon />
-                        </Button>
-                    }
-                } else { html! {} }
-            }
+                {
+                    if show_close {
+                        html! {
+                            <Button
+                                onclick={on_close_click}
+                                button_type={ButtonType::Icon}
+                                class="shrink-0"
+                            >
+                                <XIcon />
+                            </Button>
+                        }
+                    } else { html! {} }
+                }
+            </div>
         </div>
     }
 }

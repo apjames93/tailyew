@@ -41,7 +41,7 @@ pub fn notification_demo_section() -> Html {
             />
 
             <Notification
-                message="Something went wrong."
+                message="An unexpected error occurred while processing your request. This may be due to a server timeout, invalid input, or a permissions issue. Please review your form data, check your internet connection, and try again. If this issue continues, contact technical support with the error code #ERR-78291."
                 notification_type={NotificationTypes::Error}
                 visible={*show_error}
                 on_close={Some(Callback::from({
