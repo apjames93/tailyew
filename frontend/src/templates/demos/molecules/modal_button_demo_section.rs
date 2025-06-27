@@ -213,6 +213,9 @@ pub fn modal_button_demo_section() -> Html {
                 "is_open".into(),
                 "on_modal_close".into(),
                 "footer".into(),
+                "aria_label".into(),
+                "aria_labelledby".into(),
+                "modal_size".into(),
             ],
         },
         Column {
@@ -225,6 +228,9 @@ pub fn modal_button_demo_section() -> Html {
                 "bool".into(),
                 "Option<Callback<()>>".into(),
                 "Option<Callback<Callback<()>>>".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
+                "ModalSize".into(),
             ],
         },
         Column {
@@ -237,6 +243,9 @@ pub fn modal_button_demo_section() -> Html {
                 "Optional default open state.".into(),
                 "Callback when the modal is closed.".into(),
                 "Optional footer renderer; receives a close callback.".into(),
+                "ARIA label for accessibility.".into(),
+                "ARIA label for accessibility.".into(),
+                "Size of the modal. Small, Medium, Large (default), Fullscreen.".into(),
             ],
         },
     ];
@@ -247,7 +256,7 @@ pub fn modal_button_demo_section() -> Html {
             github_source_path="molecules/modal_button.rs"
             title="ModalButton Component"
             description={Some(html! {
-                <p>{"The `ModalButton` component wraps a trigger and modal in one. You can provide custom footer buttons using a `Callback<Callback<()>>` that receives a modal-closing function."}</p>
+                <Typo>{"The `ModalButton` component wraps a trigger and modal in one. You can provide custom footer buttons using a `Callback<Callback<()>>` that receives a modal-closing function."}</Typo>
             })}
             example={example}
             usage_code={usage_code}

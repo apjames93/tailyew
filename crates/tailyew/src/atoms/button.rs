@@ -42,6 +42,12 @@ pub struct ButtonProps {
 
     #[prop_or_default]
     pub children: Children,
+
+    #[prop_or_default]
+    pub aria_label: Option<String>,
+
+    #[prop_or_default]
+    pub role: Option<String>,
 }
 
 #[function_component(Button)]
@@ -53,6 +59,8 @@ pub fn button(props: &ButtonProps) -> Html {
         class,
         form,
         children,
+        aria_label,
+        role,
     } = props;
 
     // Shared focus ring for non-disabled buttons
@@ -103,6 +111,9 @@ pub fn button(props: &ButtonProps) -> Html {
             type={button_type.as_str()}
             onclick={onclick_callback}
             disabled={*disabled}
+            aria-disabled={Some(disabled.to_string())}
+            role={role.clone()}
+            aria-label={aria_label.clone()}
             // only emit `form="…"`, if Some
             form={form.clone()}
         >

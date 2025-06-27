@@ -1,5 +1,5 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::{Button, ButtonType};
+use tailyew::atoms::{Button, ButtonType, Typo};
 use tailyew::molecules::modal::{Modal, ModalSize};
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
@@ -71,6 +71,8 @@ html! {
                 "on_close".into(),
                 "children".into(),
                 "size".into(),
+                "aria_label".into(),
+                "aria_labelledby".into(),
             ],
         },
         Column {
@@ -81,6 +83,8 @@ html! {
                 "Callback<()>".into(),
                 "Children".into(),
                 "ModalSize".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
             ],
         },
         Column {
@@ -91,6 +95,8 @@ html! {
                 "Called when the modal is closed (click, ESC, X icon).".into(),
                 "Content inside the modal.".into(),
                 "`Small`, `Medium`, or `Large` modal width.".into(),
+                "ARIA label for accessibility.".into(),
+                "ARIA label for accessibility.".into(),
             ],
         },
     ];
@@ -101,7 +107,7 @@ html! {
             github_source_path="molecules/modal.rs"
             title="Modal Component"
             description={Some(html! {
-                <p>{"The `Modal` component creates a centered dialog with optional close behavior via overlay, escape key, or close button. It supports configurable sizes and can be styled freely inside."}</p>
+                <Typo>{"The `Modal` component creates a centered dialog with optional close behavior via overlay, escape key, or close button. It supports configurable sizes and can be styled freely inside."}</Typo>
             })}
             example={example}
             usage_code={usage_code}

@@ -22,6 +22,10 @@ pub struct ModalProps {
     pub children: Children,
     #[prop_or(ModalSize::Large)]
     pub size: ModalSize,
+    #[prop_or_default]
+    pub aria_label: Option<String>,
+    #[prop_or_default]
+    pub aria_labelledby: Option<String>,
 }
 
 #[function_component(Modal)]
@@ -32,6 +36,8 @@ pub fn modal(props: &ModalProps) -> Html {
         on_close,
         children,
         size,
+        aria_label,
+        aria_labelledby,
     } = props;
 
     let node_ref = use_node_ref();
@@ -120,8 +126,9 @@ pub fn modal(props: &ModalProps) -> Html {
                     modal_padding_class
                 )}
                 role="dialog"
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
+                aria-modal="true"
+                aria-label={aria_label.clone()}
+                aria-labelledby={aria_labelledby.clone()}
                 tabindex="0"
                 onclick={Callback::from(|e: MouseEvent| e.stop_propagation())}
             >

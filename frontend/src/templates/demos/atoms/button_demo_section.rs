@@ -19,6 +19,8 @@ pub fn button_demo_section() -> Html {
                 "button_type".into(),
                 "onclick".into(),
                 "disabled".into(),
+                "aria_label".into(),
+                "role".into(),
             ],
         },
         Column {
@@ -28,6 +30,8 @@ pub fn button_demo_section() -> Html {
                 "ButtonType".into(),
                 "Callback<MouseEvent>".into(),
                 "bool".into(),
+                "Option<String>".into(),
+                "Option<String>".into(),
             ],
         },
         Column {
@@ -37,6 +41,8 @@ pub fn button_demo_section() -> Html {
                 "Visual style of the button.".into(),
                 "Click event handler.".into(),
                 "Disables the button.".into(),
+                "ARIA label for accessibility.".into(),
+                "ARIA role for accessibility.".into(),
             ],
         },
     ];
