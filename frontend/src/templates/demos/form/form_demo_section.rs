@@ -3,7 +3,6 @@ use gloo_net::http::Request;
 use tailyew::atoms::{Button, ButtonType, TagType, Typo};
 use tailyew::form::*;
 use tailyew::organisms::table::Column;
-use wasm_bindgen_futures::spawn_local;
 use web_sys::console;
 use web_sys::SubmitEvent;
 use yew::prelude::*;
@@ -75,48 +74,48 @@ pub fn form_demo_section() -> Html {
     let success_message = use_state(|| None::<String>);
 
     // Build onsubmit callback
-    let onsubmit = {
+    let onsubmit_callback = async_callback({
         let form_values = form_values.clone();
         let response_text = response_text.clone();
         let error_message = error_message.clone();
         let success_message = success_message.clone();
-        Callback::from(move |e: SubmitEvent| {
-            e.prevent_default();
-            // Collect form values
-            let mut values = String::new();
-            let fields = vec![
-                "email",
-                "password",
-                "search",
-                "color",
-                "range",
-                "date",
-                "age",
-                "time",
-                "textarea",
-                "select",
-                "gender",
-                "file_upload",
-                "phone",
-                "language",
-            ];
-            for field in &fields {
-                let v = e_input_value(field, &e);
-                values.push_str(&format!("{}: {}\n", field, v));
-            }
-            let checked = e_checkbox_checked("checkbox", &e);
-            values.push_str(&format!("checkbox: {}\n", checked));
-            form_values.set(values);
 
-            // Fetch HTTP status code
-            let code = e_input_value("status", &e);
+        move |e: SubmitEvent| {
+            let form_values = form_values.clone();
             let response_text = response_text.clone();
             let error_message = error_message.clone();
             let success_message = success_message.clone();
-            spawn_local(async move {
-                error_message.set(None);
-                success_message.set(None);
+
+            async move {
+                e.prevent_default();
+                // Collect form values
+                let mut values = String::new();
+                let fields = vec![
+                    "email",
+                    "password",
+                    "search",
+                    "color",
+                    "range",
+                    "date",
+                    "age",
+                    "time",
+                    "textarea",
+                    "select",
+                    "gender",
+                    "file_upload",
+                    "phone",
+                    "language",
+                ];
+                for field in &fields {
+                    let v = e_input_value(field, &e);
+                    values.push_str(&format!("{}: {}\n", field, v));
+                }
+                let checked = e_checkbox_checked("checkbox", &e);
+                values.push_str(&format!("checkbox: {}\n", checked));
+                form_values.set(values);
+                let code = e_input_value("status", &e);
                 let url = format!("https://httpstat.us/{}", code);
+
                 match Request::get(&url)
                     .header("Accept", "application/json")
                     .send()
@@ -126,19 +125,26 @@ pub fn form_demo_section() -> Html {
                         let status = resp.status();
                         let text = resp.text().await.unwrap_or_default();
                         response_text.set(text.clone());
+
                         if (200..300).contains(&status) {
-                            success_message.set(Some(format!("Success {}: {}", status, text)));
+                            let msg = format!("Success {}: {}", status, text);
+                            success_message.set(Some(msg.clone()));
+                            Ok(Some(msg))
                         } else {
-                            error_message.set(Some(format!("Error {}: {}", status, text)));
+                            let msg = format!("Error {}: {}", status, text);
+                            error_message.set(Some(msg.clone()));
+                            Err(msg)
                         }
                     }
                     Err(err) => {
-                        error_message.set(Some(format!("Network error: {}", err)));
+                        let msg = format!("Network error: {}", err);
+                        error_message.set(Some(msg.clone()));
+                        Err(msg)
                     }
                 }
-            });
-        })
-    };
+            }
+        }
+    });
 
     // Extra footer action button
     let extra_footer_buttons = Some(Callback::from(move |_| {
@@ -157,10 +163,8 @@ pub fn form_demo_section() -> Html {
         <section class="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg space-y-6">
             <Typo tag={TagType::H1}>{ "Form with HTTP Fetch Demo" }</Typo>
             <Form
-                onsubmit_callback={onsubmit.clone()}
+                onsubmit_callback={onsubmit_callback.clone()}
                 button_label="Submit and Fetch"
-                error_message={(*error_message).clone()}
-                success_message={(*success_message).clone()}
                 extra_footer_buttons={extra_footer_buttons.clone()}
             >
                 <FormInputs />

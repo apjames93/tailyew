@@ -1,7 +1,7 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::organisms::table::Column;
 use tailyew::organisms::Markdown;
-use tailyew::{e_checkbox_checked, e_input_value};
+use tailyew::{async_callback, e_checkbox_checked, e_input_value};
 use yew::prelude::*;
 
 const MARKDOWN_DOC: &str = include_str!("./markdown_demo.md");
@@ -10,22 +10,26 @@ const MARKDOWN_DOC: &str = include_str!("./markdown_demo.md");
 pub fn markdown_demo_section() -> Html {
     let submitted_values = use_state(|| "".to_string());
 
-    let on_form_submit = {
+    let on_form_submit = async_callback({
         let submitted_values = submitted_values.clone();
-        Callback::from(move |e: SubmitEvent| {
-            e.prevent_default();
-            let email = e_input_value("email", &e);
-            let name = e_input_value("name", &e);
-            let accept = e_checkbox_checked("accept", &e);
+        move |e: SubmitEvent| {
+            let submitted_values = submitted_values.clone();
+            async move {
+                let email = e_input_value("email", &e);
+                let name = e_input_value("name", &e);
+                let accept = e_checkbox_checked("accept", &e);
 
-            let output = format!(
-                "Submitted values:\nEmail: {}\nName: {}\nAccepted Terms: {}",
-                email, name, accept
-            );
-            web_sys::console::log_1(&output.clone().into());
-            submitted_values.set(output);
-        })
-    };
+                let output = format!(
+                    "Submitted values:\nEmail: {}\nName: {}\nAccepted Terms: {}",
+                    email, name, accept
+                );
+                web_sys::console::log_1(&output.clone().into());
+                submitted_values.set(output);
+
+                Ok(Some("Form submitted successfully.".into()))
+            }
+        }
+    });
 
     let example = html! {
         <>
@@ -55,7 +59,7 @@ pub fn markdown_demo_section() -> Html {
             values: vec![
                 "String".into(),
                 "Classes".into(),
-                "Option<Callback<SubmitEvent>>".into(),
+                "Option<AsyncCallback<SubmitEvent>>".into(),
             ],
         },
         Column {

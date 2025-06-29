@@ -1,4 +1,5 @@
-use crate::{ButtonType, CopyIcon, CopyToClipboard, FormBuilder, RenderFieldProps};
+use crate::form::{async_callback, FormBuilder, FormSubmitCallback, RenderFieldProps};
+use crate::{ButtonType, CopyIcon, CopyToClipboard};
 use serde::Deserialize;
 use web_sys::SubmitEvent;
 use yew::{prelude::*, virtual_dom::VNode};
@@ -12,7 +13,7 @@ pub struct CodeBlockProps {
     #[prop_or_default]
     pub language: Option<String>,
     #[prop_or_default]
-    pub onsubmit: Option<Callback<SubmitEvent>>,
+    pub onsubmit: Option<FormSubmitCallback>,
     #[prop_or(true)]
     pub show_copy: bool,
 }
@@ -23,10 +24,6 @@ struct EmbeddedFormConfig {
     inputs: Vec<RenderFieldProps>,
     #[serde(default)]
     button_label: Option<String>,
-    #[serde(default)]
-    error_message: Option<String>,
-    #[serde(default)]
-    success_message: Option<String>,
 }
 
 #[function_component(CodeBlock)]
@@ -45,15 +42,16 @@ pub fn code_block(props: &CodeBlockProps) -> Html {
             let raw = vt.text.trim();
             match serde_json::from_str::<EmbeddedFormConfig>(raw) {
                 Ok(cfg) => {
-                    // fallback onsubmit
-                    let submit_cb = onsubmit.clone().unwrap_or_else(|| Callback::from(|_| {}));
+                    // fallback async onsubmit
+                    let submit_cb = onsubmit
+                        .clone()
+                        .unwrap_or_else(|| async_callback(|_e: SubmitEvent| async { Ok(None) }));
+
                     return html! {
                         <FormBuilder
                             onsubmit={submit_cb}
                             inputs={cfg.inputs}
                             button_label={cfg.button_label}
-                            error_message={cfg.error_message}
-                            success_message={cfg.success_message}
                         />
                     };
                 }
@@ -68,7 +66,7 @@ pub fn code_block(props: &CodeBlockProps) -> Html {
         }
     }
 
-    // otherwise fall back to a normal code‐block with a copy button
+    // fallback to normal code block rendering
     let text_to_copy = children
         .iter()
         .filter_map(|c| {

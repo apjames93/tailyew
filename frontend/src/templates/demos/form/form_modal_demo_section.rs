@@ -1,8 +1,7 @@
 use crate::templates::demos::{DemoComponent, FormInputs};
 use gloo_net::http::Request;
 use tailyew::form::*;
-use tailyew::{Button, ButtonType, ModalSize};
-use wasm_bindgen_futures::spawn_local;
+use tailyew::{async_callback, Button, ButtonType, ModalSize};
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
@@ -10,30 +9,18 @@ use yew::prelude::*;
 pub fn form_modal_demo_section() -> Html {
     // Response body text
     let response_text = use_state(|| "".to_string());
-    // Notifications
-    let error_message = use_state(|| None::<String>);
-    let success_message = use_state(|| None::<String>);
 
     // onsubmit callback: fetch from httpstat.us
-    let onsubmit = {
+    let onsubmit = async_callback({
         let response_text = response_text.clone();
-        let error_message = error_message.clone();
-        let success_message = success_message.clone();
 
-        Callback::from(move |e: SubmitEvent| {
-            e.prevent_default();
-            // reset messages
-            error_message.set(None);
-            success_message.set(None);
-            // grab the status code from the form
-            let code = e_input_value("status", &e);
-
+        move |e: SubmitEvent| {
             let response_text = response_text.clone();
-            let error_message = error_message.clone();
-            let success_message = success_message.clone();
 
-            // Spawn async fetch
-            spawn_local(async move {
+            async move {
+                // Grab the status code from the form
+                let code = e_input_value("status", &e);
+
                 let url = format!("https://httpstat.us/{}", code);
                 match Request::get(&url)
                     .header("Accept", "application/json")
@@ -44,19 +31,23 @@ pub fn form_modal_demo_section() -> Html {
                         let status = resp.status();
                         let text = resp.text().await.unwrap_or_default();
                         response_text.set(text.clone());
+
                         if (200..300).contains(&status) {
-                            success_message.set(Some(format!("Success {}: {}", status, text)));
+                            let msg = format!("Success {}: {}", status, text);
+                            Ok(Some(msg))
                         } else {
-                            error_message.set(Some(format!("Error {}: {}", status, text)));
+                            let msg = format!("Error {}: {}", status, text);
+                            Err(msg)
                         }
                     }
                     Err(err) => {
-                        error_message.set(Some(format!("Network error: {}", err)));
+                        let msg = format!("Network error: {}", err);
+                        Err(msg)
                     }
                 }
-            });
-        })
-    };
+            }
+        }
+    });
 
     // Reusable extra footer buttons for manual close
     let extra_buttons = |label: String| {
@@ -92,12 +83,8 @@ pub fn form_modal_demo_section() -> Html {
                     on_modal_close: None,
                 }}
                 onsubmit={onsubmit.clone()}
-                error_message={(*error_message).clone()}
-                success_message={(*success_message).clone()}
                 submit_label={"Fetch"}
                 auto_close_on_success={true}
-                on_success={Some(Callback::from(|_| web_sys::console::log_1(&"✅ Fetched successfully".into())))}
-                on_error={Some(Callback::from(|_| web_sys::console::log_1(&"❌ Fetch error".into())))}
                 extra_footer_buttons={Some(extra_buttons("Auto-Close".to_string()))}
             >
                 <FormInputs />
@@ -114,8 +101,6 @@ pub fn form_modal_demo_section() -> Html {
                     on_modal_close: None,
                 }}
                 onsubmit={onsubmit.clone()}
-                error_message={(*error_message).clone()}
-                success_message={(*success_message).clone()}
                 submit_label={"Fetch"}
                 auto_close_on_success={false}
                 extra_footer_buttons={Some(extra_buttons("Manual".to_string()))}
@@ -150,12 +135,8 @@ pub fn form_modal_demo_section() -> Html {
         on_modal_close: None,
     }}
     onsubmit={onsubmit}
-    error_message={error_message.clone()}
-    success_message={success_message.clone()}
     submit_label="Fetch"
     auto_close_on_success={true}
-    on_success={Some(on_success_cb)}
-    on_error={Some(on_error_cb)}
     extra_footer_buttons={Some(extra_buttons)}
 >
     <Input id="status" label="Status Code" input_type={InputType::Number} placeholder="Enter status code" />

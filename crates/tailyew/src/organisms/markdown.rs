@@ -1,3 +1,4 @@
+use crate::form::FormSubmitCallback;
 use crate::{CodeBlock, Image, Li, MarkerType, TagType, Typo, Ul, A};
 use pulldown_cmark::{CodeBlockKind, Event, HeadingLevel, Parser, Tag};
 use yew::prelude::*;
@@ -8,7 +9,7 @@ pub struct MarkdownProps {
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
-    pub on_form_submit: Option<Callback<SubmitEvent>>,
+    pub on_form_submit: Option<FormSubmitCallback>,
 }
 
 #[function_component(Markdown)]
@@ -25,7 +26,7 @@ pub fn markdown(props: &MarkdownProps) -> Html {
 
 // --- Core Markdown Parser ---
 
-fn markdown_to_yew(parser: Parser, on_form_submit: Option<Callback<SubmitEvent>>) -> Html {
+fn markdown_to_yew(parser: Parser, on_form_submit: Option<FormSubmitCallback>) -> Html {
     let mut html_nodes = Vec::new();
     let mut tags_stack = Vec::new();
 
@@ -76,11 +77,7 @@ fn push_to_stack_or_root(stack: &mut Vec<(Tag, Vec<Html>)>, root: &mut Vec<Html>
     }
 }
 
-fn render_tag(
-    tag: Tag,
-    children: Vec<Html>,
-    on_form_submit: Option<Callback<SubmitEvent>>,
-) -> Html {
+fn render_tag(tag: Tag, children: Vec<Html>, on_form_submit: Option<FormSubmitCallback>) -> Html {
     match tag {
         Tag::Paragraph => html! { <Typo tag={TagType::P}>{children}</Typo> },
 

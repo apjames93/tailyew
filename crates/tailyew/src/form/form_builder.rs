@@ -1,8 +1,8 @@
-use web_sys::SubmitEvent;
+use crate::{
+    form::{Form, FormSubmitCallback},
+    FormModal, ModalButtonConfig,
+};
 use yew::prelude::*;
-
-use crate::{form::Form, FormModal, ModalButtonConfig};
-
 pub mod render_field;
 pub use render_field::*;
 
@@ -24,7 +24,7 @@ pub struct ModalConfig {
 #[derive(Properties, PartialEq, Clone)]
 pub struct FormBuilderProps {
     /// your submit handler
-    pub onsubmit: Callback<SubmitEvent>,
+    pub onsubmit: FormSubmitCallback,
 
     /// any extra footer buttons you want
     #[prop_or_default]
@@ -38,14 +38,6 @@ pub struct FormBuilderProps {
     #[prop_or_default]
     pub button_label: Option<String>,
 
-    /// banner-level form error
-    #[prop_or_default]
-    pub error_message: Option<String>,
-
-    /// banner-level form success
-    #[prop_or_default]
-    pub success_message: Option<String>,
-
     /// the full list of fields to render
     pub inputs: Vec<RenderFieldProps>,
 
@@ -56,6 +48,8 @@ pub struct FormBuilderProps {
     /// classes applied to *every* input wrapper
     #[prop_or("col-span-1".into())]
     pub input_class: Classes,
+    #[prop_or_default]
+    pub disabled: bool,
 }
 
 #[function_component(FormBuilder)]
@@ -65,11 +59,10 @@ pub fn form_builder(props: &FormBuilderProps) -> Html {
         extra_footer_buttons,
         modal_config,
         button_label,
-        error_message,
-        success_message,
         inputs,
         container_class,
         input_class,
+        disabled,
     } = props.clone();
 
     let submit_text = button_label.unwrap_or_else(|| "Submit".into());
@@ -95,12 +88,11 @@ pub fn form_builder(props: &FormBuilderProps) -> Html {
                 modal_button={mc.modal_button}
                 onsubmit={onsubmit}
                 submit_label={submit_text.clone()}
-                error_message={error_message.clone()}
-                success_message={success_message.clone()}
                 extra_footer_buttons={extra_footer_buttons.clone()}
                 auto_close_on_success={mc.auto_close_on_success}
                 on_success={mc.on_success}
                 on_error={mc.on_error}
+                disabled={disabled}
             >
                 { form_fields }
             </FormModal>
@@ -110,9 +102,8 @@ pub fn form_builder(props: &FormBuilderProps) -> Html {
             <Form
                 onsubmit_callback={onsubmit}
                 button_label={submit_text.clone()}
-                error_message={error_message.clone()}
-                success_message={success_message.clone()}
                 extra_footer_buttons={extra_footer_buttons.clone()}
+                disabled={disabled}
             >
                 { form_fields }
             </Form>

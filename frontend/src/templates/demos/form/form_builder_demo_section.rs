@@ -1,12 +1,11 @@
 use crate::templates::demos::DemoComponent;
 use gloo_net::http::Request;
 use tailyew::{
-    e_form_builder_values, Button, ButtonType, CheckboxProps, ColorInputProps, Column,
-    FileInputProps, FormBuilder, FormValue, InputProps, InputType, ModalButtonConfig, ModalConfig,
-    ModalSize, PhoneInputProps, RadioGroupProps, RangeInputProps, RenderFieldProps,
+    async_callback, e_form_builder_values, Button, ButtonType, CheckboxProps, ColorInputProps,
+    Column, FileInputProps, FormBuilder, FormValue, InputProps, InputType, ModalButtonConfig,
+    ModalConfig, ModalSize, PhoneInputProps, RadioGroupProps, RangeInputProps, RenderFieldProps,
     SearchInputProps, SelectOption, SelectProps, StateDropdownProps, TagType, TextareaProps, Typo,
 };
-use wasm_bindgen_futures::spawn_local;
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
@@ -17,8 +16,6 @@ html! {
   <FormBuilder
     onsubmit={onsubmit}
     button_label={Some("My Button".into())}
-    error_message={Some("Oops!".into())}
-    success_message={Some("Yay!".into())}
     inputs={inputs}
     modal_config={Some( ModalConfig { /* … */ } )}
   />
@@ -30,81 +27,71 @@ pub fn form_builder_demo_section() -> Html {
     // 1) Shared state for displaying submitted values and banners
     let form_values = use_state(|| "".to_string());
     let response_text = use_state(|| "".to_string());
-    let error_message = use_state(|| None::<String>);
-    let success_message = use_state(|| None::<String>);
 
     // 2) Gather & fetch on submit
-    let onsubmit = {
+    let onsubmit = async_callback({
         let form_values = form_values.clone();
         let response_text = response_text.clone();
-        let error_message = error_message.clone();
-        let success_message = success_message.clone();
 
-        Callback::from(move |e: SubmitEvent| {
-            e.prevent_default();
-
-            // 2a) Gather all form values in one pass
-            let ids = [
-                "status",
-                "username",
-                "language",
-                "email",
-                "password",
-                "search",
-                "color",
-                "range",
-                "date",
-                "age",
-                "time",
-                "textarea",
-                "select",
-                "gender",
-                "file_upload",
-                "phone",
-                "state",
-                "accept_terms",
-            ];
-            let fields: Vec<RenderFieldProps> = ids
-                .iter()
-                .map(|&id| {
-                    let mut rf = RenderFieldProps::default();
-                    if id == "accept_terms" {
-                        rf.checkbox = Some(CheckboxProps {
-                            id: id.into(),
-                            ..Default::default()
-                        });
-                    } else {
-                        rf.input = Some(InputProps {
-                            id: id.into(),
-                            ..Default::default()
-                        });
-                    }
-                    rf
-                })
-                .collect();
-
-            let all = e_form_builder_values(&e, &fields);
-            let mut out = String::new();
-            for (k, v) in &all {
-                match v {
-                    FormValue::Text(s) => out.push_str(&format!("{}: {}\n", k, s)),
-                    FormValue::Checked(b) => out.push_str(&format!("{}: {}\n", k, b)),
-                }
-            }
-            form_values.set(out);
-
-            // 2b) Fetch HTTP status code
-            let code = match all.get("status") {
-                Some(FormValue::Text(c)) => c.clone(),
-                _ => "".into(),
-            };
-
+        move |e: SubmitEvent| {
+            let form_values = form_values.clone();
             let response_text = response_text.clone();
-            let error_message = error_message.clone();
-            let success_message = success_message.clone();
-            spawn_local(async move {
-                error_message.set(None);
-                success_message.set(None);
+
+            async move {
+                let ids = [
+                    "status",
+                    "username",
+                    "language",
+                    "email",
+                    "password",
+                    "search",
+                    "color",
+                    "range",
+                    "date",
+                    "age",
+                    "time",
+                    "textarea",
+                    "select",
+                    "gender",
+                    "file_upload",
+                    "phone",
+                    "state",
+                    "accept_terms",
+                ];
+                let fields: Vec<RenderFieldProps> = ids
+                    .iter()
+                    .map(|&id| {
+                        let mut rf = RenderFieldProps::default();
+                        if id == "accept_terms" {
+                            rf.checkbox = Some(CheckboxProps {
+                                id: id.into(),
+                                ..Default::default()
+                            });
+                        } else {
+                            rf.input = Some(InputProps {
+                                id: id.into(),
+                                ..Default::default()
+                            });
+                        }
+                        rf
+                    })
+                    .collect();
+
+                let all = e_form_builder_values(&e, &fields);
+                let mut out = String::new();
+                for (k, v) in &all {
+                    match v {
+                        FormValue::Text(s) => out.push_str(&format!("{}: {}\n", k, s)),
+                        FormValue::Checked(b) => out.push_str(&format!("{}: {}\n", k, b)),
+                    }
+                }
+                form_values.set(out);
+
+                let code = match all.get("status") {
+                    Some(FormValue::Text(c)) => c.clone(),
+                    _ => "".into(),
+                };
+
                 let url = format!("https://httpstat.us/{}", code);
                 match Request::get(&url)
                     .header("Accept", "application/json")
@@ -116,18 +103,21 @@ pub fn form_builder_demo_section() -> Html {
                         let txt = resp.text().await.unwrap_or_default();
                         response_text.set(txt.clone());
                         if (200..300).contains(&st) {
-                            success_message.set(Some(format!("Success {}: {}", st, txt)));
+                            let msg = format!("Success {}: {}", st, txt);
+                            Ok(Some(msg))
                         } else {
-                            error_message.set(Some(format!("Error {}: {}", st, txt)));
+                            let msg = format!("Error {}: {}", st, txt);
+                            Err(msg)
                         }
                     }
                     Err(err) => {
-                        error_message.set(Some(format!("Network error: {}", err)));
+                        let msg = format!("Network error: {}", err);
+                        Err(msg)
                     }
                 }
-            });
-        })
-    };
+            }
+        }
+    });
 
     // 3) Define all of the form fields
     let inputs = vec![
@@ -379,8 +369,6 @@ pub fn form_builder_demo_section() -> Html {
                 "onsubmit",
                 "inputs",
                 "button_label",
-                "error_message",
-                "success_message",
                 "extra_footer_buttons",
                 "modal_config",
                 "modal_config.modal_button",
@@ -397,8 +385,6 @@ pub fn form_builder_demo_section() -> Html {
             values: vec![
                 "Callback<SubmitEvent>",
                 "Vec<RenderFieldProps>",
-                "Option<String>",
-                "Option<String>",
                 "Option<String>",
                 "Option<Callback<Callback<()>, Html>>",
                 "Option<ModalConfig>",
@@ -448,8 +434,6 @@ pub fn form_builder_demo_section() -> Html {
                         onsubmit={onsubmit.clone()}
                         inputs={inputs.clone()}
                         button_label={Some("Register Inline".to_string())}
-                        error_message={(*error_message).clone()}
-                        success_message={(*success_message).clone()}
                         extra_footer_buttons={None::<Callback<Callback<()>, Html>>}
                     />
 
@@ -458,8 +442,6 @@ pub fn form_builder_demo_section() -> Html {
                         onsubmit={onsubmit.clone()}
                         inputs={inputs.clone()}
                         button_label={Some("Register".to_string())}
-                        error_message={(*error_message).clone()}
-                        success_message={(*success_message).clone()}
                         extra_footer_buttons={None::<Callback<Callback<()>, Html>>}
                         modal_config={Some(modal_cfg.clone())}
                     />
@@ -469,8 +451,6 @@ pub fn form_builder_demo_section() -> Html {
                         onsubmit={onsubmit}
                         inputs={inputs}
                         button_label={Some("Register".to_string())}
-                        error_message={(*error_message).clone()}
-                        success_message={(*success_message).clone()}
                         extra_footer_buttons={Some(Callback::from(move |close: Callback<()>| html! {
                             <Button
                                 button_type={ButtonType::Ghost}

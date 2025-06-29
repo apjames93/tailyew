@@ -1,6 +1,6 @@
 use crate::atoms::{Button, ButtonType};
+use crate::form::{Form, FormSubmitCallback, FormSubmitFuture};
 use crate::molecules::{ModalButton, ModalSize};
-use crate::Form;
 use js_sys::Date;
 use web_sys::SubmitEvent;
 use yew::prelude::*;
@@ -19,99 +19,75 @@ pub struct ModalButtonConfig {
 pub struct FormModalProps {
     pub modal_button: ModalButtonConfig,
     pub children: Children,
-    /// your submit handler
-    pub onsubmit: Callback<SubmitEvent>,
+    pub onsubmit: FormSubmitCallback,
 
-    /// banner‐level form error
-    #[prop_or_default]
-    pub error_message: Option<String>,
-    /// banner‐level form success
-    #[prop_or_default]
-    pub success_message: Option<String>,
-
-    /// text for the submit button
     #[prop_or("Submit".into())]
     pub submit_label: String,
 
-    /// any extra footer buttons you want
     #[prop_or_default]
     pub extra_footer_buttons: Option<Callback<Callback<()>, Html>>,
 
-    /// auto-close modal whenever we get a new `success_message`
     #[prop_or(true)]
     pub auto_close_on_success: bool,
-    /// hook to fire on each new success
+
     #[prop_or_default]
     pub on_success: Option<Callback<()>>,
-    /// hook to fire on each new error
+
     #[prop_or_default]
     pub on_error: Option<Callback<()>>,
+
+    #[prop_or_default]
+    pub disabled: bool,
 }
 
 #[function_component(FormModal)]
 pub fn form_modal(props: &FormModalProps) -> Html {
-    // 1) Unique form ID so our Button can target it
     let form_id = use_state(|| Date::now().to_string());
-
-    // 2) Internal loading state
     let loading = use_state(|| false);
-
-    // 3) Store the modal-close callback for auto-close
+    let result = use_state(|| None::<Result<Option<String>, String>>);
     let close_cb = use_mut_ref(|| None::<Callback<()>>);
 
-    // 4) Wrap the user’s onsubmit to flip loading → true
-    let internal_submit = {
-        let onsubmit = props.onsubmit.clone();
-        let loading = loading.clone();
-        Callback::from(move |e: SubmitEvent| {
-            e.prevent_default();
-            loading.set(true);
-            onsubmit.emit(e);
-        })
-    };
-
-    // 5) Fire on_success + auto-close when success_message arrives (and clear loading)
+    // Observe result: call success/error handlers and close modal if needed
     {
-        let close_cb = close_cb.clone();
+        let result = result.clone();
         let on_success = props.on_success.clone();
+        let on_error = props.on_error.clone();
         let auto_close = props.auto_close_on_success;
+        let close_cb = close_cb.clone();
         let loading = loading.clone();
-        use_effect_with(props.success_message.clone(), move |msg| {
-            if msg.is_some() {
+
+        use_effect_with(result.clone(), move |res| {
+            if let Some(res) = &**res {
                 loading.set(false);
-                if let Some(cb) = &on_success {
-                    cb.emit(());
-                }
-                if auto_close {
-                    if let Some(close) = &*close_cb.borrow() {
-                        close.emit(());
+                match res {
+                    Ok(_) => {
+                        if let Some(cb) = &on_success {
+                            cb.emit(());
+                        }
+                        if auto_close {
+                            if let Some(close) = &*close_cb.borrow() {
+                                close.emit(());
+                            }
+                        }
+                    }
+                    Err(_) => {
+                        if let Some(cb) = &on_error {
+                            cb.emit(());
+                        }
                     }
                 }
+                result.set(None);
             }
             || ()
         });
     }
 
-    // 6) Fire on_error when error_message arrives (and clear loading)
-    {
-        let on_error = props.on_error.clone();
-        let loading = loading.clone();
-        use_effect_with(props.error_message.clone(), move |msg| {
-            if msg.is_some() {
-                loading.set(false);
-                if let Some(cb) = &on_error {
-                    cb.emit(());
-                }
-            }
-            || ()
-        });
-    }
-
-    // 7) Build the footer slot, now using our `<Button>` and internal loading
+    // Footer with submit + optional extra buttons
     let footer = {
         let submit_lbl = props.submit_label.clone();
         let extra = props.extra_footer_buttons.clone();
         let close_cb = close_cb.clone();
+        let disabled = props.disabled;
         let form_id = (*form_id).clone();
         let loading = *loading;
 
@@ -123,13 +99,13 @@ pub fn form_modal(props: &FormModalProps) -> Html {
                         if let Some(cb) = &extra {
                             cb.emit(set_modal_close.clone())
                         } else {
-                            html!{}
+                            html! {}
                         }
                     }
                     <Button
                         button_type={ButtonType::Submit}
                         form={Some(form_id.clone())}
-                        disabled={loading}
+                        disabled={loading || disabled}
                     >
                         { submit_lbl.clone() }
                     </Button>
@@ -138,9 +114,28 @@ pub fn form_modal(props: &FormModalProps) -> Html {
         })
     };
 
+    // Wrap the original onsubmit to intercept the result
+    let wrapped_onsubmit: FormSubmitCallback = {
+        let original = props.onsubmit.clone();
+        let result = result.clone();
+        let loading = loading.clone();
+
+        Callback::from(move |e: SubmitEvent| {
+            loading.set(true);
+            let fut: FormSubmitFuture = original.emit(e);
+            let result = result.clone();
+            let wrapped: FormSubmitFuture = Box::pin(async move {
+                let outcome = fut.await;
+                result.set(Some(outcome.clone()));
+                outcome
+            });
+            wrapped
+        })
+    };
+
     html! {
         <ModalButton
-            trigger_children={html!{ props.modal_button.button_text.clone() }}
+            trigger_children={html! { props.modal_button.button_text.clone() }}
             button_type={props.modal_button.button_type.clone()}
             modal_title={props.modal_button.modal_title.clone()}
             modal_size={props.modal_button.modal_size}
@@ -150,10 +145,9 @@ pub fn form_modal(props: &FormModalProps) -> Html {
             modal_content={html! {
                 <Form
                     id={Some((*form_id).clone())}
-                    onsubmit_callback={internal_submit}
-                    error_message={props.error_message.clone()}
-                    success_message={props.success_message.clone()}
+                    onsubmit_callback={wrapped_onsubmit}
                     show_submit_button={false}
+                    disabled={props.disabled}
                 >
                     { for props.children.iter() }
                 </Form>

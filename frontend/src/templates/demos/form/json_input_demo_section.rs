@@ -14,12 +14,23 @@ pub fn json_input_demo_section() -> Html {
 
     // Shared handler generator
     let create_submit_handler = |id: &'static str, state: UseStateHandle<Value>| {
-        Callback::from(move |e: SubmitEvent| {
-            e.prevent_default();
-            let json_str = e_input_value(id, &e);
-            match serde_json::from_str(&json_str) {
-                Ok(val) => state.set(val),
-                Err(err) => web_sys::console::error_1(&format!("Invalid JSON: {}", err).into()),
+        async_callback({
+            let state = state.clone();
+            move |e: SubmitEvent| {
+                let state = state.clone();
+                async move {
+                    let json_str = e_input_value(id, &e);
+                    match serde_json::from_str(&json_str) {
+                        Ok(val) => {
+                            state.set(val);
+                            Ok(None)
+                        }
+                        Err(err) => {
+                            web_sys::console::error_1(&format!("Invalid JSON: {}", err).into());
+                            Err("Invalid JSON".into())
+                        }
+                    }
+                }
             }
         })
     };
