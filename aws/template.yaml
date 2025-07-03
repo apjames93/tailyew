@@ -23,11 +23,25 @@ Resources:
         - Statement:
             - Effect: Allow
               Action:
+                - route53:ListHostedZones
+                - route53:ListResourceRecordSets
+                - route53:ChangeResourceRecordSets
+                - route53:GetChange
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - ssm:PutParameter
+                - ssm:GetParameter
+              Resource:
+                - arn:aws:ssm:*:*:parameter/infra/*
+            - Effect: Allow
+              Action:
                 - acm:RequestCertificate
                 - acm:DescribeCertificate
                 - acm:DeleteCertificate
                 - acm:ListCertificates
                 - acm:AddTagsToCertificate
+                - acm:ImportCertificate
               Resource: "*"
             - Effect: Allow
               Action:
