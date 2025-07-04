@@ -11,19 +11,22 @@
 ![Components](https://img.shields.io/badge/components-50%2B-blue)
 [![Demo](https://img.shields.io/badge/live-demo-0C66F0?logo=vercel&logoColor=white)](https://tailyew.com)
 
+---
 
 ## 🚀 Why TailYew?
 
 TailYew helps you build fast, beautiful, **dark-mode ready** Yew apps — with minimal styling effort.
 
-- 🌗 **Dark mode** with Tailwind's `dark:` utilities
-- 🧹 **Reusable components**: Buttons, Modals, Forms, Accordions, Tabs
-- 📙 **Markdown rendering** Auto-maps to TailYew components (`Typo`, `A`, `Image`, `CodeBlock`) and supports dynamic `FormBuilder` blocks
-- 📊 **Charts** — Canvas-based charts (Bar, Line, Bubble, Pie, Scatter) with no JS dependencies and theme-aware data visualizations
-- 🧾 **Composable Forms** — Input-driven and config-driven forms with built-in state, modals, validation, and accessibility
-- 🦠 **Pure Rust** — No JavaScript needed 
-- 📦 **Small bundle sizes** — thanks to WASM and Tailwind JIT
-- 📝 **A11y support** — ARIA roles, labels, and `aria-describedby` support (Ongoing improvement)
+- 🌗 **Dark mode** with Tailwind's `dark:` utilities  
+- 🧹 **Reusable components**: Buttons, Modals, Forms, Accordions, Tabs  
+- 📙 **Markdown rendering** auto-maps to TailYew components (`Typo`, `A`, `Image`, `CodeBlock`) and supports embedded `FormBuilder` blocks  
+- ✍️ **Dynamic Forms in Markdown** — render live `FormBuilder` blocks from fenced code like ````form ...```` via `pulldown-cmark`  
+- 📊 **Charts** — Canvas-based charts (Bar, Line, Bubble, Pie, Scatter) with no JS dependencies and theme-aware data visualizations  
+- 🧾 **Composable Forms** — Input-driven and config-driven forms with built-in state, modals, validation, and accessibility  
+- 🔁 **Async Forms** — All forms support `FormSubmitCallback` with loading, error, and success handling built in  
+- 🦠 **Pure Rust** — No JavaScript needed  
+- 📦 **Small bundle sizes** — thanks to WASM and Tailwind JIT  
+- 📝 **A11y support** — ARIA roles, labels, and `aria-describedby` support  
 
 🔎 Explore live examples 👉 [https://tailyew.com/demo/getting_started](https://tailyew.com/demo/getting_started)
 
@@ -33,13 +36,14 @@ TailYew helps you build fast, beautiful, **dark-mode ready** Yew apps — with m
 
 > TailYew includes 50+ components. Below is a summary of a few key components— [see the full demo here »](https://tailyew.com)
 
-- **Atoms**: `Button`, `Input`, `Textarea`, `Typo`, `Checkbox`, `Select`
-- **Molecules**: `ModalButton`, `Popover`, `Accordion`, `Stepper`, `Markdown`
-- **Organisms**: `Table`, `Form`, `NavBar`, `Sidebar`, `Card`, `HeroHeader`
-- **Charts**: `BarChart`, `LineChart`, `BubbleChart`, `PieChart`, `ScatterPlot`
-- **Forms**: Self-managed `Form` and `FormBuilder` with fully composable inputs, modal support, and accessible feedback
+- **Atoms**: `Button`, `Input`, `Textarea`, `Typo`, `Checkbox`, `Select`  
+- **Molecules**: `ModalButton`, `Popover`, `Accordion`, `Stepper`, `Markdown`, `Notification`  
+- **Organisms**: `Table`, `Form`, `NavBar`, `Sidebar`, `Card`, `HeroHeader`  
+- **Charts**: `BarChart`, `LineChart`, `BubbleChart`, `PieChart`, `ScatterPlot`  
+- **Forms**: Self-managed `Form` and `FormBuilder` with fully composable inputs, modal support, and accessible feedback  
 
 See all live: [https://tailyew.com](https://tailyew.com/)
+
 ---
 
 > If you like this project, consider giving it a ⭐ — it helps others discover TailYew!  
@@ -65,23 +69,24 @@ cd my-app
 
 # 4) Start the dev server
 make run-frontend
-````
+`````
 
 You’ll get:
 
 * A fully working Yew/WASM + Tailwind starter
 * `npm install` already run for you
 * `cargo-watch` installed for hot-reload
-* A prompt (or `make run-frontend`) to launch at [http://localhost:8080](http://localhost:8080)
+* A prompt (or `make run-frontend`) to launch at [http://localhost:9001](http://localhost:9001)
+* A smart `Makefile` with dev commands: `run-frontend`, `fe-check`, `pretty`, and more
 
 ---
 
-## ✅ Option 2: Add TailYew to Your Own App
+### ✅ Option 2: Add TailYew to Your Own App
 
 In your `Cargo.toml`:
 
 ```toml
-tailyew = "0.1.28"
+tailyew = "0.1.38"
 ```
 
 ---
@@ -90,7 +95,7 @@ tailyew = "0.1.28"
 
 Tailwind CSS uses static analysis to determine which classes to include in your final CSS bundle. Since TailYew applies some classes dynamically, **you must safelist them**.
 
-### 📅 Recommended: Use the Built-in Safelist HTML
+### Recommended: Use the Built-in Safelist HTML
 
 TailYew includes a `tailyew-safelist.html` file that lists all runtime classes. Add it to your `tailwind.config.js`:
 
@@ -98,7 +103,7 @@ TailYew includes a `tailyew-safelist.html` file that lists all runtime classes. 
 module.exports = {
   darkMode: 'class',
   content: [
-   './**/**/*.{html,js,rs}',
+    './**/**/*.{html,js,rs}',
     './static/tailyew-safelist.html',
   ],
 };
@@ -123,7 +128,7 @@ You can also manually define all TailYew utility classes in the `safelist` key i
 # Install TailYew
 cargo add tailyew
 
-
+# Copy the safelist
 cp ~/.cargo/registry/src/*/tailyew-*/tailyew-safelist.html static/
 
 # Update Tailwind config
@@ -138,15 +143,28 @@ content: [
 
 ---
 
+## ♿ Accessibility
+
+TailYew is committed to accessible UI components:
+
+* All form inputs support `aria-label`, `aria-describedby`, and semantic labels
+* Modals and alerts use correct ARIA roles
+* Live validation feedback is announced for screen readers
+* Form errors are keyboard-navigable and styled consistently
+* A11y is an ongoing area of improvement — issues and PRs welcome!
+
+---
+
 # 🛠️ Project Goals
 
-| Goal                     | Status |
-| ------------------------ | ------ |
+| Goal                      | Status                          |
+| ------------------------- | ------------------------------- |
 | 🧹 Atomic Components      | ✅ Atoms → Molecules → Organisms |
-| ⚙️ Yew-Native Rust Code    | ✅ No JavaScript needed |
-| 🎨 Tailwind-First Styling  | ✅ Utility-first classes |
-| 🌗 Dark Mode Friendly      | ✅ Fully supported |
-| 📙 Typed Prop APIs         | ✅ Rust ergonomics |
+| ⚙️ Yew-Native Rust Code   | ✅ No JavaScript needed          |
+| 🎨 Tailwind-First Styling | ✅ Utility-first classes         |
+| 🌗 Dark Mode Friendly     | ✅ Fully supported               |
+| 📙 Typed Prop APIs        | ✅ Rust ergonomics               |
+
 ---
 
 # 📁 Folder Structure
@@ -173,33 +191,33 @@ We welcome contributions! ❤️
 
 **Ways you can help:**
 
-- Suggest a new component
-- Improve UX/UI or theming
-- Add missing dark mode styles
-- Write docs or demos
-- Report bugs and issues
+* Suggest a new component
+* Improve UX/UI or theming
+* Add missing dark mode styles
+* Write docs or demos
+* Report bugs and issues
 
 **Before submitting a PR:**
 
-- Run `make release-check`
-- Test both **light mode** and **dark mode**
-- Include **before/after screenshots** if you change visuals
+* Run `make release-check`
+* Test both **light mode** and **dark mode**
+* Include **before/after screenshots** if you change visuals
 
 ---
 
 # 📂 Helpful Links
 
-- 📥 [Open a Pull Request](https://github.com/apjames93/tailyew/compare)
-- 🐛 [Report a Bug](https://github.com/apjames93/tailyew/issues/new?template=bug_report.md)
-- 💡 [Propose a Feature](https://github.com/apjames93/tailyew/issues/new?template=feature_request.md)
+* 📥 [Open a Pull Request](https://github.com/apjames93/tailyew/compare)
+* 🐛 [Report a Bug](https://github.com/apjames93/tailyew/issues/new?template=bug_report.md)
+* 💡 [Propose a Feature](https://github.com/apjames93/tailyew/issues/new?template=feature_request.md)
 
 ---
 
 # 🔗 Related Projects
 
-- 🦠 [Yew Framework](https://yew.rs/)
-- 🎨 [TailwindCSS](https://tailwindcss.com/)
-- 🚀 [TailYew Starter](https://github.com/apjames93/tailyew-starter)
+* 🦠 [Yew Framework](https://yew.rs/)
+* 🎨 [TailwindCSS](https://tailwindcss.com/)
+* 🚀 [Create TailYew App](https://crates.io/crates/create-tailyew-app)
 
 ---
 
@@ -210,4 +228,3 @@ We welcome contributions! ❤️
 # 📜 License
 
 MIT License — see [LICENSE](./LICENSE)
-
