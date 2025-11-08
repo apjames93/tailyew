@@ -74,10 +74,16 @@ def handler(event, context):
         staging_flag = "--staging" if os.environ.get("IS_PRODUCTION", "false").lower() != "true" else ""
         certbot_args = [
             "certonly", "--dns-route53",
-            "-m", email, "--agree-tos", "--non-interactive",
-            "--config-dir", tmp_dir, "--work-dir", tmp_dir, "--logs-dir", tmp_dir,
-            f"-d {domain_name}", f"-d *.{domain_name}"
+            "-m", email,
+            "--agree-tos",
+            "--non-interactive",
+            "--config-dir", tmp_dir,
+            "--work-dir", tmp_dir,
+            "--logs-dir", tmp_dir,
+            "-d", domain_name,
+            "-d", f"*.{domain_name}",
         ]
+
         if staging_flag:
             certbot_args.append(staging_flag)
 

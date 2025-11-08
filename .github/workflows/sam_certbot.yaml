@@ -12,7 +12,7 @@ on:
   pull_request:
     branches: [main]
     paths: ['aws/certbot_lambda/**', 'aws/template.yaml']
-  workflow_dispatch: 
+  workflow_dispatch:
 
 env:
   AWS_REGION: us-east-1
@@ -27,20 +27,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install system dependencies (incl. Python 3.9)
+      - name: Install system deps + Python 3.13
         run: |
           sudo apt-get update
-          sudo apt-get install -y libssl-dev pkg-config zip make curl unzip python3-pip software-properties-common
+          sudo apt-get install -y \
+            libssl-dev pkg-config zip make curl unzip \
+            python3-pip software-properties-common \
+            python3-distutils
           sudo add-apt-repository -y ppa:deadsnakes/ppa
           sudo apt-get update
-          sudo apt-get install -y python3.9 python3.9-venv python3.9-dev
-          sudo ln -sf /usr/bin/python3.9 /usr/local/bin/python
-
-      - name: Install AWS SAM CLI
-        run: pip3 install aws-sam-cli --upgrade
+          sudo apt-get install -y python3.13 python3.13-venv python3.13-dev
+          # set up 3.13 tooling
+          python3.13 -m ensurepip --upgrade
+          python3.13 -m pip install --upgrade pip setuptools wheel
+          # install SAM into 3.13's user site so we don't touch system python
+          python3.13 -m pip install --user aws-sam-cli
+          # make sure ~/.local/bin is on PATH (act runner needs this explicitly)
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Validate SAM Template
-        run: make aws-sam-validate
+        run: sam validate --template-file aws/template.yaml
 
       - name: Build Lambda
         run: make aws-sam-build
@@ -55,17 +61,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🔧 Install system dependencies (incl. Python 3.9)
+      - name: Install system deps + Python 3.13
         run: |
           sudo apt-get update
-          sudo apt-get install -y libssl-dev pkg-config zip make curl unzip python3-pip software-properties-common
+          sudo apt-get install -y \
+            libssl-dev pkg-config zip make curl unzip \
+            python3-pip software-properties-common \
+            python3-distutils
           sudo add-apt-repository -y ppa:deadsnakes/ppa
           sudo apt-get update
-          sudo apt-get install -y python3.9 python3.9-venv python3.9-dev
-          sudo ln -sf /usr/bin/python3.9 /usr/local/bin/python
-
-      - name: Install AWS SAM CLI
-        run: pip3 install aws-sam-cli --upgrade
+          sudo apt-get install -y python3.13 python3.13-venv python3.13-dev
+          python3.13 -m ensurepip --upgrade
+          python3.13 -m pip install --upgrade pip setuptools wheel
+          python3.13 -m pip install --user aws-sam-cli
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
