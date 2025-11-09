@@ -30,3 +30,6 @@ pub use atom_icon::*;
 
 pub mod polyline_icon;
 pub use polyline_icon::*;
+
+pub mod icon_base;
+pub use icon_base::*;
