@@ -26,6 +26,7 @@ pub struct SidebarProps {
     pub on_select: Callback<AttrValue>,
     #[prop_or(true)]
     pub auto_close: bool,
+    // e.g. "top-16" to clear your app bar
     #[prop_or_default]
     pub top_offset_class: Classes,
     #[prop_or_default]
@@ -50,6 +51,18 @@ pub fn sidebar(props: &SidebarProps) -> Html {
         SidebarPosition::Static => "relative",
     };
 
+    // build the position-specific classes first
+    let (position_classes, height_classes) = if matches!(position, SidebarPosition::Static) {
+        // static mode – let parent control height
+        (classes!("relative"), classes!("h-full"))
+    } else {
+        // fixed under navbar to bottom
+        (
+            classes!("fixed", "z-40", top_offset_class.clone(), "bottom-0"),
+            classes!(), // no extra height classes
+        )
+    };
+
     let overlay = if active_index.is_some() && !matches!(position, SidebarPosition::Static) {
         let close = {
             let active_index = active_index.clone();
@@ -71,29 +84,29 @@ pub fn sidebar(props: &SidebarProps) -> Html {
             { overlay }
 
             <div
-            class={classes!(
-                if matches!(position, SidebarPosition::Static) { "" } else { "fixed z-40 h-screen" },
-                "top-0",
-                side_class,
-                "bg-white",
-                "dark:bg-gray-900",
-                "border-r",
-                "border-gray-200",
-                "dark:border-gray-700",
-                "transition-all",
-                "duration-300",
-                "flex",
-                "flex-col",
-                "items-stretch",
-                "overflow-y-auto",
-                if matches!(position, SidebarPosition::Static) {
-                    "h-full"
-                } else {
-                    ""
-                },
-                if active_index.is_some() { "w-64" } else { "w-14" },
-                top_offset_class.clone(),
-            )}
+                class={classes!(
+                    position_classes,
+                    height_classes,
+                    side_class,
+                    // look & feel
+                    "bg-white",
+                    "dark:bg-gray-900",
+                    "border-r",
+                    "border-gray-200",
+                    "dark:border-gray-700",
+                    "transition-all",
+                    "duration-300",
+                    // structure
+                    "flex",
+                    "flex-col",
+                    "items-stretch",
+                    // scroll
+                    "overflow-y-auto",
+                    // width based on active state
+                    if active_index.is_some() { "w-64" } else { "w-14" },
+                    // make sure last item is reachable
+                    "pb-16",
+                )}
             >
                 {
                     for icon_list.iter().enumerate().map(|(i, btn)| {
@@ -145,7 +158,10 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                                     if is_active {
                                         html! {
                                             <div class="pl-4 pr-2 py-2">
-                                                <NestedList list={btn.list.clone()} on_select={on_select_internal.clone()} />
+                                                <NestedList
+                                                    list={btn.list.clone()}
+                                                    on_select={on_select_internal.clone()}
+                                                />
                                             </div>
                                         }
                                     } else {
