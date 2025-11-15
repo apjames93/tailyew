@@ -13,7 +13,7 @@ pub fn nav_bar() -> Html {
             vec![
                 NestedItem::with_html(
                     html! {
-                        <Link<Route> to={Route::NotFoundPage}>
+                        <Link<Route> to={Route::NotFoundPage} classes="block w-full">
                             { "404" }
                         </Link<Route>>
                     },
@@ -21,7 +21,7 @@ pub fn nav_bar() -> Html {
                 ),
                 NestedItem::with_html(
                     html! {
-                        <Link<Route> to={Route::LandingPage}>
+                        <Link<Route> to={Route::LandingPage} classes="block w-full">
                             { "About" }
                         </Link<Route>>
                     },
@@ -34,7 +34,7 @@ pub fn nav_bar() -> Html {
             vec![
                 NestedItem::with_html(
                     html! {
-                        <Link<Route> to={Route::LandingPage}>
+                        <Link<Route> to={Route::LandingPage} classes="block w-full">
                             <Button button_type={ButtonType::Primary}>{ "Docs" }</Button>
                         </Link<Route>>
                     },
