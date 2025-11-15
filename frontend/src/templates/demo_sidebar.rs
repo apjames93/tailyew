@@ -7,14 +7,14 @@ use crate::templates::demos::{
     CircularProgressDemoSection, CodeBlockDemoSection, ColorInputDemoSection,
     CopyToClipboardDemoSection, DownloadButtonDemoSection, FileInputDemoSection,
     FormBuilderDemoSection, FormDemoSection, FormModalDemoSection, GettingStarted,
-    HeroHeaderDemoSection, ImageDemoSection, InitThemeDemoSection, InputDemoSection,
-    JsonInputDemoSection, LiDemoSection, LineChartDemoSection, LinearProgressDemoSection,
-    MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection, NavBarDemoSection,
-    NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection, PieChartDemoSection,
-    PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection, ScatterPlotDemoSection,
-    SearchInputDemoSection, SelectDemoSection, SidebarDemoSection, SpacerDemoSection,
-    StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection, TooltipDemoSection,
-    TypoDemoSection, UlDemoSection,
+    HeroHeaderDemoSection, IconDemoSection, ImageDemoSection, InitThemeDemoSection,
+    InputDemoSection, JsonInputDemoSection, LiDemoSection, LineChartDemoSection,
+    LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection,
+    NavBarDemoSection, NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection,
+    PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection,
+    ScatterPlotDemoSection, SearchInputDemoSection, SelectDemoSection, SidebarDemoSection,
+    SpacerDemoSection, StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection,
+    TooltipDemoSection, TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
 use tailyew::{
@@ -41,6 +41,11 @@ pub const SYSTEM_LINKS: &[DemoLink] = &[
         name: "Init Theme",
         route: "init_theme",
         render: || html! { <InitThemeDemoSection /> },
+    },
+    DemoLink {
+        name: "Icon",
+        route: "icon",
+        render: || html! { <IconDemoSection /> },
     },
 ];
 

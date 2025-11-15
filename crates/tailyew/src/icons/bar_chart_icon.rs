@@ -1,10 +1,31 @@
 use yew::prelude::*;
 
+use crate::icons::icon_base::IconBase;
+
 /// Properties for the BarChartIcon component.
 #[derive(Properties, PartialEq, Clone)]
 pub struct BarChartIconProps {
+    /// Extra classes for the svg
+    #[prop_or_default]
+    pub class: Classes,
+
+    /// Icon size in px
     #[prop_or(24)]
     pub size: u32,
+
+    /// Stroke width to match the rest of the icon set
+    #[prop_or(1.5)]
+    pub stroke_width: f32,
+
+    /// Accessible label
+    #[prop_or_default]
+    pub label: Option<String>,
+
+    /// If true, hide from screen readers
+    #[prop_or(false)]
+    pub decorative: bool,
+
+    /// Optional explicit stroke/fill color for the bars
     #[prop_or_default]
     pub color: Option<String>,
 }
@@ -12,26 +33,30 @@ pub struct BarChartIconProps {
 /// Bar chart icon for TailYew
 #[function_component(BarChartIcon)]
 pub fn bar_chart_icon(props: &BarChartIconProps) -> Html {
-    let BarChartIconProps { size, color } = props.clone();
+    let stroke_or_fill = props
+        .color
+        .clone()
+        .unwrap_or_else(|| "currentColor".to_string());
 
-    let stroke_color = color.unwrap_or_else(|| "currentColor".to_string());
+    // give it a default label if user didn't set one and it's not decorative
+    let label = if props.label.is_none() && !props.decorative {
+        Some("Bar chart".to_string())
+    } else {
+        props.label.clone()
+    };
 
     html! {
-        <svg
-            width={size.to_string()}
-            height={size.to_string()}
-            fill="none"
-            stroke={stroke_color}
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            role="img"
-            aria-label="Bar chart"
-            xmlns="http://www.w3.org/2000/svg"
+        <IconBase
+            class={props.class.clone()}
+            size={props.size}
+            stroke_width={props.stroke_width}
+            label={label}
+            decorative={props.decorative}
         >
-            <rect x="4" y="12" width="3" height="8" rx="1" />
-            <rect x="10.5" y="8" width="3" height="12" rx="1" />
-            <rect x="17" y="4" width="3" height="16" rx="1" />
-        </svg>
+            // these are bars, so it's fine to just set fill explicitly
+            <rect x="4" y="12" width="3" height="8" rx="1" fill={stroke_or_fill.clone()} />
+            <rect x="10.5" y="8" width="3" height="12" rx="1" fill={stroke_or_fill.clone()} />
+            <rect x="17" y="4" width="3" height="16" rx="1" fill={stroke_or_fill} />
+        </IconBase>
     }
 }

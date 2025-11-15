@@ -31,9 +31,10 @@ jobs:
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.89.0
           profile: minimal
           components: rustfmt, clippy
+          override: true
 
       - name: Cache Cargo registry and target
         uses: actions/cache@v3
@@ -50,7 +51,7 @@ jobs:
           sudo apt-get install -y libssl-dev pkg-config make curl
 
       - name: Install wasm-pack
-        run: cargo install wasm-pack
+        run: cargo install wasm-pack --locked
 
       - name: Dry-run publish check
         run: make release-check
@@ -79,7 +80,7 @@ jobs:
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
- 
+
   deploy:
     name: Deploy Crate
     needs: [build-and-check, check-cargo-changed]
@@ -93,8 +94,9 @@ jobs:
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.89.0
           profile: minimal
+          override: true
 
       - name: Publish `tailyew` crate to crates.io
         run: make publish-tailyew

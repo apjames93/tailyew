@@ -2,37 +2,56 @@
 
 use yew::prelude::*;
 
-/// Properties for the `ArrowDownIcon` component.
+use crate::icons::icon_base::IconBase;
+
 #[derive(Properties, PartialEq, Clone)]
 pub struct ArrowDownIconProps {
+    #[prop_or_default]
+    pub class: Classes,
+
     #[prop_or(24)]
     pub size: u32,
+
+    #[prop_or(1.5)]
+    pub stroke_width: f32,
+
+    #[prop_or_default]
+    pub label: Option<String>,
+
+    #[prop_or(false)]
+    pub decorative: bool,
+
     #[prop_or_default]
     pub color: Option<String>,
 }
 
-/// Arrow Down Icon component
 #[function_component(ArrowDownIcon)]
 pub fn arrow_down_icon(props: &ArrowDownIconProps) -> Html {
-    let ArrowDownIconProps { size, color } = props.clone();
+    let stroke_color = props
+        .color
+        .clone()
+        .unwrap_or_else(|| "currentColor".to_string());
 
-    // Set the SVG `fill` and `stroke` to the provided color or default to "currentColor"
-    let fill_color = color.unwrap_or("currentColor".to_string());
+    let label = if props.label.is_none() && !props.decorative {
+        Some("Arrow down".to_string())
+    } else {
+        props.label.clone()
+    };
 
     html! {
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={size.to_string()}
-            height={size.to_string()}
-            viewBox="0 0 24 24"
-            fill={fill_color.clone()}
-            stroke={fill_color}
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="arrow-down-icon"
+        <IconBase
+            class={props.class.clone()}
+            size={props.size}
+            stroke_width={props.stroke_width}
+            label={label}
+            decorative={props.decorative}
         >
-            <path d="M12 5v14M19 12l-7 7-7-7" />
-        </svg>
+            <path
+                d="M12 5v14M19 12l-7 7-7-7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke={stroke_color}
+            />
+        </IconBase>
     }
 }
