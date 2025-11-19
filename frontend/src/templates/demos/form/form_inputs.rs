@@ -68,6 +68,7 @@ pub fn form_inputs() -> Html {
             <RadioGroup id="gender" label="Select Gender" options={radio_options.clone()} default_value="female" />
             <FileInput id="file_upload" label="Upload File" />
             <Checkbox id="checkbox" label="Accept Terms" />
+            <Switch id="switch" label="Enable Notifications" />
             <PhoneInput id="phone" label="Phone" placeholder="123-456-7890" />
         </>
     }

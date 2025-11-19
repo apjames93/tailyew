@@ -13,8 +13,8 @@ use crate::templates::demos::{
     NavBarDemoSection, NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection,
     PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection,
     ScatterPlotDemoSection, SearchInputDemoSection, SelectDemoSection, SidebarDemoSection,
-    SpacerDemoSection, StepperDemoSection, TableDemoSection, TabsDemoSection, TextareaDemoSection,
-    TooltipDemoSection, TypoDemoSection, UlDemoSection,
+    SpacerDemoSection, StepperDemoSection, SwitchDemoSection, TableDemoSection, TabsDemoSection,
+    TextareaDemoSection, TooltipDemoSection, TypoDemoSection, UlDemoSection,
 };
 use crate::Route;
 use tailyew::{
@@ -90,6 +90,11 @@ pub const FORM_LINKS: &[DemoLink] = &[
         name: "Checkbox",
         route: "checkbox",
         render: || html! { <CheckboxDemoSection /> },
+    },
+    DemoLink {
+        name: "Switch",
+        route: "switch",
+        render: || html! { <SwitchDemoSection /> },
     },
     DemoLink {
         name: "Radio Group",

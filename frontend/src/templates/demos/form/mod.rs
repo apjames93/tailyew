@@ -42,3 +42,6 @@ pub use search_input_demo_section::*;
 
 pub mod form_inputs;
 pub use form_inputs::*;
+
+pub mod switch_demo_section;
+pub use switch_demo_section::*;
