@@ -48,3 +48,6 @@ pub use form_helpers::*;
 
 pub mod form_deserializer;
 pub use form_deserializer::*;
+
+pub mod switch;
+pub use switch::*;

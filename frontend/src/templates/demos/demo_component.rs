@@ -54,12 +54,32 @@ pub fn demo_component(props: &DemoComponentProps) -> Html {
             >
                 { "Source ↗" }
             </A>
+
+            <A
+                href={{
+                    let raw = github_source_path.as_str();
+
+                    let no_leading_slash = raw.trim_start_matches('/');
+
+                    let trimmed = no_leading_slash
+                        .strip_suffix(".rs")
+                        .unwrap_or(no_leading_slash);
+
+                    format!(
+                        "https://docs.rs/tailyew/latest/tailyew/{}/index.html",
+                        trimmed,
+                    )
+                }}
+                target={Some("_blank".to_string())}
+            >
+                { "docs.rs ↗" }
+            </A>
         </div>
     };
 
     html! {
         <Section class="pt-[74px] mb-16">
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex flex-col gap-2 mb-4">
                 <Typo tag={TagType::H2}>{ title.clone() }</Typo>
                 { github_links }
             </div>

@@ -112,6 +112,10 @@ pub fn form_demo_section() -> Html {
                 }
                 let checked = e_checkbox_checked("checkbox", &e);
                 values.push_str(&format!("checkbox: {}\n", checked));
+
+                let switch = e_checkbox_checked("switch", &e);
+                values.push_str(&format!("switch: {}\n", switch));
+
                 form_values.set(values);
                 let code = e_input_value("status", &e);
                 let url = format!("https://httpstat.us/{}", code);
