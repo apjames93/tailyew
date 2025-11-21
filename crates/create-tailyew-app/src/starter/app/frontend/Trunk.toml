@@ -1,0 +1,14 @@
+[build]
+dist = "dist"
+public_url = "/"
+
+[serve]
+port = 9001
+
+[[copy]]
+source = "static"
+
+[[hooks]]
+stage = "pre_build"
+command = "npm"
+command_arguments = ["run", "tailwind:build"]

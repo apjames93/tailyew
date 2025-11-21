@@ -67,17 +67,20 @@ create-tailyew-app my-app
 # 3) Change into it
 cd my-app
 
-# 4) Start the dev server
+# 4) Install prerequisites (once)
+rustup target add wasm32-unknown-unknown
+cargo install trunk
+npm install
+
+# 5) Start the dev server (Trunk)
 make run-frontend
 `````
 
 You’ll get:
 
 * A fully working Yew/WASM + Tailwind starter
-* `npm install` already run for you
-* `cargo-watch` installed for hot-reload
-* A prompt (or `make run-frontend`) to launch at [http://localhost:9001](http://localhost:9001)
-* A smart `Makefile` with dev commands: `run-frontend`, `fe-check`, `pretty`, and more
+* Trunk dev server with hot reload at [http://localhost:9001](http://localhost:9001)
+* A smart `Makefile` with dev commands: `run-frontend`, `pretty`, and more
 
 ---
 

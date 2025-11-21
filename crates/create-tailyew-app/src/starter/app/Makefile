@@ -27,5 +27,4 @@ fe-%:
 	$(FRONTEND_MAKE) $*
 
 run-frontend:
-	cargo watch -p frontend -w frontend/src -s 'make fe-run'
-
+	make fe-run

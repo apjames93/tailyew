@@ -24,17 +24,10 @@ This is a scaffold app for TailYew, accessible, and fully typed UI component lib
 
 You'll need the following tools installed:
 
-- [Rust](https://rust-lang.org/tools/install) + [wasm-pack](https://rustwasm.github.io/wasm-pack/)
-- [`cargo-watch`](https://crates.io/crates/cargo-watch) — for hot reloading
-- [`npm`](https://www.npmjs.com/package/serve) — for local development to server FE and build tailwind css 
-
-Install example:
-
-```sh
-cargo install wasm-pack cargo-watch
-npm install install
-brew install binaryen
-```
+- [Rust](https://rust-lang.org/tools/install)
+- `rustup target add wasm32-unknown-unknown`
+- [Trunk](https://trunkrs.dev/) (`cargo install trunk`)
+- `npm install` (for Tailwind CLI)
 
 ## 🚀 Quickstart
 
@@ -44,11 +37,9 @@ git clone https://github.com/tailyew/create-tailyew-app
 cd create-tailyew-app
 
 cargo build
+npm install
 
-# install tailwindcss cli and server
-npm i
-
-# Start the dev server with hot reloads
+# Start the dev server with hot reloads (Trunk)
 make run
 ```
 
@@ -89,9 +80,10 @@ html! {
 │   ├── templates/       # Layout components (e.g., NavBar)
 │   ├── lib.rs           # App entry point + routing
 │   └── app_router.rs    # Main router with layout shell
-├── static/
-│   └── index.html       # Entrypoint HTML with service worker
-│   └── pkg/             # wasm build
+├── static/             # assets copied by Trunk (manifest, service worker, images)
+│   └── pkg/            # wasm build output (generated)
+├── index.html          # Trunk entrypoint
+├── Trunk.toml          # Trunk configuration
 ├── main.css             # Tailwind setup + custom themes
 ├── tailwind.config.js   # Design tokens and scan paths
 ├── Cargo.toml           # Rust + wasm config
@@ -105,7 +97,7 @@ html! {
 - [Yew](https://yew.rs/) — Rust-based web framework (WASM)
 - [TailYew](https://github.com/tailyew/tailyew) — Reusable component system
 - [Tailwind CSS](https://tailwindcss.com/) — Utility-first styling
-- [wasm-bindgen](https://rustwasm.github.io/docs/wasm-bindgen/) — Interop between Rust and JS
+- [Trunk](https://trunkrs.dev) — Build + serve
 
 ---
 

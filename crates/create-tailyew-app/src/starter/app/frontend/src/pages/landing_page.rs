@@ -3,7 +3,7 @@ use tailyew::molecules::{Accordion, HeroHeader};
 use tailyew::organisms::{Card, TabItem, Tabs};
 use yew::prelude::*;
 
-const HERO_IMAGE_URL: &str = "/images/TailYew.png";
+const HERO_IMAGE_URL: &str = "static/images/TailYew.png";
 
 #[function_component(LandingPage)]
 pub fn landing_page() -> Html {
