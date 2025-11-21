@@ -299,7 +299,7 @@ pub fn line_chart_component(props: &LineChartProps) -> Html {
         <ChartLegend
             items={props.lines.iter().map(|line| LegendItem {
                 label: line.label.clone(),
-                value: Some(line.points.iter().map(|p| p.y).sum::<f64>()),
+                value: None,
                 color: line.color.clone(),
             }).collect::<Vec<LegendItem>>()}
         />

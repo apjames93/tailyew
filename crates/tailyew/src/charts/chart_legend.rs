@@ -3,7 +3,7 @@ use yew::prelude::*;
 #[derive(Properties, PartialEq, Clone)]
 pub struct LegendItem {
     pub label: String,
-    pub value: Option<f64>,
+    pub value: Option<String>,
     pub color: String,
 }
 
@@ -31,8 +31,8 @@ pub fn chart_legend(props: &ChartLegendProps) -> Html {
                     />
                     <span class="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-tight">
                         {
-                            if let Some(val) = item.value {
-                                format!("{}: {:.0}", item.label, val)
+                            if let Some(val) = &item.value {
+                                format!("{}: {}", item.label, val)
                             } else {
                                 item.label.clone()
                             }

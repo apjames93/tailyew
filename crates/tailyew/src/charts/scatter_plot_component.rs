@@ -247,7 +247,7 @@ pub fn scatter_plot_component(props: &ScatterPlotProps) -> Html {
         <ChartLegend
             items={props.points.iter().map(|p| LegendItem {
                 label: p.label.clone(),
-                value: Some(p.y),
+                value: Some(format!("({:.0}, {:.0})", p.x, p.y)),
                 color: p.color.clone(),
             }).collect::<Vec<LegendItem>>()}
         />

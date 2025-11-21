@@ -238,7 +238,7 @@ pub fn pie_chart_component(props: &PieChartProps) -> Html {
         <ChartLegend
             items={props.data.iter().map(|d| LegendItem {
                 label: d.label.clone(),
-                value: Some(d.value),
+                value: Some(format!("{:.0}", d.value)),
                 color: d.color.clone(),
             }).collect::<Vec<LegendItem>>()}
         />

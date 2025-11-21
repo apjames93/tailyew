@@ -265,7 +265,7 @@ pub fn bubble_chart_component(props: &BubbleChartProps) -> Html {
         <ChartLegend
             items={props.points.iter().map(|p| LegendItem {
                 label: p.label.clone(),
-                value: Some(p.radius),
+                value: Some(format!("({:.0}, {:.0}) r={:.0}", p.x, p.y, p.radius)),
                 color: p.color.clone(),
             }).collect::<Vec<LegendItem>>()}
         />
