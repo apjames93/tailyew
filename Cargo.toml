@@ -34,6 +34,13 @@ web-sys = { version = "0.3.69", features = [
   "MutationObserverInit",
   "ScrollIntoViewOptions",
   "ScrollBehavior",
+  "ResizeObserver",
+  "ResizeObserverEntry",
+  "Window",
+  "Document",
+  "Element",
+  "DomRectReadOnly",
+
 ]}
 
 gloo-net = "0.6.0"

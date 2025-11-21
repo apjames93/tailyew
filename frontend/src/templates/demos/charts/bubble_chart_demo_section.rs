@@ -12,17 +12,24 @@ pub fn bubble_chart_demo_section() -> Html {
     let props_table = vec![
         Column {
             header: "Prop".into(),
-            values: vec!["points".into()],
+            values: vec![
+                "data".into(),
+                "legend_position".into(),
+                ],
         },
         Column {
             header: "Type".into(),
-            values: vec!["Vec<BubbleChartPoint>".into()],
+            values: vec![
+                "Vec<BarChartData>".into(),
+                "LegendPosition".into(),
+                ],
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "List of points with `x`, `y`, `radius`, and `color` to render each bubble.".into(),
-            ],
+                "Vector of bar data containing label, value, and color.".into(),
+                "Where to place the legend relative to the chart. Ex: Left, Right, Top, Bottom, Auto. Auto places the legend above the chart on very small screens, and to the right on sm+ screens and is the default".into(),
+                ],
         },
     ];
 

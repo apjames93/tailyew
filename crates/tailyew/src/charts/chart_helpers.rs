@@ -1,7 +1,65 @@
 use js_sys::Array;
 use wasm_bindgen::{closure::Closure, JsCast};
 use web_sys::{window, CanvasRenderingContext2d, MutationObserver, MutationObserverInit};
+use web_sys::{Element, ResizeObserver, ResizeObserverEntry};
 use yew::prelude::*;
+
+/// Track the rendered width of an element using ResizeObserver.
+#[hook]
+pub fn use_container_width(container_ref: &NodeRef) -> f64 {
+    let width = use_state(|| 0.0_f64);
+
+    {
+        let container_ref = container_ref.clone();
+        let width = width.clone();
+
+        // Attach effect with the ref as a dependency so it only runs
+        // when the actual DOM node behind the ref changes.
+        use_effect_with(container_ref, move |container_ref| {
+            // We'll optionally store an observer and clean it up later.
+            let mut observer_opt: Option<ResizeObserver> = None;
+
+            if let Some(element) = container_ref.cast::<Element>() {
+                let width_state = width.clone();
+
+                // JS callback: entries[0].contentRect.width
+                let callback = Closure::<dyn FnMut(js_sys::Array, ResizeObserver)>::wrap(Box::new(
+                    move |entries: js_sys::Array, _observer: ResizeObserver| {
+                        if let Ok(entry) = entries.get(0).dyn_into::<ResizeObserverEntry>() {
+                            let rect = entry.content_rect();
+                            let new_width = rect.width();
+
+                            let current = *width_state;
+                            // Only update if changed by at least 1px to avoid thrash
+                            if (new_width - current).abs() >= 1.0 {
+                                width_state.set(new_width);
+                            }
+                        }
+                    },
+                ));
+
+                let observer = ResizeObserver::new(callback.as_ref().unchecked_ref())
+                    .expect("create observer");
+
+                observer.observe(&element);
+
+                // Keep the closure alive for the life of this effect.
+                callback.forget();
+
+                observer_opt = Some(observer);
+            }
+
+            // Single cleanup closure, captures `observer_opt` (which may be None).
+            move || {
+                if let Some(observer) = observer_opt {
+                    observer.disconnect();
+                }
+            }
+        });
+    }
+
+    *width
+}
 
 /// Centralized theme-based styles for canvas drawing
 pub struct ThemeStyles {
