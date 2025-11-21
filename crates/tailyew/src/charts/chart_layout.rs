@@ -12,6 +12,7 @@ pub enum LegendPosition {
     Left,
     Top,
     Bottom,
+    Hidden,
 }
 
 #[derive(Properties, PartialEq, Clone)]
@@ -85,6 +86,11 @@ pub fn chart_layout(props: &ChartLayoutProps) -> Html {
                 <div class="shrink-0">
                     { legend }
                 </div>
+            </div>
+        },
+        LegendPosition::Hidden => html! {
+            <div class={classes!("w-full", class)}>
+                { chart }
             </div>
         },
     }
