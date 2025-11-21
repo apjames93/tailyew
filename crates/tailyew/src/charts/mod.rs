@@ -13,5 +13,8 @@ pub use scatter_plot_component::*;
 pub mod bubble_chart_component;
 pub use bubble_chart_component::*;
 
+pub mod chart_layout;
+pub use chart_layout::*;
+
 mod chart_helpers;
 mod chart_legend;

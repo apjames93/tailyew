@@ -15,14 +15,21 @@ pub struct ChartLegendProps {
 #[function_component(ChartLegend)]
 pub fn chart_legend(props: &ChartLegendProps) -> Html {
     html! {
-        <div class="legend space-y-1 max-h-[400px] overflow-y-auto pr-2 min-w-[120px]">
+        <div
+            class="
+            space-y-1
+                max-h-[200px]
+                overflow-y-auto
+                pr-2
+            "
+        >
             { for props.items.iter().map(|item| html! {
                 <div class="flex items-center space-x-2">
                     <div
-                        class="w-4 h-4 rounded-full"
+                        class="w-3 h-3 rounded-full"
                         style={format!("background-color: {};", item.color)}
                     />
-                    <span class="text-sm text-gray-700 dark:text-gray-300">
+                    <span class="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-tight">
                         {
                             if let Some(val) = item.value {
                                 format!("{}: {:.0}", item.label, val)
