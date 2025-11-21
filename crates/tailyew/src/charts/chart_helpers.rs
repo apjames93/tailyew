@@ -23,23 +23,20 @@ pub fn use_container_width(container_ref: &NodeRef) -> f64 {
                 let width_state = width.clone();
 
                 // JS callback: entries[0].contentRect.width
-                let callback =
-                    Closure::<dyn FnMut(js_sys::Array, ResizeObserver)>::wrap(Box::new(
-                        move |entries: js_sys::Array, _observer: ResizeObserver| {
-                            if let Some(entry) =
-                                entries.get(0).dyn_into::<ResizeObserverEntry>().ok()
-                            {
-                                let rect = entry.content_rect();
-                                let new_width = rect.width();
+                let callback = Closure::<dyn FnMut(js_sys::Array, ResizeObserver)>::wrap(Box::new(
+                    move |entries: js_sys::Array, _observer: ResizeObserver| {
+                        if let Ok(entry) = entries.get(0).dyn_into::<ResizeObserverEntry>() {
+                            let rect = entry.content_rect();
+                            let new_width = rect.width();
 
-                                let current = *width_state;
-                                // Only update if changed by at least 1px to avoid thrash
-                                if (new_width - current).abs() >= 1.0 {
-                                    width_state.set(new_width);
-                                }
+                            let current = *width_state;
+                            // Only update if changed by at least 1px to avoid thrash
+                            if (new_width - current).abs() >= 1.0 {
+                                width_state.set(new_width);
                             }
-                        },
-                    ));
+                        }
+                    },
+                ));
 
                 let observer = ResizeObserver::new(callback.as_ref().unchecked_ref())
                     .expect("create observer");
