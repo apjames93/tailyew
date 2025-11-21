@@ -85,8 +85,9 @@ publish-create-tailyew-app:
 
 # Watch frontend and tailyew together (docs site DX)
 run-frontend:
-	@echo "🚀 Running TailYew docs site with hot reloading..."
-	cargo watch -p frontend -w frontend/src -w crates/tailyew/src -s 'make fe-run'
+	@echo "🚀 Running TailYew docs site with Trunk (hot reloading)..."
+	cd frontend && trunk serve --config Trunk.toml --port 3031 \
+		--watch src --watch static --watch ../crates/tailyew/src
 
 # ---------------------------------------
 # Command Delegation Helpers

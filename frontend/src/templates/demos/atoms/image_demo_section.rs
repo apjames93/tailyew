@@ -8,20 +8,20 @@ pub fn image_demo_section() -> Html {
     let example = html! {
         <div class="space-y-6">
             <Image
-                src="/images/TailYew.png"
+                src="/static/images/TailYew.png"
                 alt="TailYew Logo"
                 class="rounded shadow-md"
                 width={Some("200px".to_string())}
             />
 
             <Image
-                src="/images/TailYew.png"
+                src="/static/images/TailYew.png"
                 alt="Sales performance chart"
                 aria_describedby="chart-desc"
             />
 
             <Image
-                src="/images/TailYew.png"
+                src="/static/images/TailYew.png"
                 alt=""
                 class="opacity-50"
                 aria_label="Decorative swirl pattern"
@@ -31,14 +31,14 @@ pub fn image_demo_section() -> Html {
 
     let usage_code = r#"
 <Image
-    src="/images/TailYew.png"
+    src="/static/images/TailYew.png"
     alt="TailYew Logo"
     class="rounded shadow-md"
     width={Some("200px".to_string())}
 />
 
 <Image
-    src="/images/chart.png"
+    src="/static/images/chart.png"
     alt="Sales performance chart"
     aria_describedby="chart-desc"
     width={Some("100%".to_string())}
@@ -48,7 +48,7 @@ pub fn image_demo_section() -> Html {
 </p>
 
 <Image
-    src="/images/decorative.svg"
+    src="/static/images/decorative.svg"
     alt=""
     aria_label="Decorative swirl pattern"
     class="opacity-50"

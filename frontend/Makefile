@@ -9,56 +9,39 @@
 # ---------------------------------------
 # Configuration
 # ---------------------------------------
-ENV_FILE ?= .env.development     # Default environment file (can be overridden)
-STATIC_DIR ?= ./static           # Directory for static assets
-BUILD_DIR ?= ./static/pkg        # Directory for WebAssembly build artifacts
 PORT ?= 3031                     # Default port for the development server
+TAILWIND_CMD = npm run tailwind:build
 
 # =======================================
 # Build Targets
 # =======================================
 
-# Build Tailwind CSS into the static directory
 build-tailwind:
 	@echo "Building Tailwind CSS..."
-	npx tailwindcss  -i main.css \
-		-c tailwind.config.js \
-		-o ./static/styles.css --minify
+	$(TAILWIND_CMD)
 
-# Build WebAssembly package using wasm-pack
-build-wasm:
-	@echo "Building WebAssembly package..."
-	wasm-pack build \
-		--target web \
-		--out-dir $(BUILD_DIR) \
-		--out-name frontend
-
-# Build both CSS and WebAssembly
 build: clean
-	@echo "Starting build process..."
-	@echo "Using ENV_FILE=$(ENV_FILE)"
+	@echo "Starting Trunk build..."
 	make build-tailwind
-	make build-wasm
-	@echo "Build completed."
+	trunk build --config Trunk.toml --dist dist
 
 # =======================================
 # Run and Serve Targets
 # =======================================
 
-# Start the Warp server for development
-start:
-	@echo "Starting development server on http://localhost:$(PORT)..."
-	cd static && serve -s -l $(PORT) --no-clipboard
+# Start the Trunk dev server with hot reload
+serve:
+	@echo "Starting Trunk dev server on http://localhost:$(PORT)..."
+	trunk serve --config Trunk.toml --port $(PORT) \
+		--watch src --watch static --watch ../crates/tailyew/src
 
-# Run the development server with Warp and build WASM
-run: build start
+run: serve
 
 # =======================================
 # Cleanup Targets
 # =======================================
 
-# Clean up build artifacts
 clean:
 	@echo "Cleaning up build artifacts..."
-	rm -rf $(BUILD_DIR) ./static/styles.css
+	rm -rf ./dist ./static/styles.css
 	@echo "Cleanup completed."

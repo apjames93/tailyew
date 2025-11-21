@@ -32,7 +32,7 @@ pub fn nav_bar() -> Html {
     html! {
       <AppBar
           title={Some("TailYew")}
-          logo_url={Some("/images/logo.png")}
+          logo_url={Some("/static/images/logo.png")}
           position={AppBarPosition::Top}
           nested_list={nested_list}
           logo_onclick={Callback::from(|_| {
