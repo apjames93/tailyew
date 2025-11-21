@@ -13,11 +13,11 @@ pub fn nav_bar() -> Html {
             vec![
                 NestedItem::with_html(
                     html! {
-                        <Link<Route> to={Route::NotFoundPage} classes="block w-full">
-                            { "404" }
+                        <Link<Route> to={Route::LoginPage} classes="block w-full">
+                            { "Login" }
                         </Link<Route>>
                     },
-                    "404",
+                    "Login",
                 ),
                 NestedItem::with_html(
                     html! {

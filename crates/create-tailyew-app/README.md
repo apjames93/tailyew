@@ -14,7 +14,7 @@
 
 Pure Rust & WASM in production — no JS needed to run your UI.
 
-Note: Tailwind’s CLI (via npm) is still required for development builds.
+Note: Tailwind’s CLI (via npm) is still required for development builds, and the dev server runs on Trunk.
 
 Dreaming of a totally Rust-native toolchain? Us too! We’re open to ideas and contributions.
 
@@ -27,7 +27,7 @@ Dreaming of a totally Rust-native toolchain? Us too! We’re open to ideas and c
 You get:
 
 - A ready-to-go Yew/WASM frontend with TailwindCSS (JIT mode)
-- Live-reload via `cargo-watch`
+- Live-reload via Trunk
 - Dark mode + accessibility baked in
 - Examples of atomic, composable UI via TailYew
 - Smart Makefile for build, lint, and dev workflows
@@ -60,10 +60,13 @@ create-tailyew-app <NAME> [--dest <BASE_DIR>]
 ```bash
 create-tailyew-app my-app
 cd my-app
+rustup target add wasm32-unknown-unknown   # if not already installed
+cargo install trunk                        # if not already installed
+npm install                                # for tailwindcss cli
 make run-frontend
 ```
 
-This launches your dev server at [http://localhost:8080](http://localhost:8080).
+This launches your dev server at [http://localhost:9001](http://localhost:9001).
 
 ---
 
@@ -76,12 +79,15 @@ This launches your dev server at [http://localhost:8080](http://localhost:8080).
 │  ├─ tailwind.config.js   # TailwindCSS setup (pre-configured for TailYew)
 │  ├─ src/                 # Rust app sources
 │  ├─ static/              # HTML, safelist, assets, WASM pkg
-│  └─ Makefile             # Frontend build & serve tasks
+│  ├─ Trunk.toml           # Trunk config (dev server/build)
+│  ├─ index.html           # Trunk entry point
+│  └─ Makefile             # Frontend build & serve tasks (Trunk + Tailwind)
 ├─ Makefile                # Root orchestrator (run-frontend, lint, format, etc)
 └─ README.md               # This file
 ```
 
 * **Tailwind Safelist**: `static/tailyew-safelist.html` is included for correct dark-mode & dynamic class extraction.
+  * Refresh it after upgrading TailYew: from the project root run `make fe-copy-tailyew-safelist` (or inside `frontend/` run `make copy-tailyew-safelist`).
 * **Live Reload**: Hot-reloading for rapid dev (edit, save, reload).
 
 ---
@@ -108,9 +114,9 @@ cd <BASE_DIR>/<NAME>
 make run-frontend
 ```
 
-* Watches Rust sources (`frontend/src`)
-* Rebuilds WASM + auto-reloads browser
-* Serves locally at [localhost:8080](http://localhost:8080)
+* Watches Rust sources (`frontend/src`, `frontend/static`)
+* Rebuilds WASM + Tailwind via Trunk pre-build hook, auto-reloads browser
+* Serves locally at [localhost:9001](http://localhost:9001)
 
 ---
 
@@ -118,24 +124,22 @@ make run-frontend
 
 From your project root:
 
+* **`make help` ** - in the generated project to see all available targets.
 * **`make format`** — Format Rust sources
 * **`make lint`** — Lint with Clippy
 * **`make pretty`** — Format + Lint
-* **`make fe-build`** — Build the Yew/WASM frontend
-* **`make fe-check`** — Check frontend with Cargo
-* **`make fe-run`** — Serve with hot-reload (used by `run-frontend`)
-
+* **`make run-frontend`** — Serve with hot-reload
+* **`make fe-copy-tailyew-safelist`** — Refresh the TailYew safelist HTML from your local Cargo registry
 
 ## ❤️ Contributing
 
-We love contributions! Help grow the Rust UI ecosystem:
+Help grow the Rust UI ecosystem:
 
 1. Fork & clone this repo
 2. Edit `starter/app/` to change the template
 3. Tweak CLI in `src/`
 4. Run `make pretty` to format & lint
 5. Open a PR — all feedback welcome!
-
 
 ---
 
@@ -152,10 +156,3 @@ We love contributions! Help grow the Rust UI ecosystem:
 
 * 🦠 [Yew Framework](https://yew.rs/)
 * 🎨 [TailwindCSS](https://tailwindcss.com/)
-* 🚀 [TailYew Starter](https://github.com/apjames93/tailyew-starter)
-
----
-
-# 📜 License
-
-MIT License — see [LICENSE](./LICENSE)

@@ -1,13 +1,14 @@
 # =======================================
 # Configuration
 # =======================================
-PORT ?= 9001                     # Default port for the development server
-# TAILWIND_CMD = npm run tailwind:build
+PORT ?= 9001                     # Default port for the development server (It's over 9000!!!)
 
 # =======================================
 # Build Targets
 # =======================================
-copy-tailyew:
+
+# if you need to update your safelist with a new version from the tailyew crate
+copy-tailyew-safelist:
 	@echo "🔁 Checking for local TailYew crate in Cargo registry..."
 	@if find ~/.cargo/registry/src/ -type d -path "*/tailyew-*/src" | grep -q .; then \
 		echo "📦 Found local TailYew source, copying..."; \

@@ -91,9 +91,6 @@ pub fn landing_page() -> Html {
             // FAQ
             <Section id="faq" class="max-w-3xl mx-auto">
                 <Typo tag={TagType::H2}>{ "Frequently Asked Questions" }</Typo>
-                <Accordion title="Is TailYew production-ready?">
-                    <Typo tag={TagType::P}>{ "I dont know I am using it on some side projects." }</Typo>
-                </Accordion>
                 <Accordion title="How can I contribute?">
                     <Typo tag={TagType::P}>{ "Open issues, suggest components, or submit PRs on GitHub. We welcome community involvement!" }</Typo>
                 </Accordion>
