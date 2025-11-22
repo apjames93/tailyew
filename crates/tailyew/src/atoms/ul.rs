@@ -2,17 +2,12 @@
 
 use yew::prelude::*;
 
-#[derive(PartialEq, Clone)]
+#[derive(Default, PartialEq, Clone)]
 pub enum MarkerType {
     Disc,
     Decimal,
-    None,
-}
-
-impl Default for MarkerType {
-    fn default() -> Self {
-        Self::None // Sidebar use case: no bullets by default
-    }
+    #[default]
+    None, // Sidebar use case: no bullets by default
 }
 
 impl MarkerType {

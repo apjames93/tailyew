@@ -31,7 +31,7 @@ jobs:
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.89.0
+          toolchain: 1.91.1
           profile: minimal
           components: rustfmt, clippy
           override: true
@@ -94,7 +94,7 @@ jobs:
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.89.0
+          toolchain: 1.91.1
           profile: minimal
           override: true
 
