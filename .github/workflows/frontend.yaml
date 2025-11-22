@@ -54,8 +54,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libssl-dev pkg-config zip make curl unzip python3-pip
 
-      - name: 📥 Install wasm-pack
-        run: cargo install wasm-pack --locked
+      - name: 📥 Install Trunk + wasm32 target
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install trunk --locked
 
       - name: 📥 Install Node dependencies
         working-directory: ./frontend
@@ -97,8 +99,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libssl-dev pkg-config zip make curl unzip python3-pip
 
-      - name: 📥 Install wasm-pack
-        run: cargo install wasm-pack --locked
+      - name: 📥 Install Trunk + wasm32 target
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install trunk --locked
 
       - name: 📥 Install Node dependencies
         working-directory: ./frontend

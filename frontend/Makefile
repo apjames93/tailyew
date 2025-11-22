@@ -10,6 +10,20 @@
 # Configuration
 # ---------------------------------------
 PORT ?= 3031                     # Default port for the development server
+TAILWIND_CMD = npm run tailwind:build
+
+# =======================================
+# Build Targets
+# =======================================
+
+build-tailwind:
+	@echo "Building Tailwind CSS..."
+	$(TAILWIND_CMD)
+
+build: clean
+	@echo "Starting Trunk build..."
+	make build-tailwind
+	trunk build --config Trunk.toml --dist dist
 
 # =======================================
 # Run and Serve Targets

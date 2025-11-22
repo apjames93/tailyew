@@ -50,9 +50,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libssl-dev pkg-config make curl
 
-      - name: Install wasm-pack
-        run: cargo install wasm-pack --locked
-
       - name: Dry-run publish check
         run: make release-check
 
