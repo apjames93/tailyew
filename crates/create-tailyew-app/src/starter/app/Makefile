@@ -27,5 +27,20 @@ fe-%:
 	$(FRONTEND_MAKE) $*
 
 run-frontend:
-	cargo watch -p frontend -w frontend/src -s 'make fe-run'
+	make fe-run
 
+# ---------------------------------------
+# Help Message
+# ---------------------------------------
+
+help:
+	@echo "🛠️  Available Make targets:"
+	@echo ""
+	@echo "General:"
+	@echo "  make format           Format all code"
+	@echo "  make lint             Lint with clippy (warnings = errors)"
+	@echo "  make pretty           Format + lint"
+	@echo ""
+	@echo "Frontend:"
+	@echo "  make run-frontend     Run frontend dev server (Trunk hot reload)"
+	@echo "  make fe-copy-tailyew-safelist   Refresh TailYew safelist HTML from local Cargo registry"

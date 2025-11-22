@@ -13,11 +13,11 @@ pub fn nav_bar() -> Html {
             vec![
                 NestedItem::with_html(
                     html! {
-                        <Link<Route> to={Route::NotFoundPage} classes="block w-full">
-                            { "404" }
+                        <Link<Route> to={Route::LoginPage} classes="block w-full">
+                            { "Login" }
                         </Link<Route>>
                     },
-                    "404",
+                    "Login",
                 ),
                 NestedItem::with_html(
                     html! {
@@ -51,7 +51,7 @@ pub fn nav_bar() -> Html {
     html! {
         <AppBar
             title={Some("TailYew")}
-            logo_url={Some("/images/logo.png")}
+            logo_url={Some("static/images/logo.png")}
             position={AppBarPosition::Top}
             nested_list={nested_list}
         />

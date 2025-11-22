@@ -9,7 +9,7 @@ pub fn badge_demo_section() -> Html {
         <div class="flex flex-wrap gap-8 text-gray-800 dark:text-white">
             // Count badge
             <Badge badge_content={Some(String::from("4"))} color={classes!("bg-blue-600")}>
-                <Avatar src={Some(String::from("/images/TailYew.png"))} alt={Some(String::from("TailYew Logo"))} />
+                <Avatar src={Some(String::from("/static/images/TailYew.png"))} alt={Some(String::from("TailYew Logo"))} />
             </Badge>
 
             // Dot badge
@@ -37,7 +37,7 @@ pub fn badge_demo_section() -> Html {
     let usage_code = r#"
 <div class="flex items-center gap-8">
   <Badge badge_content={Some(String::from("4"))} color={classes!("bg-blue-600")}>
-    <Avatar src={Some(String::from("/images/TailYew.png"))} alt={Some(String::from("TailYew Logo"))} />
+    <Avatar src={Some(String::from("/static/images/TailYew.png"))} alt={Some(String::from("TailYew Logo"))} />
   </Badge>
 
   <Badge badge_content={Some(String::from("1000"))} max={99} color={classes!("bg-green-600")}>

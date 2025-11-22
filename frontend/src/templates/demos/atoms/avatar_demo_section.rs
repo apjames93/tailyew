@@ -10,7 +10,7 @@ pub fn avatar_demo_section() -> Html {
     let example = html! {
         <div class="flex items-center gap-6">
             <Avatar
-                src={Some(String::from("/images/TailYew.png"))}
+                src={Some(String::from("/static/images/TailYew.png"))}
                 alt={Some(String::from("TailYew Logo"))}
             />
             <Avatar
@@ -30,7 +30,7 @@ let log_click = Callback::from(|_| web_sys::console::log_1(&"Avatar clicked!".in
 
 <div class="flex items-center gap-6">
   <Avatar
-    src={Some(String::from("/images/TailYew.png"))}
+    src={Some(String::from("/static/images/TailYew.png"))}
     alt={Some(String::from("TailYew Logo"))}
   />
   <Avatar

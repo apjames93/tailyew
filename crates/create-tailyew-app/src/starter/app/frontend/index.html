@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" class="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TailYew Starter</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="/static/styles.css">
+        <link rel="icon" type="image/png" href="/static/favicon.ico">
+        <link data-trunk rel="copy-dir" href="static">
+        <link data-trunk rel="rust" href="Cargo.toml">
+        <link rel="manifest" href="/static/manifest.json">
+    </head>
+    <body>
+        <div id="app"></div>
+        <script>
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("/static/service_worker.js").catch((error) =>
+                    console.error("Service Worker registration failed:", error),
+                );
+            }
+        </script>
+    </body>
+</html>

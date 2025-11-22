@@ -5,7 +5,8 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 mod pages;
 mod templates;
-use pages::{AppRouter, LandingPage, NotFoundPage};
+mod helpers;
+use pages::{AppRouter, LandingPage, NotFoundPage, LoginPage};
 use tailyew::system::{InitTheme, Theme};
 
 /// Define the application routes and implement the `Routable` trait
@@ -13,6 +14,8 @@ use tailyew::system::{InitTheme, Theme};
 pub enum Route {
     #[at("/")]
     LandingPage,
+    #[at("/login")]
+    LoginPage,
     #[not_found]
     #[at("/404")]
     NotFoundPage,
@@ -21,6 +24,7 @@ pub enum Route {
 pub fn switch(route: Route) -> Html {
     match route {
         Route::LandingPage => html! { <LandingPage /> },
+        Route::LoginPage => html! { <LoginPage /> },
         Route::NotFoundPage => html! { <NotFoundPage /> },
     }
 }

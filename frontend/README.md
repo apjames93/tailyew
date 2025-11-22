@@ -25,8 +25,7 @@ This docs app helps us:
 - ⚙️ **Yew** – Rust-based frontend framework
 - 🎨 **Tailwind CSS** – Utility-first styling
 - 🧩 **TailYew** – Local component crate under development
-- 🧰 **wasm-pack** – Build Rust → WebAssembly
-- 📦 **serve** – Local static file server
+- 🚚 **Trunk** – Build + serve the Yew app
 - 🛠️ **Makefile** – Development workflow commands
 
 ---
@@ -35,11 +34,13 @@ This docs app helps us:
 
 ```
 frontend/
-├── static/            # Static assets (HTML, CSS, images, manifest)
-│   └── pkg/           # WASM build output from `wasm-pack`
+├── static/            # Static assets (CSS, images, manifest, service worker)
+├── dist/              # Trunk build output (gitignored)
 ├── src/               # Yew application source code
 │   └── pages/         # Component-based route pages
 ├── main.css           # Tailwind input CSS
+├── index.html         # Trunk entry point
+├── Trunk.toml         # Trunk configuration
 ├── tailwind.config.js # Tailwind configuration
 ├── Makefile           # Build + serve commands
 ├── Cargo.toml         # Rust crate config
@@ -49,7 +50,13 @@ frontend/
 
 ## 🚀 Local Development
 
-This frontend is built with `wasm-pack` and served as static files using the `serve` CLI tool.
+This frontend is built and served with **Trunk**. Tailwind CSS is compiled via the Tailwind CLI (npm).
+
+Prerequisites (once):
+
+- `cargo install trunk`
+- `rustup target add wasm32-unknown-unknown`
+- `npm install` inside `frontend/` (for Tailwind CLI)
 
 ### 1. Build the frontend
 
@@ -60,7 +67,7 @@ make build
 This does the following:
 
 - Compiles Tailwind CSS to `static/styles.css`
-- Builds the Yew app to WebAssembly in `static/pkg/`
+- Runs `trunk build`, emitting the site into `dist/`
 
 ### 2. Start the dev server
 
@@ -71,7 +78,7 @@ make run
 Opens your docs site at:
 
 ```
-http://localhost:3030
+http://localhost:3031
 ```
 
 ### 3. Watch and rebuild when developing TailYew
@@ -82,7 +89,7 @@ If you’re editing components inside the `tailyew` crate:
 make run-frontend
 ```
 
-This will watch both the component crate and the frontend for changes, automatically rebuilding the site when updates are detected.
+Trunk watches the frontend and `../crates/tailyew/src` for changes and hot-reloads the app.
 
 ---
 
@@ -92,7 +99,7 @@ This will watch both the component crate and the frontend for changes, automatic
 make clean
 ```
 
-Removes generated CSS and WASM files.
+Removes generated CSS and Trunk build artifacts.
 
 ---
 
@@ -124,15 +131,15 @@ tailyew = { path = "../crates/tailyew" }
 Here are some useful commands:
 
 ```bash
-make build           # Build CSS + WASM
-make run             # Serve the static site locally
+make build           # Build CSS + WASM via Trunk
+make run             # Serve the static site locally with Trunk
 make clean           # Delete build output
 ```
 
 Or from the root:
 
 ```bash
-make run-frontend    # Watch both frontend and tailyew crate
+make run-frontend    # Start Trunk dev server (frontend + tailyew crate)
 make fe-build        # Run `make build` inside frontend/
 ```
 

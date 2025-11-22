@@ -3,7 +3,7 @@ use tailyew::atoms::{Button, ButtonType};
 use tailyew::organisms::{table::Column, Card};
 use yew::prelude::*;
 
-const HERO_IMAGE_URL: &str = "/images/TailYew.png";
+const HERO_IMAGE_URL: &str = "/static/images/TailYew.png";
 
 #[function_component(CardDemoSection)]
 pub fn card_demo_section() -> Html {

@@ -9,7 +9,7 @@ use yew::prelude::*;
 pub fn avatar_group_demo_section() -> Html {
     let avatars = vec![
         AvatarData {
-            src: Some(String::from("/images/TailYew.png")),
+            src: Some(String::from("/static/images/TailYew.png")),
             fallback: Some(String::from("AJ")),
             alt: Some(String::from("Alex")),
             class: None,
@@ -21,7 +21,7 @@ pub fn avatar_group_demo_section() -> Html {
             class: None,
         },
         AvatarData {
-            src: Some(String::from("/images/TailYew.png")),
+            src: Some(String::from("/static/images/TailYew.png")),
             fallback: None,
             alt: Some(String::from("C")),
             class: None,
@@ -53,7 +53,7 @@ pub fn avatar_group_demo_section() -> Html {
     let usage_code = r#"
 let avatars = vec![
     AvatarData {
-        src: Some(String::from("/images/user1.png")),
+        src: Some(String::from("/static/images/user1.png")),
         fallback: Some(String::from("AJ")),
         alt: Some(String::from("Alex")),
         class: None,
@@ -65,7 +65,7 @@ let avatars = vec![
         class: None,
     },
     AvatarData {
-        src: Some(String::from("/images/user3.png")),
+        src: Some(String::from("/static/images/user3.png")),
         fallback: None,
         alt: Some(String::from("C")),
         class: None,

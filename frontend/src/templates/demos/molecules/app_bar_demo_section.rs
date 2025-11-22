@@ -7,7 +7,7 @@ use web_sys::console;
 use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("app_bar_usage.rs");
-const LOGO_IMAGE_URL: &str = "/images/logo.png";
+const LOGO_IMAGE_URL: &str = "/static/images/logo.png";
 
 #[function_component(AppBarDemoSection)]
 pub fn app_bar_demo_section() -> Html {

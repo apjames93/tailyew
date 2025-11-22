@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-const TAILYEW_IMAGE_URL: &str = "/images/TailYew.png";
+const TAILYEW_IMAGE_URL: &str = "static/images/TailYew.png";
 
 #[function_component(NotFoundPage)]
 pub fn not_found() -> Html {

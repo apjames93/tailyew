@@ -4,7 +4,7 @@ use tailyew::molecules::HeroHeader;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-const HERO_IMAGE_URL: &str = "/images/TailYew.png";
+const HERO_IMAGE_URL: &str = "/static/images/TailYew.png";
 
 #[function_component(HeroHeaderDemoSection)]
 pub fn hero_header_demo_section() -> Html {
