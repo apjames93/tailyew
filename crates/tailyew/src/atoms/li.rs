@@ -2,6 +2,13 @@
 
 use yew::prelude::*;
 
+#[derive(PartialEq, Clone, Copy, Default)]
+pub enum IconPosition {
+    #[default]
+    Left,
+    Right,
+}
+
 /// A single item in a list, often used in navigation or option lists
 #[derive(Properties, PartialEq, Clone)]
 pub struct LiProps {
@@ -17,10 +24,10 @@ pub struct LiProps {
     pub hover: bool,
 
     #[prop_or_default]
-    pub with_icon: bool,
+    pub icon: Option<Html>,
 
     #[prop_or_default]
-    pub icon: Option<Html>,
+    pub icon_position: IconPosition,
 
     #[prop_or_default]
     pub bordered: bool,
@@ -42,25 +49,37 @@ pub fn li(props: &LiProps) -> Html {
         class,
         hover,
         icon,
+        icon_position,
         onclick,
-        with_icon,
     } = props;
 
-    let icon_section = if *with_icon {
+    let icon_section = icon.as_ref().map(|icon| {
+        let spacing_class = match icon_position {
+            IconPosition::Left => "mr-3",
+            IconPosition::Right => "ml-3",
+        };
+
         html! {
-            <span class="flex-shrink-0 p-2 bg-gray-700 rounded-full text-white">
-                { icon.clone().unwrap_or_default() }
+            <span class={classes!(
+                "flex-shrink-0",
+                "inline-flex",
+                "items-center",
+                "justify-center",
+                "text-gray-500",
+                "dark:text-gray-300",
+                spacing_class,
+            )}>
+                { icon.clone() }
             </span>
         }
-    } else {
-        Html::default()
-    };
+    });
 
     let li_classes = classes!(
         "transition-colors",
         "duration-200",
-        "text-gray-700",
-        "dark:text-gray-200",
+        "text-gray-800",
+        "dark:text-gray-100",
+        "rounded-md",
         class.clone(),
         background.clone(),
         if *active {
@@ -85,10 +104,22 @@ pub fn li(props: &LiProps) -> Html {
         },
     );
 
+    let row_classes = classes!("flex", "items-center", "gap-2", "w-full");
+    let content_classes = classes!("flex-1", "min-w-0", "text-sm");
+
+    let (leading_icon, trailing_icon) = match icon_section {
+        Some(icon) if matches!(icon_position, IconPosition::Right) => (Html::default(), icon),
+        Some(icon) => (icon, Html::default()),
+        None => (Html::default(), Html::default()),
+    };
+
     html! {
         <li class={li_classes} onclick={onclick.clone()}>
-            { icon_section }
-            <div class="ml-2">{ for children.iter() }</div>
+            <div class={row_classes}>
+                { leading_icon }
+                <div class={content_classes}>{ for children.iter() }</div>
+                { trailing_icon }
+            </div>
         </li>
     }
 }

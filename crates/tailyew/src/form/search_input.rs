@@ -352,7 +352,6 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                             <Li
                                 onclick={if disabled { None } else { Some(on_clear_selection) }}
                                 icon={if disabled { None } else { Some(html! { <XIcon size={12} /> }) }}
-                                with_icon={true}
                                 class="hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-50 dark:bg-gray-800 rounded px-4 py-2 flex items-center justify-left"
                             >
                                 <Typo>{ format!("Selected: {}", item.label) }</Typo>
