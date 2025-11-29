@@ -1,6 +1,6 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::{MarkerType, Ul};
 use tailyew::organisms::table::Column;
+use tailyew::{Li, MarkerType, Section, TagType, Typo, Ul};
 use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("ul_usage.rs");
@@ -17,6 +17,8 @@ pub fn ul_demo_section() -> Html {
                 "class".into(),
                 "spacing".into(),
                 "marker_type".into(),
+                "marker_color".into(),
+                "dense".into(),
             ],
         },
         Column {
@@ -26,6 +28,9 @@ pub fn ul_demo_section() -> Html {
                 "Classes".into(),
                 "Classes".into(),
                 "MarkerType".into(),
+                "Classes".into(),
+                "MarkerAlign".into(),
+                "bool".into(),
             ],
         },
         Column {
@@ -34,7 +39,9 @@ pub fn ul_demo_section() -> Html {
                 "List items inside the UL.".into(),
                 "Optional extra utility classes.".into(),
                 "Tailwind spacing utility like `space-y-2`.".into(),
-                "Bullet marker style: Disc, Decimal, or None.".into(),
+                "Bullet marker style: Disc, Decimal, or None (default).".into(),
+                "Marker color utility classes (uses Tailwind marker:* utilities).".into(),
+                "Use compact spacing and typography for dense lists.".into(),
             ],
         },
     ];

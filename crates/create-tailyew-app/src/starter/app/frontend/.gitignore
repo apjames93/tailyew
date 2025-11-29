@@ -1,6 +1,4 @@
 # Front end static assets
-static/styles.css
-static/pkg/*
 dist/
 node_modules
 

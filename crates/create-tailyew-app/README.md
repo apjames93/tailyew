@@ -58,10 +58,11 @@ create-tailyew-app <NAME> [--dest <BASE_DIR>]
 ### Example
 
 ```bash
-create-tailyew-app my-app
-cd my-app
 rustup target add wasm32-unknown-unknown   # if not already installed
 cargo install trunk                        # if not already installed
+
+create-tailyew-app tailyew-app
+cd tailyew-app
 npm install                                # for tailwindcss cli
 make run-frontend
 ```

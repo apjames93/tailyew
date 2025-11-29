@@ -118,7 +118,7 @@ pub fn form_demo_section() -> Html {
 
                 form_values.set(values);
                 let code = e_input_value("status", &e);
-                let url = format!("https://httpstat.us/{}", code);
+                let url = format!("https://tools-httpstatus.pickup-services.com/{}", code);
 
                 match Request::get(&url)
                     .header("Accept", "application/json")

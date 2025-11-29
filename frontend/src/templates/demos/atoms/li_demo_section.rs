@@ -1,5 +1,5 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::Li;
+use tailyew::atoms::{IconPosition, Li, MarkerType, Section, TagType, Typo, Ul};
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
@@ -17,10 +17,9 @@ pub fn li_demo_section() -> Html {
                 "class".into(),
                 "active".into(),
                 "hover".into(),
-                "with_icon".into(),
+                "icon_position".into(),
                 "icon".into(),
                 "bordered".into(),
-                "spacing".into(),
                 "background".into(),
                 "onclick".into(),
             ],
@@ -32,10 +31,9 @@ pub fn li_demo_section() -> Html {
                 "Classes".into(),
                 "bool".into(),
                 "bool".into(),
-                "bool".into(),
+                "IconPosition".into(),
                 "Option<Html>".into(),
                 "bool".into(),
-                "Classes".into(),
                 "Classes".into(),
                 "Option<Callback<MouseEvent>>".into(),
             ],
@@ -47,10 +45,9 @@ pub fn li_demo_section() -> Html {
                 "Additional class names.".into(),
                 "Highlights the item as active.".into(),
                 "Adds a hover background effect.".into(),
-                "Whether to show the icon section.".into(),
-                "HTML content rendered inside the icon slot.".into(),
+                "Aligns the optional icon to the left or right of the content.".into(),
+                "HTML content rendered inside the optional icon slot.".into(),
                 "Adds a bottom border.".into(),
-                "Controls spacing utility classes.".into(),
                 "Controls background utility classes.".into(),
                 "Optional click handler.".into(),
             ],

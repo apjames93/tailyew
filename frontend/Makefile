@@ -34,6 +34,7 @@ run:
 	@echo "Starting Trunk dev server on http://localhost:$(PORT)..."
 	trunk serve --config Trunk.toml --port $(PORT) \
 		--watch src --watch static --watch ../crates/tailyew/src
+		--ignore static/styles.css --ignore static/pkg
 
 # =======================================
 # Cleanup Targets

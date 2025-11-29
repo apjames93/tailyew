@@ -2,12 +2,12 @@
 
 use yew::prelude::*;
 
-#[derive(Default, PartialEq, Clone)]
+#[derive(PartialEq, Clone, Default)]
 pub enum MarkerType {
     Disc,
     Decimal,
     #[default]
-    None, // Sidebar use case: no bullets by default
+    None,
 }
 
 impl MarkerType {
@@ -23,14 +23,22 @@ impl MarkerType {
 #[derive(Properties, PartialEq, Clone)]
 pub struct UlProps {
     pub children: Children,
+
     #[prop_or_default]
     pub class: Classes,
 
-    #[prop_or_else(|| "space-y-1".into())] // Small vertical spacing by default
+    // Compact vertical spacing by default
+    #[prop_or_else(|| "space-y-1".into())]
     pub spacing: Classes,
 
     #[prop_or_default]
     pub marker_type: MarkerType,
+
+    #[prop_or_else(|| "marker:text-gray-400 dark:marker:text-gray-500".into())]
+    pub marker_color: Classes,
+
+    #[prop_or_default]
+    pub dense: bool,
 }
 
 #[function_component(Ul)]
@@ -40,17 +48,51 @@ pub fn ul(props: &UlProps) -> Html {
         class,
         spacing,
         marker_type,
+        marker_color,
+        dense,
     } = props;
+
+    let spacing_classes = if *dense {
+        classes!("space-y-1")
+    } else {
+        spacing.clone()
+    };
+
+    let has_markers = !matches!(marker_type, MarkerType::None);
+
+    let list_style = match marker_type {
+        MarkerType::Disc => "list-style-type: disc;",
+        MarkerType::Decimal => "list-style-type: decimal;",
+        MarkerType::None => "list-style-type: none;",
+    };
+
+    // Always behave like the old `MarkerAlign::Outside`
+    let align_class = if has_markers {
+        "list-outside"
+    } else {
+        "list-none"
+    };
+
+    let padding_class = if has_markers { "pl-6" } else { "pl-0" };
 
     let ul_classes = classes!(
         marker_type.as_class(),
-        "pl-0",
-        spacing.clone(),
+        align_class,
+        padding_class,
+        "text-gray-800",
+        "dark:text-gray-100",
+        if *dense {
+            Some("text-sm leading-5")
+        } else {
+            Some("text-base leading-6")
+        },
+        marker_color.clone(),
+        spacing_classes,
         class.clone(),
     );
 
     html! {
-        <ul class={ul_classes}>
+        <ul class={ul_classes} style={list_style}>
             { for children.iter() }
         </ul>
     }

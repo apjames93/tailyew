@@ -46,14 +46,14 @@ pub fn form_inputs() -> Html {
             <Input id="username" label="Username"    input_type={InputType::Text} placeholder="e.g. buddy_guy"
                 pattern={Some("^[a-z0-9_-]{3,16}$")}
                 error_title={Some("Use 3–16 lowercase letters, numbers, underscores, or dashes.")}
-                required=true
+                required={false}
             />
             <SearchInput
                 id="language"
                 label="Language"
                 placeholder="Choose a language"
                 items={language_options.clone()}
-                required={true}
+                required={false}
             />
             <Input id="email"    label="Email"       input_type={InputType::Email}    placeholder="Enter email" />
             <Input id="password" label="Password"    input_type={InputType::Password} placeholder="Enter password" />
