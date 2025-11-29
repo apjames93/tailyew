@@ -89,7 +89,7 @@ You’ll get:
 In your `Cargo.toml`:
 
 ```toml
-tailyew = "0.1.41"
+tailyew = "0.1.42"
 ```
 
 ---
