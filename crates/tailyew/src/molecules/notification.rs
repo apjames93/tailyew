@@ -34,7 +34,7 @@ pub struct NotificationProps {
     pub fixed: bool,
 }
 
-#[function_component(Notification)]
+#[component(Notification)]
 pub fn notification(props: &NotificationProps) -> Html {
     let NotificationProps {
         message,
@@ -58,7 +58,6 @@ pub fn notification(props: &NotificationProps) -> Html {
                 is_visible.set(*new_visible);
                 last_visible.set(*new_visible);
             }
-            || ()
         });
     }
 
@@ -119,21 +118,21 @@ pub fn notification(props: &NotificationProps) -> Html {
     html! {
         <div
             role="alert"
-            class={classes!(
-                position_class,
-                "relative", "overflow-hidden", "p-4", "w-full",
-                max_width,
-                bg_color, border_color,
-                "rounded-lg", "shadow-lg"
-            )}
-        >
-            <div class="flex items-start justify-between gap-4">
-                <div class="flex items-center gap-2">
-                    { icon.map(|sym| html! { <Typo tag={TagType::Span} class={text_color}>{ sym }</Typo> }) }
-                    <Typo tag={TagType::Span} class={classes!(text_color, "text-base", "font-medium")}>
-                        { message }
-                    </Typo>
-                </div>
+        class={classes!(
+            position_class,
+            "relative", "overflow-hidden", "p-4", "w-full",
+            max_width,
+            bg_color, border_color,
+            "rounded-lg", "shadow-lg"
+        )}
+    >
+        <div class="flex items-start justify-between gap-4">
+            <div class="flex items-center gap-2">
+                { icon.map(|sym| html! { <Typo tag={TagType::Span} class={text_color}>{ html! { sym } }</Typo> }) }
+                <Typo tag={TagType::Span} class={classes!(text_color, "text-base", "font-medium")}>
+                    { html! { message } }
+                </Typo>
+            </div>
 
                 {
                     if show_close {

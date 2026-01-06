@@ -30,7 +30,7 @@ pub struct FileInputProps {
     pub onchange: Option<Callback<String>>,
 }
 
-#[function_component(FileInput)]
+#[component(FileInput)]
 pub fn file_input(props: &FileInputProps) -> Html {
     let FileInputProps {
         id,

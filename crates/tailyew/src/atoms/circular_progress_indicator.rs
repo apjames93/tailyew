@@ -17,7 +17,7 @@ pub struct CircularProgressIndicatorProps {
     pub class: Classes,
 }
 
-#[function_component(CircularProgressIndicator)]
+#[component(CircularProgressIndicator)]
 pub fn circular_progress_indicator(props: &CircularProgressIndicatorProps) -> Html {
     let CircularProgressIndicatorProps {
         size_class,

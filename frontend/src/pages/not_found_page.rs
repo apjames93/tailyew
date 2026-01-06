@@ -2,7 +2,7 @@ use yew::prelude::*;
 
 const TAILYEW_IMAGE_URL: &str = "/static/images/TailYew.png";
 
-#[function_component(NotFoundPage)]
+#[component(NotFoundPage)]
 pub fn not_found() -> Html {
     html! {
         <div class="container mx-auto p-4">

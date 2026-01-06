@@ -5,7 +5,7 @@ use tailyew::{async_callback, Button, ButtonType, ModalSize};
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
-#[function_component(FormModalDemoSection)]
+#[component(FormModalDemoSection)]
 pub fn form_modal_demo_section() -> Html {
     // Response body text
     let response_text = use_state(|| "".to_string());

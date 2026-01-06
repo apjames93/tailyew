@@ -25,7 +25,7 @@ pub struct CardProps {
     pub class: Option<String>,
 }
 
-#[function_component(Card)]
+#[component(Card)]
 pub fn card(props: &CardProps) -> Html {
     let CardProps {
         id,
@@ -64,14 +64,14 @@ pub fn card(props: &CardProps) -> Html {
             }
 
             <div class="p-6 space-y-2">
-                <Typo tag={TagType::H3}>{ title.clone() }</Typo>
+                <Typo tag={TagType::H3}>{ html! { title.clone() } }</Typo>
 
                 if let Some(sub) = subtitle {
-                    <Typo tag={TagType::H4} class="text-sm text-gray-500 dark:text-gray-400">{ sub.clone() }</Typo>
+                    <Typo tag={TagType::H4} class="text-sm text-gray-500 dark:text-gray-400">{ html! { sub.clone() } }</Typo>
                 }
 
                 if let Some(desc) = description {
-                    <Typo tag={TagType::P} class="text-sm text-gray-600 dark:text-gray-300">{ desc.clone() }</Typo>
+                    <Typo tag={TagType::P} class="text-sm text-gray-600 dark:text-gray-300">{ html! { desc.clone() } }</Typo>
                 }
 
                 { for children.iter() }

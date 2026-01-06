@@ -4,7 +4,7 @@ use tailyew::organisms::table::Column;
 use tailyew::system::{InitTheme, Theme};
 use yew::prelude::*;
 
-#[function_component(InitThemeDemoSection)]
+#[component(InitThemeDemoSection)]
 pub fn init_theme_demo_section() -> Html {
     let example = html! {
         <InitTheme

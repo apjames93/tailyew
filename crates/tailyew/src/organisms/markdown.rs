@@ -12,7 +12,7 @@ pub struct MarkdownProps {
     pub on_form_submit: Option<FormSubmitCallback>,
 }
 
-#[function_component(Markdown)]
+#[component(Markdown)]
 pub fn markdown(props: &MarkdownProps) -> Html {
     let parser = Parser::new(&props.content);
     let nodes = markdown_to_yew(parser, props.on_form_submit.clone());
@@ -66,7 +66,7 @@ fn markdown_to_yew(parser: Parser, on_form_submit: Option<FormSubmitCallback>) -
         }
     }
 
-    html! { for html_nodes }
+    Html::from_iter(html_nodes)
 }
 
 fn push_to_stack_or_root(stack: &mut Vec<(Tag, Vec<Html>)>, root: &mut Vec<Html>, node: Html) {

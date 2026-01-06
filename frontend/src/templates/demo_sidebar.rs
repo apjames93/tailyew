@@ -344,7 +344,7 @@ fn build_nested_sidebar_links(_title: &str, links: &[DemoLink]) -> Vec<NestedIte
         .collect()
 }
 
-#[function_component(DemoSidebar)]
+#[component(DemoSidebar)]
 pub fn demo_sidebar() -> Html {
     let navigator = use_navigator();
 

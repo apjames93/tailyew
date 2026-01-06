@@ -6,7 +6,7 @@ use yew::prelude::*;
 
 use crate::templates::demos::DemoComponent;
 
-#[function_component(NavBarDemoSection)]
+#[component(NavBarDemoSection)]
 pub fn navbar_demo_section() -> Html {
     let example = html! {
         <NavBar position={AppBarPosition::Static}>

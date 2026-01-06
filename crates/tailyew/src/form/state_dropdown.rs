@@ -78,7 +78,7 @@ pub struct StateDropdownProps {
     pub on_change: Option<Callback<String>>,
 }
 
-#[function_component(StateDropdown)]
+#[component(StateDropdown)]
 pub fn state_dropdown(props: &StateDropdownProps) -> Html {
     html! {
         <Select

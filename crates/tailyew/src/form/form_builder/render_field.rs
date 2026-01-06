@@ -34,7 +34,7 @@ pub struct RenderFieldProps {
     pub class: Classes,
 }
 
-#[function_component(RenderField)]
+#[component(RenderField)]
 pub fn render_field(props: &RenderFieldProps) -> Html {
     if let Some(input_props) = props.input.clone() {
         html! { <Input ..input_props /> }

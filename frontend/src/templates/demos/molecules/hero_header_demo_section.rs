@@ -6,7 +6,7 @@ use yew::prelude::*;
 
 const HERO_IMAGE_URL: &str = "/static/images/TailYew.png";
 
-#[function_component(HeroHeaderDemoSection)]
+#[component(HeroHeaderDemoSection)]
 pub fn hero_header_demo_section() -> Html {
     let example = html! {
         <HeroHeader

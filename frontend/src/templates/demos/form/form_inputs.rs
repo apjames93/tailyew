@@ -1,7 +1,7 @@
 use tailyew::form::*;
 use yew::prelude::*;
 
-#[function_component(FormInputs)]
+#[component(FormInputs)]
 pub fn form_inputs() -> Html {
     // Options for inputs
     let language_options = vec![

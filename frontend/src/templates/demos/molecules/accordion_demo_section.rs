@@ -4,7 +4,7 @@ use tailyew::molecules::Accordion;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(AccordionDemoSection)]
+#[component(AccordionDemoSection)]
 pub fn accordion_demo_section() -> Html {
     let example = html! {
         <div class="space-y-4">

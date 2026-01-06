@@ -4,7 +4,7 @@ use tailyew::molecules::{Tooltip, TooltipPosition};
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(TooltipDemoSection)]
+#[component(TooltipDemoSection)]
 pub fn tooltip_demo_section() -> Html {
     let example = html! {
         <div class="flex flex-wrap gap-6 justify-center py-8">

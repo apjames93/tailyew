@@ -3,7 +3,7 @@ use tailyew::atoms::{Avatar, Badge, Button, Typo};
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(BadgeDemoSection)]
+#[component(BadgeDemoSection)]
 pub fn badge_demo_section() -> Html {
     let example = html! {
         <div class="flex flex-wrap gap-8 text-gray-800 dark:text-white">

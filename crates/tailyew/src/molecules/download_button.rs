@@ -61,7 +61,7 @@ pub struct DownloadButtonProps {
     pub class: Classes,
 }
 
-#[function_component(DownloadButton)]
+#[component(DownloadButton)]
 pub fn download_button(props: &DownloadButtonProps) -> Html {
     let DownloadButtonProps {
         source,

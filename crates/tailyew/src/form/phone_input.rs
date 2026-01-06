@@ -27,7 +27,7 @@ pub struct PhoneInputProps {
     pub class: Classes,
 }
 
-#[function_component(PhoneInput)]
+#[component(PhoneInput)]
 pub fn phone_input(props: &PhoneInputProps) -> Html {
     let PhoneInputProps {
         placeholder,

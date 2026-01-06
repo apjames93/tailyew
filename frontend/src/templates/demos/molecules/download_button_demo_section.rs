@@ -6,7 +6,7 @@ use tailyew::molecules::DownloadButton;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(DownloadButtonDemoSection)]
+#[component(DownloadButtonDemoSection)]
 pub fn download_button_demo_section() -> Html {
     let json_data = json!({
         "project": "TailYew",

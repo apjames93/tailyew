@@ -16,7 +16,7 @@ pub struct SpacerProps {
     pub class: Classes,
 }
 
-#[function_component(Spacer)]
+#[component(Spacer)]
 pub fn spacer(props: &SpacerProps) -> Html {
     let SpacerProps {
         size,

@@ -30,7 +30,7 @@ pub struct AvatarGroupProps {
     pub class: Classes,
 }
 
-#[function_component(AvatarGroup)]
+#[component(AvatarGroup)]
 pub fn avatar_group(props: &AvatarGroupProps) -> Html {
     let AvatarGroupProps {
         avatars,

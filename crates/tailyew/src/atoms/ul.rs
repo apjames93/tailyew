@@ -41,7 +41,7 @@ pub struct UlProps {
     pub dense: bool,
 }
 
-#[function_component(Ul)]
+#[component(Ul)]
 pub fn ul(props: &UlProps) -> Html {
     let UlProps {
         children,

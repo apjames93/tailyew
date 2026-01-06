@@ -40,7 +40,7 @@ pub struct FormModalProps {
     pub disabled: bool,
 }
 
-#[function_component(FormModal)]
+#[component(FormModal)]
 pub fn form_modal(props: &FormModalProps) -> Html {
     let form_id = use_state(|| Date::now().to_string());
     let loading = use_state(|| false);
@@ -78,7 +78,6 @@ pub fn form_modal(props: &FormModalProps) -> Html {
                 }
                 result.set(None);
             }
-            || ()
         });
     }
 
@@ -107,7 +106,7 @@ pub fn form_modal(props: &FormModalProps) -> Html {
                         form={Some(form_id.clone())}
                         disabled={loading || disabled}
                     >
-                        { submit_lbl.clone() }
+                        { html! { submit_lbl.clone() } }
                     </Button>
                 </div>
             }

@@ -28,7 +28,7 @@ pub struct RangeInputProps {
     pub on_change: Option<Callback<String>>,
 }
 
-#[function_component(RangeInput)]
+#[component(RangeInput)]
 pub fn range_input(props: &RangeInputProps) -> Html {
     let RangeInputProps {
         id,

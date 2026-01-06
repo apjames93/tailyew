@@ -34,7 +34,7 @@ pub struct CopyToClipboardProps {
     pub children: Children,
 }
 
-#[function_component(CopyToClipboard)]
+#[component(CopyToClipboard)]
 pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
     let CopyToClipboardProps {
         value,
@@ -78,17 +78,19 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
         button_type.clone()
     };
 
+    let content = if children.is_empty() {
+        html! { current_label }
+    } else {
+        Html::from_iter(children.iter())
+    };
+
     html! {
         <Button
             button_type={current_type}
             onclick={onclick}
             class={class}
         >
-            { if children.is_empty() {
-                html! { current_label }
-            } else {
-                html! { for children.iter() }
-            }}
+            { content }
         </Button>
     }
 }

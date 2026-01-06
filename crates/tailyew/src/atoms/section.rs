@@ -33,7 +33,7 @@ pub struct SectionProps {
     pub aria_labelledby: Option<String>,
 }
 
-#[function_component(Section)]
+#[component(Section)]
 pub fn section(props: &SectionProps) -> Html {
     let SectionProps {
         aria_label,

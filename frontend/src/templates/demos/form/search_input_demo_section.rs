@@ -44,7 +44,7 @@ struct PokemonResponse {
     results: Vec<PokemonResult>,
 }
 
-#[function_component(SearchInputDemoSection)]
+#[component(SearchInputDemoSection)]
 pub fn search_input_demo_section() -> Html {
     // 1. Static language example
     let selected = use_state(|| "".to_string());

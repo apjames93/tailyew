@@ -8,7 +8,7 @@ use crate::templates::demos::DemoComponent;
 
 const USAGE_CODE: &str = include_str!("./a_component_usage.rs");
 
-#[function_component(AComponentDemoSection)]
+#[component(AComponentDemoSection)]
 pub fn a_component_demo_section() -> Html {
     let example: Html = include!("./a_component_usage.rs");
 

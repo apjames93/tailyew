@@ -4,7 +4,7 @@ use tailyew::molecules::Popover;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(PopoverDemoSection)]
+#[component(PopoverDemoSection)]
 pub fn popover_demo_section() -> Html {
     let show_popup = use_state(|| false);
 

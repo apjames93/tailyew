@@ -36,7 +36,7 @@ pub struct RadioGroupProps {
     pub on_change: Option<Callback<String>>,
 }
 
-#[function_component(RadioGroup)]
+#[component(RadioGroup)]
 pub fn radio_group(props: &RadioGroupProps) -> Html {
     let RadioGroupProps {
         id,

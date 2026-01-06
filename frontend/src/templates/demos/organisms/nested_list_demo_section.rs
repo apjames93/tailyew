@@ -3,7 +3,7 @@ use tailyew::organisms::table::Column;
 use tailyew::organisms::{NestedItem, NestedList};
 use yew::prelude::*;
 
-#[function_component(NestedListDemoSection)]
+#[component(NestedListDemoSection)]
 pub fn nested_list_demo_section() -> Html {
     let on_select = Callback::from(|value: AttrValue| {
         web_sys::console::log_1(&format!("Selected: {}", value).into());

@@ -25,7 +25,7 @@ pub struct ArrowDownIconProps {
     pub color: Option<String>,
 }
 
-#[function_component(ArrowDownIcon)]
+#[component(ArrowDownIcon)]
 pub fn arrow_down_icon(props: &ArrowDownIconProps) -> Html {
     let stroke_color = props
         .color

@@ -20,7 +20,7 @@ html! {
 }
 "#;
 
-#[function_component(ColorInputDemoSection)]
+#[component(ColorInputDemoSection)]
 pub fn color_input_demo_section() -> Html {
     let example = html! { <ColorInputUsage /> };
 
@@ -72,7 +72,7 @@ pub fn color_input_demo_section() -> Html {
     }
 }
 
-#[function_component(ColorInputUsage)]
+#[component(ColorInputUsage)]
 fn color_input_usage() -> Html {
     let color = use_state(|| "#3b82f6".to_string());
     let on_change = {

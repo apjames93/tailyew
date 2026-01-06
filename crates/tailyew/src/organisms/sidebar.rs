@@ -33,7 +33,7 @@ pub struct SidebarProps {
     pub position: SidebarPosition,
 }
 
-#[function_component(Sidebar)]
+#[component(Sidebar)]
 pub fn sidebar(props: &SidebarProps) -> Html {
     let SidebarProps {
         icon_list,

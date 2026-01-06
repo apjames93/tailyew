@@ -26,7 +26,7 @@ struct EmbeddedFormConfig {
     button_label: Option<String>,
 }
 
-#[function_component(CodeBlock)]
+#[component(CodeBlock)]
 pub fn code_block(props: &CodeBlockProps) -> Html {
     let CodeBlockProps {
         children,

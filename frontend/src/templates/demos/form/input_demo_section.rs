@@ -43,7 +43,7 @@ html! {
 }
 "#;
 
-#[function_component(InputDemoSection)]
+#[component(InputDemoSection)]
 pub fn input_demo_section() -> Html {
     let example = html! { <InputUsage /> };
 
@@ -146,7 +146,7 @@ pub fn input_demo_section() -> Html {
     }
 }
 
-#[function_component(InputUsage)]
+#[component(InputUsage)]
 fn input_usage() -> Html {
     let name = use_state(|| "".to_string());
     let username = use_state(|| "".to_string());

@@ -33,7 +33,7 @@ pub struct BadgeProps {
     pub children: Children,
 }
 
-#[function_component(Badge)]
+#[component(Badge)]
 pub fn badge(props: &BadgeProps) -> Html {
     let BadgeProps {
         badge_content,

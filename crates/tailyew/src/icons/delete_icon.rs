@@ -25,7 +25,7 @@ pub struct DeleteIconProps {
     pub color: Option<String>,
 }
 
-#[function_component(DeleteIcon)]
+#[component(DeleteIcon)]
 pub fn delete_icon(props: &DeleteIconProps) -> Html {
     let stroke_color = props
         .color

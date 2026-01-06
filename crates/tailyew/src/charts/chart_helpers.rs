@@ -133,7 +133,6 @@ pub fn use_get_chart_theme() -> UseStateHandle<String> {
             .expect("failed to observe <html>");
 
         callback.forget();
-        || ()
     });
 
     theme

@@ -22,7 +22,7 @@ html! {
 }
 "#;
 
-#[function_component(FormBuilderDemoSection)]
+#[component(FormBuilderDemoSection)]
 pub fn form_builder_demo_section() -> Html {
     // 1) Shared state for displaying submitted values and banners
     let form_values = use_state(|| "".to_string());

@@ -45,7 +45,7 @@ pub struct NestedListProps {
     pub start_index: usize,
 }
 
-#[function_component(NestedList)]
+#[component(NestedList)]
 pub fn nested_list(props: &NestedListProps) -> Html {
     let NestedListProps {
         list,
@@ -98,7 +98,7 @@ struct NestedListItemProps {
     pub index: usize,
 }
 
-#[function_component(NestedListItem)]
+#[component(NestedListItem)]
 fn nested_list_item(props: &NestedListItemProps) -> Html {
     let NestedListItemProps {
         item,

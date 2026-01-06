@@ -4,7 +4,7 @@ use tailyew::molecules::Breadcrumbs;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(BreadcrumbsDemoSection)]
+#[component(BreadcrumbsDemoSection)]
 pub fn breadcrumbs_demo_section() -> Html {
     let example = html! {
         <div class="space-y-6 text-sm text-gray-800 dark:text-white">

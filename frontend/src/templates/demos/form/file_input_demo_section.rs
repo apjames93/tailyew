@@ -21,7 +21,7 @@ html! {
 }
 "#;
 
-#[function_component(FileInputDemoSection)]
+#[component(FileInputDemoSection)]
 pub fn file_input_demo_section() -> Html {
     let example = html! { <FileInputUsage /> };
 
@@ -76,7 +76,7 @@ pub fn file_input_demo_section() -> Html {
     }
 }
 
-#[function_component(FileInputUsage)]
+#[component(FileInputUsage)]
 fn file_input_usage() -> Html {
     let file = use_state(|| "".to_string());
     let onchange = {

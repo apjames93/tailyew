@@ -17,7 +17,7 @@ pub struct TableProps {
     pub row_click_callback: Option<Callback<usize>>,
 }
 
-#[function_component(Table)]
+#[component(Table)]
 pub fn table(props: &TableProps) -> Html {
     let TableProps {
         columns,

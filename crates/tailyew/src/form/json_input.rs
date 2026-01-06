@@ -29,7 +29,7 @@ pub struct JsonInputProps {
     pub disable_values: bool,
 }
 
-#[function_component(JsonInput)]
+#[component(JsonInput)]
 pub fn json_input(props: &JsonInputProps) -> Html {
     // Build initial entries from value or start blank
     let json_state = use_state(|| props.initial_value.clone().unwrap_or(json!({})));
@@ -62,7 +62,6 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                     cb.emit(new_json.clone());
                 }
             }
-            || ()
         });
     }
 

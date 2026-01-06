@@ -19,7 +19,7 @@ use tailyew::icons::{IconBase};
 </IconBase>
 "#;
 
-#[function_component(IconDemoSection)]
+#[component(IconDemoSection)]
 pub fn icon_demo_section() -> Html {
     let example = html! { <IconDemoExample /> };
 
@@ -79,7 +79,7 @@ pub fn icon_demo_section() -> Html {
 }
 
 // actual DOM we render in the demo pane
-#[function_component(IconDemoExample)]
+#[component(IconDemoExample)]
 fn icon_demo_example() -> Html {
     html! {
         <div class="space-y-6">
@@ -124,7 +124,7 @@ struct IconTileProps {
     pub children: Children,
 }
 
-#[function_component(IconTile)]
+#[component(IconTile)]
 fn icon_tile(props: &IconTileProps) -> Html {
     html! {
         <div class="flex flex-col items-center gap-2 rounded-lg border border-border/60 bg-background/40 p-3">
@@ -132,7 +132,7 @@ fn icon_tile(props: &IconTileProps) -> Html {
                 { for props.children.iter() }
             </div>
             <Typo tag={TagType::Span}>
-                { props.label.clone() }
+                { html! { props.label.clone() } }
             </Typo>
         </div>
     }

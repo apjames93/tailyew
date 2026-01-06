@@ -16,7 +16,7 @@ pub struct TabsProps {
     pub scroll_into_view: bool,
 }
 
-#[function_component(Tabs)]
+#[component(Tabs)]
 pub fn tabs(props: &TabsProps) -> Html {
     let scroll_into_view = props.scroll_into_view;
     let active_tab_index = use_state(|| 0);

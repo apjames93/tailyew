@@ -31,7 +31,7 @@ pub struct ColorInputProps {
     pub class: Classes,
 }
 
-#[function_component(ColorInput)]
+#[component(ColorInput)]
 pub fn color_input(props: &ColorInputProps) -> Html {
     let ColorInputProps {
         id,

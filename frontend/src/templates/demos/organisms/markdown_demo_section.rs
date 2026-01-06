@@ -6,7 +6,7 @@ use yew::prelude::*;
 
 const MARKDOWN_DOC: &str = include_str!("./markdown_demo.md");
 
-#[function_component(MarkdownDemoSection)]
+#[component(MarkdownDemoSection)]
 pub fn markdown_demo_section() -> Html {
     let submitted_values = use_state(|| "".to_string());
 

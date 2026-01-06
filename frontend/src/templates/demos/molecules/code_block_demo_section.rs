@@ -5,7 +5,7 @@ use tailyew::molecules::CodeBlock;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(CodeBlockDemoSection)]
+#[component(CodeBlockDemoSection)]
 pub fn code_block_demo_section() -> Html {
     let example = html! {
         <CodeBlock>

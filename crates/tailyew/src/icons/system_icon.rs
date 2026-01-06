@@ -23,7 +23,7 @@ pub struct SystemIconProps {
     pub color: Option<String>,
 }
 
-#[function_component(SystemIcon)]
+#[component(SystemIcon)]
 pub fn system_icon(props: &SystemIconProps) -> Html {
     let stroke_color = props
         .color

@@ -24,7 +24,7 @@ pub struct FormIconProps {
 }
 
 /// Form Icon component for TailYew
-#[function_component(FormIcon)]
+#[component(FormIcon)]
 pub fn form_icon(props: &FormIconProps) -> Html {
     let stroke_color = props
         .color

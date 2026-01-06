@@ -9,7 +9,7 @@ const USAGE_CODE: &str = r#"
 use tailyew::form::Switch;
 use yew::prelude::*;
 
-#[function_component(SwitchUsage)]
+#[component(SwitchUsage)]
 fn switch_usage() -> Html {
     let state = use_state(|| false);
     let on_change = {
@@ -29,7 +29,7 @@ fn switch_usage() -> Html {
 }
 "#;
 
-#[function_component(SwitchDemoSection)]
+#[component(SwitchDemoSection)]
 pub fn switch_demo_section() -> Html {
     let example = html! { <SwitchUsage /> };
 
@@ -99,7 +99,7 @@ pub fn switch_demo_section() -> Html {
     }
 }
 
-#[function_component(SwitchUsage)]
+#[component(SwitchUsage)]
 fn switch_usage() -> Html {
     let state = use_state(|| false);
     let on_change = {

@@ -3,7 +3,7 @@ use tailyew::organisms::table::Column;
 use tailyew::{Button, ButtonType, Notification, NotificationTypes};
 use yew::prelude::*;
 
-#[function_component(NotificationDemoSection)]
+#[component(NotificationDemoSection)]
 pub fn notification_demo_section() -> Html {
     let show_success = use_state(|| true);
     let show_error = use_state(|| true);

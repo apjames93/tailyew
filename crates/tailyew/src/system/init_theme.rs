@@ -34,7 +34,7 @@ pub struct InitProps {
     pub class: Classes,
 }
 
-#[function_component(InitTheme)]
+#[component(InitTheme)]
 pub fn init_theme(props: &InitProps) -> Html {
     let InitProps {
         children,

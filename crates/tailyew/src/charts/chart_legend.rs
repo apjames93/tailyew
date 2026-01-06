@@ -12,7 +12,7 @@ pub struct ChartLegendProps {
     pub items: Vec<LegendItem>,
 }
 
-#[function_component(ChartLegend)]
+#[component(ChartLegend)]
 pub fn chart_legend(props: &ChartLegendProps) -> Html {
     html! {
         <div

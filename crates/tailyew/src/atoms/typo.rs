@@ -45,7 +45,7 @@ pub struct TypoProps {
     pub role: Option<String>,
 }
 
-#[function_component(Typo)]
+#[component(Typo)]
 pub fn typo(props: &TypoProps) -> Html {
     let TypoProps {
         children,

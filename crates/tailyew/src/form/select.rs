@@ -44,7 +44,7 @@ pub struct SelectProps {
     pub disabled: bool,
 }
 
-#[function_component(Select)]
+#[component(Select)]
 pub fn select(props: &SelectProps) -> Html {
     let SelectProps {
         id,

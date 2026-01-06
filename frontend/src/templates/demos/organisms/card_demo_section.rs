@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 const HERO_IMAGE_URL: &str = "/static/images/TailYew.png";
 
-#[function_component(CardDemoSection)]
+#[component(CardDemoSection)]
 pub fn card_demo_section() -> Html {
     let example = html! {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

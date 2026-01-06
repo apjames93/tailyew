@@ -32,7 +32,7 @@ pub struct TextareaProps {
     pub rows: usize,
 }
 
-#[function_component(Textarea)]
+#[component(Textarea)]
 pub fn textarea(props: &TextareaProps) -> Html {
     let TextareaProps {
         id,

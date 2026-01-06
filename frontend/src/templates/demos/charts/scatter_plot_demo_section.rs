@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("scatter_plot_usage.rs");
 
-#[function_component(ScatterPlotDemoSection)]
+#[component(ScatterPlotDemoSection)]
 pub fn scatter_plot_demo_section() -> Html {
     let example: Html = include!("scatter_plot_usage.rs");
 

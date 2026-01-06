@@ -23,7 +23,7 @@ pub struct PolylineProps {
     pub color: Option<String>,
 }
 
-#[function_component(PolylineIcon)]
+#[component(PolylineIcon)]
 pub fn polyline_icon(props: &PolylineProps) -> Html {
     let stroke_color = props
         .color

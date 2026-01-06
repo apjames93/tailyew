@@ -23,7 +23,7 @@ pub struct AppsIconProps {
     pub color: Option<String>,
 }
 
-#[function_component(AppsIcon)]
+#[component(AppsIcon)]
 pub fn apps_icon(props: &AppsIconProps) -> Html {
     let fill_or_stroke = props
         .color

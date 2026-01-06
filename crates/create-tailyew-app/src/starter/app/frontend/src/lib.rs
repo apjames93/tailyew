@@ -29,7 +29,7 @@ pub fn switch(route: Route) -> Html {
     }
 }
 
-#[function_component(App)]
+#[component(App)]
 pub fn app() -> Html {
     let my_theme = Theme {
         name: "system".into(),

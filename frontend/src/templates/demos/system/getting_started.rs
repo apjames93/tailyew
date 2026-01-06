@@ -2,7 +2,7 @@ use tailyew::atoms::{Button, ButtonType, Section, TagType, Typo};
 use tailyew::molecules::CodeBlock;
 use yew::prelude::*;
 
-#[function_component(GettingStarted)]
+#[component(GettingStarted)]
 pub fn getting_started() -> Html {
     html! {
         <Section class="space-y-6">

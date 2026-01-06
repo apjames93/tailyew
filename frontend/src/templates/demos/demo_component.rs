@@ -20,7 +20,7 @@ pub struct DemoComponentProps {
     pub github_source_path: AttrValue,
 }
 
-#[function_component(DemoComponent)]
+#[component(DemoComponent)]
 pub fn demo_component(props: &DemoComponentProps) -> Html {
     let DemoComponentProps {
         title,

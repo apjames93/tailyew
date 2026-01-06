@@ -13,7 +13,7 @@ pub struct PopoverProps {
     pub on_close: Option<Callback<MouseEvent>>,
 }
 
-#[function_component(Popover)]
+#[component(Popover)]
 pub fn popover(props: &PopoverProps) -> Html {
     let PopoverProps {
         trigger,

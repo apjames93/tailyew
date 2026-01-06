@@ -3,7 +3,7 @@ use yew::prelude::*;
 
 use crate::atoms::Button;
 
-#[function_component(ThemeToggle)]
+#[component(ThemeToggle)]
 pub fn theme_toggle() -> Html {
     // Try to get the theme from localStorage or default to "light"
     let initial_theme = {
@@ -63,14 +63,19 @@ pub fn theme_toggle() -> Html {
                         .expect("Could not set initial theme class");
                 }
             }
-            || ()
         });
     }
 
     html! {
         <div>
             <Button onclick={toggle_theme}>
-                { if *theme == "light" { "🌞 Light Mode" } else { "🌙 Dark Mode" } }
+                {
+                    if *theme == "light" {
+                        html! { "🌞 Light Mode" }
+                    } else {
+                        html! { "🌙 Dark Mode" }
+                    }
+                }
             </Button>
         </div>
     }

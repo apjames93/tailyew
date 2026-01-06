@@ -3,7 +3,7 @@ use tailyew::atoms::Avatar;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(AvatarDemoSection)]
+#[component(AvatarDemoSection)]
 pub fn avatar_demo_section() -> Html {
     let log_click = Callback::from(|_| web_sys::console::log_1(&"Avatar clicked!".into()));
 

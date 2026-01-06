@@ -28,7 +28,7 @@ pub struct ModalProps {
     pub aria_labelledby: Option<String>,
 }
 
-#[function_component(Modal)]
+#[component(Modal)]
 pub fn modal(props: &ModalProps) -> Html {
     let ModalProps {
         title,
@@ -54,7 +54,6 @@ pub fn modal(props: &ModalProps) -> Html {
                     let _ = node.focus();
                 }
             }
-            || ()
         });
     }
 
@@ -134,7 +133,7 @@ pub fn modal(props: &ModalProps) -> Html {
             >
                 // -- STICKY HEADER --
                 <div class="flex justify-between items-center border-b pb-4 border-gray-200 dark:border-gray-700 mb-4 sticky top-0 z-10 bg-white dark:bg-gray-800">
-                    <Typo tag={TagType::H2} class="text-lg">{ title.clone() }</Typo>
+                    <Typo tag={TagType::H2} class="text-lg">{ html! { title.clone() } }</Typo>
                     <Button
                         onclick={on_close_click}
                         button_type={ButtonType::Icon}

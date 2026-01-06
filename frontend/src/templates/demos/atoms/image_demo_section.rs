@@ -3,7 +3,7 @@ use tailyew::atoms::{Image, Typo};
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(ImageDemoSection)]
+#[component(ImageDemoSection)]
 pub fn image_demo_section() -> Html {
     let example = html! {
         <div class="space-y-6">

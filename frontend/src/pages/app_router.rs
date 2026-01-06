@@ -3,7 +3,7 @@ use crate::{switch, Route};
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-#[function_component(AppRouter)]
+#[component(AppRouter)]
 pub fn app_router() -> Html {
     html! {
         <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-800">

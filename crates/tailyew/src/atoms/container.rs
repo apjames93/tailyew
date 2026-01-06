@@ -14,7 +14,7 @@ pub struct ContainerProps {
     pub children: Children,
 }
 
-#[function_component(Container)]
+#[component(Container)]
 pub fn container(props: &ContainerProps) -> Html {
     let ContainerProps {
         class,

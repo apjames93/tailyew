@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("li_usage.rs");
 
-#[function_component(LiDemoSection)]
+#[component(LiDemoSection)]
 pub fn li_demo_section() -> Html {
     let example: Html = include!("li_usage.rs");
 
