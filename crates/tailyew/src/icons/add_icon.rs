@@ -25,7 +25,7 @@ pub struct AddIconProps {
     pub color: Option<String>,
 }
 
-#[function_component(AddIcon)]
+#[component(AddIcon)]
 pub fn add_icon(props: &AddIconProps) -> Html {
     let stroke_color = props
         .color

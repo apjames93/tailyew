@@ -144,7 +144,7 @@ fn draw_chart(
     }
 }
 
-#[function_component(BarChartComponent)]
+#[component(BarChartComponent)]
 pub fn bar_chart_component(props: &BarChartProps) -> Html {
     let canvas_ref = use_node_ref();
     let chart_container_ref = use_node_ref();
@@ -183,8 +183,6 @@ pub fn bar_chart_component(props: &BarChartProps) -> Html {
                 if let Some(canvas) = canvas_ref.cast::<HtmlCanvasElement>() {
                     draw_chart(&canvas, &data, &theme, &bar_geometries);
                 }
-
-                || ()
             },
         );
     }

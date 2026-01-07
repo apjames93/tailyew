@@ -14,7 +14,7 @@ pub struct StepperProps {
     pub show_navigation_buttons: bool,
 }
 
-#[function_component(Stepper)]
+#[component(Stepper)]
 pub fn stepper(props: &StepperProps) -> Html {
     let StepperProps {
         steps,
@@ -31,7 +31,6 @@ pub fn stepper(props: &StepperProps) -> Html {
             if let Some(step) = new_step {
                 internal_step.set(*step);
             }
-            || ()
         });
     }
 
@@ -107,7 +106,7 @@ pub fn stepper(props: &StepperProps) -> Html {
                                     { index + 1 }
                                 </div>
 
-                                <Typo tag={TagType::P} class="text-xs mt-2 text-center">{ step.clone() }</Typo>
+                                <Typo tag={TagType::P} class="text-xs mt-2 text-center">{ html! { step.clone() } }</Typo>
 
                                 // Connector line (skip last step)
                                 if index < steps.len() - 1 {

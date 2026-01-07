@@ -16,7 +16,7 @@ pub struct IconBaseProps {
     pub children: Children,
 }
 
-#[function_component(IconBase)]
+#[component(IconBase)]
 pub fn icon_base(props: &IconBaseProps) -> Html {
     let aria_label = props.label.clone().unwrap_or_default();
 

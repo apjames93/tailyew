@@ -27,7 +27,7 @@ pub struct AvatarProps {
     pub on_click: Option<Callback<MouseEvent>>,
 }
 
-#[function_component(Avatar)]
+#[component(Avatar)]
 pub fn avatar(props: &AvatarProps) -> Html {
     let AvatarProps {
         src,

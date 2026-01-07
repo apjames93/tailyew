@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("bubble_chart_usage.rs");
 
-#[function_component(BubbleChartDemoSection)]
+#[component(BubbleChartDemoSection)]
 pub fn bubble_chart_demo_section() -> Html {
     let example: Html = include!("bubble_chart_usage.rs");
 

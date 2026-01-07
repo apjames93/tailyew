@@ -44,7 +44,7 @@ pub struct ModalButtonProps {
     pub aria_labelledby: Option<String>,
 }
 
-#[function_component(ModalButton)]
+#[component(ModalButton)]
 pub fn modal_button(props: &ModalButtonProps) -> Html {
     let ModalButtonProps {
         trigger_children,

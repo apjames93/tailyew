@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("spacer_usage.rs");
 
-#[function_component(SpacerDemoSection)]
+#[component(SpacerDemoSection)]
 pub fn spacer_demo_section() -> Html {
     let example: Html = include!("spacer_usage.rs");
 

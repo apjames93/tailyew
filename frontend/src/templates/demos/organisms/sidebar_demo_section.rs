@@ -3,7 +3,7 @@ use tailyew::atoms::Typo;
 use tailyew::organisms::{table::Column, NestedItem, Sidebar, SidebarButton, SidebarPosition};
 use yew::prelude::*;
 
-#[function_component(SidebarDemoSection)]
+#[component(SidebarDemoSection)]
 pub fn sidebar_demo_section() -> Html {
     let icons = [
         html! {

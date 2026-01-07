@@ -6,7 +6,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 
 /// Define a new component `AppRouter` that wraps the router and handles state management.
-#[function_component(AppRouter)]
+#[component(AppRouter)]
 pub fn app_router() -> Html {
     html! {
         <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-800">

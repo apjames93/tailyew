@@ -175,7 +175,7 @@ fn draw_chart(
     apply_theme_styles(&ctx, &styles);
 }
 
-#[function_component(LineChartComponent)]
+#[component(LineChartComponent)]
 pub fn line_chart_component(props: &LineChartProps) -> Html {
     let canvas_ref = use_node_ref();
     let theme = use_get_chart_theme();
@@ -207,8 +207,6 @@ pub fn line_chart_component(props: &LineChartProps) -> Html {
                 if let Some(canvas) = canvas_ref.cast::<HtmlCanvasElement>() {
                     draw_chart(&canvas, &lines, &theme, &geoms_ref);
                 }
-
-                || ()
             },
         );
     }

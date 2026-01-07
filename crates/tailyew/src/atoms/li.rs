@@ -39,7 +39,7 @@ pub struct LiProps {
     pub onclick: Option<Callback<MouseEvent>>,
 }
 
-#[function_component(Li)]
+#[component(Li)]
 pub fn li(props: &LiProps) -> Html {
     let LiProps {
         active,

@@ -22,7 +22,7 @@ html! {
 }
 "#;
 
-#[function_component(TextareaDemoSection)]
+#[component(TextareaDemoSection)]
 pub fn textarea_demo_section() -> Html {
     let state = use_state(String::new);
     let on_change = {

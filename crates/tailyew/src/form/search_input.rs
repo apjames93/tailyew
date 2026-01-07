@@ -76,7 +76,7 @@ pub struct SearchInputProps {
     pub disabled: bool,
 }
 
-#[function_component(SearchInput)]
+#[component(SearchInput)]
 pub fn search_input(props: &SearchInputProps) -> Html {
     let SearchInputProps {
         items,
@@ -273,7 +273,6 @@ pub fn search_input(props: &SearchInputProps) -> Html {
             if let Some(input_el) = input_ref.cast::<HtmlInputElement>() {
                 apply_validity(&input_el, selected_item.is_some());
             }
-            || ()
         });
     }
 
@@ -333,7 +332,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                                             class="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 transition-colors duration-150"
                                             onclick={Callback::from(move |_| on_click.emit(item_clone.clone()))}
                                         >
-                                            { item.label.clone() }
+                                            { html! { item.label.clone() } }
                                         </Li>
                                     }
                                 }) }
@@ -354,7 +353,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                                 icon={if disabled { None } else { Some(html! { <XIcon size={12} /> }) }}
                                 class="hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-50 dark:bg-gray-800 rounded px-4 py-2 flex items-center justify-left"
                             >
-                                <Typo>{ format!("Selected: {}", item.label) }</Typo>
+                                <Typo>{ html! { format!("Selected: {}", item.label) } }</Typo>
                             </Li>
                         </Ul>
                     }

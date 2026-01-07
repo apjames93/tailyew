@@ -41,7 +41,7 @@ pub struct CheckboxProps {
     pub on_change: Option<Callback<bool>>,
 }
 
-#[function_component(Checkbox)]
+#[component(Checkbox)]
 pub fn checkbox(props: &CheckboxProps) -> Html {
     let CheckboxProps {
         id,

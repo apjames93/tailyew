@@ -4,7 +4,7 @@ use tailyew::molecules::modal::{Modal, ModalSize};
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(ModalDemoSection)]
+#[component(ModalDemoSection)]
 pub fn modal_demo_section() -> Html {
     let show_modal = use_state(|| false);
     let toggle_modal = {

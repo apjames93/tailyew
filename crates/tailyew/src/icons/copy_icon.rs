@@ -23,7 +23,7 @@ pub struct CopyIconProps {
     pub color: Option<String>,
 }
 
-#[function_component(CopyIcon)]
+#[component(CopyIcon)]
 pub fn copy_icon(props: &CopyIconProps) -> Html {
     let stroke_color = props
         .color

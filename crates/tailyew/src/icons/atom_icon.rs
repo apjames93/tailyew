@@ -22,7 +22,7 @@ pub struct AtomIconProps {
     pub color: Option<String>,
 }
 
-#[function_component(AtomIcon)]
+#[component(AtomIcon)]
 pub fn atom_icon(props: &AtomIconProps) -> Html {
     let stroke_color = props
         .color

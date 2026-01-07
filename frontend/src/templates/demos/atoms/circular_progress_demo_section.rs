@@ -7,7 +7,7 @@ use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("circular_progress_usage.rs");
 
-#[function_component(CircularProgressDemoSection)]
+#[component(CircularProgressDemoSection)]
 pub fn circular_progress_demo_section() -> Html {
     let example: Html = include!("circular_progress_usage.rs");
 

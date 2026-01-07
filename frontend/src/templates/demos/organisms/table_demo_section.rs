@@ -4,7 +4,7 @@ use tailyew::form::Checkbox;
 use tailyew::organisms::table::{Column, Table};
 use yew::prelude::*;
 
-#[function_component(TableDemoSection)]
+#[component(TableDemoSection)]
 pub fn table_demo_section() -> Html {
     let clicked_row = use_state(|| None::<usize>);
 

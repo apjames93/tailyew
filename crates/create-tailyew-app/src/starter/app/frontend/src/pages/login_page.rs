@@ -41,7 +41,7 @@ pub async fn login(email: String, password: String) -> Result<LoginResponse, Str
         .and_then(|response| response.data.ok_or_else(|| "No data returned.".to_string()))
 }
 
-#[function_component(LoginPage)]
+#[component(LoginPage)]
 pub fn login_page() -> Html {
     let error_message = use_state(|| None::<String>);
 

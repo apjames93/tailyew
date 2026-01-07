@@ -15,7 +15,7 @@ html! {
 }
 "#;
 
-#[function_component(PhoneInputDemoSection)]
+#[component(PhoneInputDemoSection)]
 pub fn phone_input_demo_section() -> Html {
     let example = html! {
         <PhoneInput

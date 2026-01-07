@@ -23,7 +23,7 @@ pub struct AppBarProps {
     pub title_onclick: Option<Callback<MouseEvent>>,
 }
 
-#[function_component(AppBar)]
+#[component(AppBar)]
 pub fn app_bar(props: &AppBarProps) -> Html {
     let AppBarProps {
         title,

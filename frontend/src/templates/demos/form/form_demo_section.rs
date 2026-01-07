@@ -65,7 +65,7 @@ let onsubmit_callback = {
 };
 "#;
 
-#[function_component(FormDemoSection)]
+#[component(FormDemoSection)]
 pub fn form_demo_section() -> Html {
     // Shared state
     let form_values = use_state(|| "".to_string());

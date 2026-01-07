@@ -17,7 +17,7 @@ html! {
 }
 "#;
 
-#[function_component(RangeInputDemoSection)]
+#[component(RangeInputDemoSection)]
 pub fn range_input_demo_section() -> Html {
     let on_change = Callback::from(|val: String| {
         web_sys::console::log_1(&format!("Range value changed: {}", val).into());

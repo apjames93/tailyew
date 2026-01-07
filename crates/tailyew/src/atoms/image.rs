@@ -35,7 +35,7 @@ pub struct ImageProps {
     pub role: Option<String>,
 }
 
-#[function_component(Image)]
+#[component(Image)]
 pub fn image(props: &ImageProps) -> Html {
     let style = format!(
         "{}{}",

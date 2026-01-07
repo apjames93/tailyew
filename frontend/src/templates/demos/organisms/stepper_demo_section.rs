@@ -3,7 +3,7 @@ use tailyew::atoms::{TagType, Typo};
 use tailyew::organisms::{table::Column, Stepper};
 use yew::prelude::*;
 
-#[function_component(StepperDemoSection)]
+#[component(StepperDemoSection)]
 pub fn stepper_demo_section() -> Html {
     let steps = vec![
         "Start".to_string(),

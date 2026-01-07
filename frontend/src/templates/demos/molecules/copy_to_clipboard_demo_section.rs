@@ -5,7 +5,7 @@ use tailyew::molecules::CopyToClipboard;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(CopyToClipboardDemoSection)]
+#[component(CopyToClipboardDemoSection)]
 pub fn copy_to_clipboard_demo_section() -> Html {
     let example = html! {
         <div class="max-w-xl space-y-4">

@@ -63,7 +63,7 @@ pub struct SwitchProps {
     pub on_change: Option<Callback<bool>>,
 }
 
-#[function_component(Switch)]
+#[component(Switch)]
 pub fn switch(props: &SwitchProps) -> Html {
     let SwitchProps {
         id,

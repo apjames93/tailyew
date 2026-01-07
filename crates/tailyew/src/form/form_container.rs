@@ -32,7 +32,7 @@ pub struct FormProps {
     pub disabled: bool,
 }
 
-#[function_component(Form)]
+#[component(Form)]
 pub fn form(props: &FormProps) -> Html {
     let FormProps {
         children,
@@ -148,12 +148,18 @@ pub fn form(props: &FormProps) -> Html {
                         }}
                         if show_submit_button {
                             <Button
-                                button_type={ButtonType::Submit}
-                                disabled={*loading || disabled}
-                                class="ml-auto"
-                            >
-                                { if *loading { "Submitting..." } else { &button_label } }
-                            </Button>
+                            button_type={ButtonType::Submit}
+                            disabled={*loading || disabled}
+                            class="ml-auto"
+                        >
+                            {
+                                if *loading {
+                                    html! { "Submitting..." }
+                                } else {
+                                    html! { button_label.clone() }
+                                }
+                            }
+                        </Button>
                         }
                     </div>
                 }

@@ -6,7 +6,7 @@ use tailyew::organisms::table::Column;
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 
-#[function_component(JsonInputDemoSection)]
+#[component(JsonInputDemoSection)]
 pub fn json_input_demo_section() -> Html {
     let submitted_json = use_state(|| Value::Null);
     let submitted_json_flat = use_state(|| Value::Null);

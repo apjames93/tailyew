@@ -29,7 +29,7 @@ pub struct ChartLayoutProps {
     pub class: Classes,
 }
 
-#[function_component(ChartLayout)]
+#[component(ChartLayout)]
 pub fn chart_layout(props: &ChartLayoutProps) -> Html {
     let ChartLayoutProps {
         chart,

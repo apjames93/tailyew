@@ -138,7 +138,7 @@ fn draw_chart(
     }
 }
 
-#[function_component(BubbleChartComponent)]
+#[component(BubbleChartComponent)]
 pub fn bubble_chart_component(props: &BubbleChartProps) -> Html {
     let canvas_ref = use_node_ref();
     let theme = use_get_chart_theme();
@@ -171,8 +171,6 @@ pub fn bubble_chart_component(props: &BubbleChartProps) -> Html {
                 if let Some(canvas) = canvas_ref.cast::<HtmlCanvasElement>() {
                     draw_chart(&canvas, &points, &theme, &geoms_ref);
                 }
-
-                || ()
             },
         );
     }

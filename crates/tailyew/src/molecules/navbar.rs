@@ -22,7 +22,7 @@ pub struct NavBarProps {
     pub position: AppBarPosition,
 }
 
-#[function_component(NavBar)]
+#[component(NavBar)]
 pub fn nav_bar(props: &NavBarProps) -> Html {
     let NavBarProps {
         children,

@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("linear_progress_usage.rs");
 
-#[function_component(LinearProgressDemoSection)]
+#[component(LinearProgressDemoSection)]
 pub fn linear_progress_demo_section() -> Html {
     let example: Html = include!("linear_progress_usage.rs");
 

@@ -104,7 +104,7 @@ fn draw_chart(
     ctx.stroke();
 }
 
-#[function_component(PieChartComponent)]
+#[component(PieChartComponent)]
 pub fn pie_chart_component(props: &PieChartProps) -> Html {
     let canvas_ref = use_node_ref();
     let theme = use_get_chart_theme();
@@ -136,8 +136,6 @@ pub fn pie_chart_component(props: &PieChartProps) -> Html {
                 if let Some(canvas) = canvas_ref.cast::<HtmlCanvasElement>() {
                     draw_chart(&canvas, &data, &theme, &geoms_ref);
                 }
-
-                || ()
             },
         );
     }

@@ -23,7 +23,7 @@ html! {
 }
 "#;
 
-#[function_component(CheckboxDemoSection)]
+#[component(CheckboxDemoSection)]
 pub fn checkbox_demo_section() -> Html {
     let example = html! { <CheckboxUsage /> };
 
@@ -78,7 +78,7 @@ pub fn checkbox_demo_section() -> Html {
     }
 }
 
-#[function_component(CheckboxUsage)]
+#[component(CheckboxUsage)]
 fn checkbox_usage() -> Html {
     let state = use_state(|| false);
     let on_change = {

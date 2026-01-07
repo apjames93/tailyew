@@ -6,7 +6,7 @@ use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("pie_chart_usage.rs");
 
-#[function_component(PieChartDemoSection)]
+#[component(PieChartDemoSection)]
 pub fn pie_chart_demo_section() -> Html {
     let example: Html = include!("pie_chart_usage.rs");
 

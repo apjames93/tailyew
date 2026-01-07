@@ -28,7 +28,7 @@ html! {
 }
 "#;
 
-#[function_component(SelectDemoSection)]
+#[component(SelectDemoSection)]
 pub fn select_demo_section() -> Html {
     let options = vec![
         SelectOption {

@@ -18,7 +18,7 @@ pub struct BreadcrumbsProps {
     pub aria_label: String,
 }
 
-#[function_component(Breadcrumbs)]
+#[component(Breadcrumbs)]
 pub fn breadcrumbs(props: &BreadcrumbsProps) -> Html {
     let BreadcrumbsProps {
         children,

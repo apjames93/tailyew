@@ -130,7 +130,7 @@ impl fmt::Display for InputType {
     }
 }
 
-#[function_component(Input)]
+#[component(Input)]
 pub fn input(props: &InputProps) -> Html {
     let InputProps {
         placeholder,

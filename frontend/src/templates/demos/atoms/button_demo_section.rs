@@ -7,7 +7,7 @@ use crate::templates::demos::DemoComponent;
 
 const USAGE_CODE: &str = include_str!("./button_usage.rs");
 
-#[function_component(ButtonDemoSection)]
+#[component(ButtonDemoSection)]
 pub fn button_demo_section() -> Html {
     let example: Html = include!("./button_usage.rs");
 

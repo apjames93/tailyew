@@ -50,7 +50,7 @@ pub struct ButtonProps {
     pub role: Option<String>,
 }
 
-#[function_component(Button)]
+#[component(Button)]
 pub fn button(props: &ButtonProps) -> Html {
     let ButtonProps {
         button_type,

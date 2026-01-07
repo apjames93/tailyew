@@ -52,7 +52,7 @@ pub struct FormBuilderProps {
     pub disabled: bool,
 }
 
-#[function_component(FormBuilder)]
+#[component(FormBuilder)]
 pub fn form_builder(props: &FormBuilderProps) -> Html {
     let FormBuilderProps {
         onsubmit,

@@ -31,7 +31,7 @@ pub struct AProps {
     pub include_referrer: bool,
 }
 
-#[function_component(A)]
+#[component(A)]
 pub fn a(props: &AProps) -> Html {
     let AProps {
         href,

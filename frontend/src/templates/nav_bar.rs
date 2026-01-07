@@ -4,7 +4,7 @@ use tailyew::organisms::NestedItem;
 use yew::prelude::*;
 use yew_router::prelude::Link;
 
-#[function_component(NavBar)]
+#[component(NavBar)]
 pub fn nav_bar() -> Html {
     let nested_list = vec![
         NestedItem::with_html(

@@ -9,7 +9,7 @@ use yew::prelude::*;
 const USAGE_CODE: &str = include_str!("app_bar_usage.rs");
 const LOGO_IMAGE_URL: &str = "/static/images/logo.png";
 
-#[function_component(AppBarDemoSection)]
+#[component(AppBarDemoSection)]
 pub fn app_bar_demo_section() -> Html {
     let nested_list = vec![
         NestedItem::with_html(html! { "Home" }, "home"),

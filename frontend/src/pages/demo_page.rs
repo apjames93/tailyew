@@ -8,7 +8,7 @@ pub struct DemoPageProps {
     pub component: String,
 }
 
-#[function_component(DemoPage)]
+#[component(DemoPage)]
 pub fn demo_page(props: &DemoPageProps) -> Html {
     let DemoPageProps { component } = props;
 

@@ -10,7 +10,7 @@ pub struct LinearProgressProps {
     pub class: Classes,
 }
 
-#[function_component(LinearProgressIndicator)]
+#[component(LinearProgressIndicator)]
 pub fn linear_progress_indicator(props: &LinearProgressProps) -> Html {
     let progress = props.progress.clamp(0, 100); // safe bounds
 

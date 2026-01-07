@@ -19,7 +19,7 @@ html! {
 }
 "#;
 
-#[function_component(RadioGroupDemoSection)]
+#[component(RadioGroupDemoSection)]
 pub fn radio_group_demo_section() -> Html {
     let options = vec![
         ("red".into(), "Red".into()),

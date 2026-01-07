@@ -7,7 +7,7 @@
 ![License](https://img.shields.io/crates/l/tailyew)
 [![CI](https://github.com/apjames93/tailyew/actions/workflows/tailyew.yaml/badge.svg)](https://github.com/apjames93/tailyew/actions)
 ![WASM Ready](https://img.shields.io/badge/WASM-ready-blueviolet)
-![Powered by Yew](https://img.shields.io/badge/Yew-0.21-blue)
+![Powered by Yew](https://img.shields.io/badge/Yew-0.22-success)
 ![Components](https://img.shields.io/badge/components-50%2B-blue)
 [![Demo](https://img.shields.io/badge/live-demo-0C66F0?logo=vercel&logoColor=white)](https://tailyew.com)
 
@@ -29,6 +29,31 @@ TailYew helps you build fast, beautiful, **dark-mode ready** Yew apps — with m
 - 📝 **A11y support** — ARIA roles, labels, and `aria-describedby` support  
 
 🔎 Explore live examples 👉 [https://tailyew.com/demo/getting_started](https://tailyew.com/demo/getting_started)
+
+
+---
+
+## 🔄 Yew 0.22 Migration Notes
+
+TailYew (v0.1.43) has been updated to support Yew 0.22, including:
+
+- Adoption of the new `#[component]` macro
+- Compatibility with updated hook and props APIs
+- No required API changes for existing TailYew components
+
+If you are upgrading from Yew 0.21:
+- Your TailYew usage should continue to work without changes
+- We recommend following the official Yew migration guide alongside upgrading TailYew
+
+📘 Official guide: https://yew.rs/docs/next/migration-guides/yew/from-0_21_0-to-0_22_0
+
+### 📌 Yew Version Support Policy
+
+Starting with **TailYew v0.1.43**, new releases target **Yew 0.22+**.
+
+- Projects still on **Yew 0.21** should pin TailYew to `<= 0.1.42`
+- No further features will be added for Yew 0.21
+
 
 ---
 
@@ -89,7 +114,7 @@ You’ll get:
 In your `Cargo.toml`:
 
 ```toml
-tailyew = "0.1.42"
+tailyew = "0.1.43" # Yew 0.22 compatible
 ```
 
 ---

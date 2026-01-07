@@ -5,7 +5,7 @@ use tailyew::molecules::{AvatarData, AvatarGroup};
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 
-#[function_component(AvatarGroupDemoSection)]
+#[component(AvatarGroupDemoSection)]
 pub fn avatar_group_demo_section() -> Html {
     let avatars = vec![
         AvatarData {

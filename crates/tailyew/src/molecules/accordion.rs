@@ -30,7 +30,7 @@ pub struct AccordionProps {
     pub arrow: Option<Html>,
 }
 
-#[function_component(Accordion)]
+#[component(Accordion)]
 pub fn accordion(props: &AccordionProps) -> Html {
     let AccordionProps {
         title,

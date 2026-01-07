@@ -18,7 +18,7 @@ pub struct TooltipProps {
     pub position: TooltipPosition,
 }
 
-#[function_component(Tooltip)]
+#[component(Tooltip)]
 pub fn tooltip(props: &TooltipProps) -> Html {
     let TooltipProps {
         trigger,

@@ -4,7 +4,7 @@ use tailyew::organisms::table::Column;
 use tailyew::organisms::tabs::{TabItem, Tabs};
 use yew::prelude::*;
 
-#[function_component(TabsDemoSection)]
+#[component(TabsDemoSection)]
 pub fn tabs_demo_section() -> Html {
     // Sample tab data
     let items = vec![

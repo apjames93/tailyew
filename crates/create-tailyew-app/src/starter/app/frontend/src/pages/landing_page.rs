@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 const HERO_IMAGE_URL: &str = "static/images/TailYew.png";
 
-#[function_component(LandingPage)]
+#[component(LandingPage)]
 pub fn landing_page() -> Html {
     let tabs = vec![
         TabItem {

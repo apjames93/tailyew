@@ -125,7 +125,7 @@ fn draw_chart(
     apply_theme_styles(&ctx, &styles);
 }
 
-#[function_component(ScatterPlotComponent)]
+#[component(ScatterPlotComponent)]
 pub fn scatter_plot_component(props: &ScatterPlotProps) -> Html {
     let canvas_ref = use_node_ref();
     let theme = use_get_chart_theme();
@@ -157,8 +157,6 @@ pub fn scatter_plot_component(props: &ScatterPlotProps) -> Html {
                 if let Some(canvas) = canvas_ref.cast::<HtmlCanvasElement>() {
                     draw_chart(&canvas, &points, &theme, &geoms_ref);
                 }
-
-                || ()
             },
         );
     }

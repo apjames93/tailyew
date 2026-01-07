@@ -1,3 +1,5 @@
+# aws/Makefile
+
 # AWS CloudFormation Constants
 BACKEND_STACK_NAME ?= tailyew-fn-stack
 FRONTEND_CLOUDFRONT_DISTRIBUTION_ID ?= E2JO86BVTFVNRI
@@ -97,10 +99,11 @@ deploy-frontend:
 
 # Upload Frontend Files to S3
 upload-frontend:
+	# Build the frontend (Trunk + Tailwind)
 	(cd .. && ENV_FILE=".env.production" make fe-build)
 
-	# Upload all frontend files to the S3 bucket
-	aws s3 sync ../frontend/static s3://$(FRONTEND_S3_BUCKET)
+	# Upload the built dist folder (Trunk output) to S3
+	aws s3 sync ../frontend/dist s3://$(FRONTEND_S3_BUCKET) --delete
 	aws cloudfront create-invalidation --distribution-id $(FRONTEND_CLOUDFRONT_DISTRIBUTION_ID) --paths "/*"
 
 # Deploy Full Application

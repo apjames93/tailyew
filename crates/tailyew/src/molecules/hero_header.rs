@@ -30,7 +30,7 @@ pub struct HeroHeaderProps {
     pub aria_describedby: Option<String>,
 }
 
-#[function_component(HeroHeader)]
+#[component(HeroHeader)]
 pub fn hero_header(props: &HeroHeaderProps) -> Html {
     let HeroHeaderProps {
         title,
@@ -98,7 +98,7 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
                     class={base_title_class}
                     style={text_style.clone()}
                 >
-                    { title }
+                    { html! { title } }
                 </Typo>
 
                 {
@@ -110,7 +110,7 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
                                 class={base_subtitle_class}
                                 style={text_style.clone()}
                             >
-                                { subtitle }
+                                { html! { subtitle } }
                             </Typo>
                         }
                     } else {

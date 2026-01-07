@@ -26,7 +26,7 @@ pub struct XIconProps {
 }
 
 /// X Icon component
-#[function_component(XIcon)]
+#[component(XIcon)]
 pub fn x_icon(props: &XIconProps) -> Html {
     let stroke_color = props
         .color

@@ -31,7 +31,7 @@ pub struct BarChartIconProps {
 }
 
 /// Bar chart icon for TailYew
-#[function_component(BarChartIcon)]
+#[component(BarChartIcon)]
 pub fn bar_chart_icon(props: &BarChartIconProps) -> Html {
     let stroke_or_fill = props
         .color

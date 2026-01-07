@@ -9,7 +9,7 @@ use yew::prelude::*;
 use tailyew::organisms::Markdown;
 const MARKDOWN_DOC: &str = include_str!("../organisms/markdown_demo.md");
 
-#[function_component(ModalButtonDemoSection)]
+#[component(ModalButtonDemoSection)]
 pub fn modal_button_demo_section() -> Html {
     let confirmed = use_state(|| false);
     let declined = use_state(|| false);

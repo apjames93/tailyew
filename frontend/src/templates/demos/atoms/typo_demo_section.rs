@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 const USAGE_CODE: &str = include_str!("typo_usage.rs");
 
-#[function_component(TypoDemoSection)]
+#[component(TypoDemoSection)]
 pub fn typo_demo_section() -> Html {
     let example: Html = include!("typo_usage.rs");
 
