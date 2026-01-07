@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/crates/l/tailyew)
 ![CI](https://github.com/apjames93/tailyew/actions/workflows/create-tailyew-app.yaml/badge.svg)
 ![WASM Ready](https://img.shields.io/badge/WASM-ready-blueviolet)
-![Powered by Yew](https://img.shields.io/badge/Yew-0.21-blue)
+![Powered by Yew](https://img.shields.io/badge/Yew-0.22-success)
 ![Components](https://img.shields.io/badge/components-50%2B-blue)
 [![Demo](https://img.shields.io/badge/live-demo-0C66F0?logo=vercel&logoColor=white)](https://tailyew.com)
 
@@ -18,6 +18,9 @@ Note: Tailwind’s CLI (via npm) is still required for development builds, and t
 
 Dreaming of a totally Rust-native toolchain? Us too! We’re open to ideas and contributions.
 
+> ✅ **Yew 0.22 Ready**  
+> Projects scaffolded with `create-tailyew-app` use **Yew 0.22** and **TailYew v0.1.43** by default.
+
 ---
 
 ## ✨ What is this?
@@ -26,6 +29,7 @@ Dreaming of a totally Rust-native toolchain? Us too! We’re open to ideas and c
 
 You get:
 
+- Uses **TailYew v0.1.43** (Yew 0.22 compatible) by default
 - A ready-to-go Yew/WASM frontend with TailwindCSS (JIT mode)
 - Live-reload via Trunk
 - Dark mode + accessibility baked in
