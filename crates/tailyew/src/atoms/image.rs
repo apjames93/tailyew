@@ -24,15 +24,15 @@ pub struct ImageProps {
 
     /// Optional ARIA label override
     #[prop_or_default]
-    pub aria_label: Option<String>,
+    pub aria_label: Option<AttrValue>,
 
     /// Optional ARIA describedby ID
     #[prop_or_default]
-    pub aria_describedby: Option<String>,
+    pub aria_describedby: Option<AttrValue>,
 
     /// Optional role (e.g. "presentation", "img")
     #[prop_or_default]
-    pub role: Option<String>,
+    pub role: Option<AttrValue>,
 }
 
 #[component(Image)]

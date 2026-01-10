@@ -9,39 +9,39 @@ use yew::prelude::*;
 pub fn avatar_group_demo_section() -> Html {
     let avatars = vec![
         AvatarData {
-            src: Some(String::from("/static/images/TailYew.png")),
-            fallback: Some(String::from("AJ")),
-            alt: Some(String::from("Alex")),
+            src: Some("/static/images/TailYew.png".into()),
+            fallback: Some("AJ".into()),
+            alt: Some("Alex".into()),
             class: classes!(),
         },
         AvatarData {
             src: None,
-            fallback: Some(String::from("B")),
-            alt: Some(String::from("Bri")),
+            fallback: Some("B".into()),
+            alt: Some("Bri".into()),
             class: classes!(),
         },
         AvatarData {
-            src: Some(String::from("/static/images/TailYew.png")),
+            src: Some("/static/images/TailYew.png".into()),
             fallback: None,
-            alt: Some(String::from("C")),
+            alt: Some("C".into()),
             class: classes!(),
         },
         AvatarData {
             src: None,
-            fallback: Some(String::from("D")),
-            alt: Some(String::from("Dana")),
+            fallback: Some("D".into()),
+            alt: Some("Dana".into()),
             class: classes!(),
         },
         AvatarData {
             src: None,
-            fallback: Some(String::from("E")),
-            alt: Some(String::from("Eli")),
+            fallback: Some("E".into()),
+            alt: Some("Eli".into()),
             class: classes!(),
         },
         AvatarData {
             src: None,
-            fallback: Some(String::from("F")),
-            alt: Some(String::from("Fay")),
+            fallback: Some("F".into()),
+            alt: Some("Fay".into()),
             class: classes!(),
         },
     ];
@@ -53,21 +53,21 @@ pub fn avatar_group_demo_section() -> Html {
     let usage_code = r#"
 let avatars = vec![
     AvatarData {
-        src: Some(String::from("/static/images/user1.png")),
-        fallback: Some(String::from("AJ")),
-        alt: Some(String::from("Alex")),
+        src: Some("/static/images/user1.png".into()),
+        fallback: Some("AJ".into()),
+        alt: Some("Alex".into()),
         class: classes!(),
     },
     AvatarData {
         src: None,
-        fallback: Some(String::from("B")),
-        alt: Some(String::from("Bri")),
+        fallback: Some("B".into()),
+        alt: Some("Bri".into()),
         class: classes!(),
     },
     AvatarData {
-        src: Some(String::from("/static/images/user3.png")),
+        src: Some("/static/images/user3.png".into()),
         fallback: None,
-        alt: Some(String::from("C")),
+        alt: Some("C".into()),
         class: classes!(),
     },
     // ...

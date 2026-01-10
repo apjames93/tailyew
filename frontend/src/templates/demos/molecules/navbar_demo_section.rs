@@ -47,7 +47,7 @@ use tailyew::atoms::{Typo, TagType, Button, ButtonType};
             values: vec![
                 "Children".into(),
                 "Classes".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
                 "AppBarPosition".into(),
             ],
         },

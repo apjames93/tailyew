@@ -83,8 +83,8 @@ html! {
                 "Callback<()>".into(),
                 "Children".into(),
                 "ModalSize".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
             ],
         },
         Column {

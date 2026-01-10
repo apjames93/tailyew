@@ -37,11 +37,11 @@ pub struct ModalButtonProps {
 
     /// ARIA label (for screen readers if no heading)
     #[prop_or_default]
-    pub aria_label: Option<String>,
+    pub aria_label: Option<AttrValue>,
 
     /// ID of the heading element for aria-labelledby
     #[prop_or_default]
-    pub aria_labelledby: Option<String>,
+    pub aria_labelledby: Option<AttrValue>,
 }
 
 #[component(ModalButton)]

@@ -3,11 +3,11 @@ use yew::prelude::*;
 /// Properties for the Anchor (A) component
 #[derive(Properties, PartialEq, Clone)]
 pub struct AProps {
-    pub href: String,
+    pub href: AttrValue,
     pub children: Children,
 
     #[prop_or_default]
-    pub target: Option<String>,
+    pub target: Option<AttrValue>,
 
     #[prop_or_default]
     pub class: Classes,
@@ -16,13 +16,13 @@ pub struct AProps {
     pub onclick: Option<Callback<MouseEvent>>,
 
     #[prop_or_default]
-    pub aria_label: Option<String>,
+    pub aria_label: Option<AttrValue>,
 
     #[prop_or_default]
-    pub aria_describedby: Option<String>,
+    pub aria_describedby: Option<AttrValue>,
 
     #[prop_or_default]
-    pub role: Option<String>,
+    pub role: Option<AttrValue>,
 
     #[prop_or_default]
     pub tabindex: Option<i16>,

@@ -23,9 +23,9 @@ pub struct ModalProps {
     #[prop_or(ModalSize::Large)]
     pub size: ModalSize,
     #[prop_or_default]
-    pub aria_label: Option<String>,
+    pub aria_label: Option<AttrValue>,
     #[prop_or_default]
-    pub aria_labelledby: Option<String>,
+    pub aria_labelledby: Option<AttrValue>,
 }
 
 #[component(Modal)]

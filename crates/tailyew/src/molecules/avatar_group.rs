@@ -3,9 +3,9 @@ use yew::prelude::*;
 
 #[derive(Clone, PartialEq, Default)]
 pub struct AvatarData {
-    pub src: Option<String>,
-    pub fallback: Option<String>,
-    pub alt: Option<String>,
+    pub src: Option<AttrValue>,
+    pub fallback: Option<AttrValue>,
+    pub alt: Option<AttrValue>,
     pub class: Classes,
 }
 

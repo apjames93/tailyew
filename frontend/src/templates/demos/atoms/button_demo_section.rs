@@ -30,8 +30,8 @@ pub fn button_demo_section() -> Html {
                 "ButtonType".into(),
                 "Callback<MouseEvent>".into(),
                 "bool".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
             ],
         },
         Column {

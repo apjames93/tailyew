@@ -7,7 +7,7 @@ pub struct HeroHeaderProps {
     #[prop_or_default]
     pub subtitle: Option<String>,
     #[prop_or_default]
-    pub background_image_url: Option<String>,
+    pub background_image_url: Option<AttrValue>,
     #[prop_or_default]
     pub title_class: Classes,
     #[prop_or_default]
@@ -23,11 +23,11 @@ pub struct HeroHeaderProps {
 
     // a11y additions
     #[prop_or_default]
-    pub id: Option<String>,
+    pub id: Option<AttrValue>,
     #[prop_or_default]
-    pub aria_labelledby: Option<String>,
+    pub aria_labelledby: Option<AttrValue>,
     #[prop_or_default]
-    pub aria_describedby: Option<String>,
+    pub aria_describedby: Option<AttrValue>,
 }
 
 #[component(HeroHeader)]
@@ -97,11 +97,9 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
     let text_style = format!("color: {}", text_color);
 
     // Fallback generated IDs
-    let title_id = format!("{}-title", id.clone().unwrap_or_else(|| "hero".to_string()));
-    let subtitle_id = format!(
-        "{}-subtitle",
-        id.clone().unwrap_or_else(|| "hero".to_string())
-    );
+    let base_id = id.clone().unwrap_or_else(|| AttrValue::from("hero"));
+    let title_id: AttrValue = format!("{}-title", base_id).into();
+    let subtitle_id: AttrValue = format!("{}-subtitle", base_id).into();
 
     let resolved_aria_labelledby = aria_labelledby.unwrap_or_else(|| title_id.clone());
     let resolved_aria_describedby = if subtitle.is_some() {

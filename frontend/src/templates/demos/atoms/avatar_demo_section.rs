@@ -10,16 +10,16 @@ pub fn avatar_demo_section() -> Html {
     let example = html! {
         <div class="flex items-center gap-6">
             <Avatar
-                src={Some(String::from("/static/images/TailYew.png"))}
-                alt={Some(String::from("TailYew Logo"))}
+                src={Some(AttrValue::from("/static/images/TailYew.png"))}
+                alt={Some(AttrValue::from("TailYew Logo"))}
             />
             <Avatar
-                fallback={Some(String::from("AJ"))}
+                fallback={Some(AttrValue::from("AJ"))}
                 on_click={log_click.clone()}
             />
             <Avatar
-                fallback={Some(String::from("🚀"))}
-                class="bg-purple-600"
+                fallback={Some(AttrValue::from("🚀"))}
+                class={classes!("bg-purple-600")}
                 on_click={log_click}
             />
         </div>
@@ -30,16 +30,16 @@ let log_click = Callback::from(|_| web_sys::console::log_1(&"Avatar clicked!".in
 
 <div class="flex items-center gap-6">
   <Avatar
-    src={Some(String::from("/static/images/TailYew.png"))}
-    alt={Some(String::from("TailYew Logo"))}
+    src={Some(AttrValue::from("/static/images/TailYew.png"))}
+    alt={Some(AttrValue::from("TailYew Logo"))}
   />
   <Avatar
-    fallback={Some(String::from("AJ"))}
+    fallback={Some(AttrValue::from("AJ"))}
     on_click={log_click.clone()}
   />
   <Avatar
-    fallback={Some(String::from("🚀"))}
-    class="bg-purple-600"
+    fallback={Some(AttrValue::from("🚀"))}
+    class={classes!("bg-purple-600")}
     on_click={log_click}
   />
 </div>
@@ -60,9 +60,9 @@ let log_click = Callback::from(|_| web_sys::console::log_1(&"Avatar clicked!".in
         Column {
             header: "Type".into(),
             values: vec![
-                "Option<String>".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
                 "Classes".into(),
                 "Classes".into(),
                 "Option<Callback<MouseEvent>>".into(),

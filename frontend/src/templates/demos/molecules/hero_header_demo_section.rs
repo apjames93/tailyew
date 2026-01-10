@@ -13,7 +13,7 @@ pub fn hero_header_demo_section() -> Html {
             id="hero-header-demo"
             title="Welcome to TailYew"
             subtitle={Some("Build elegant Rust+Yew apps with beautiful defaults".to_string())}
-            background_image_url={Some(HERO_IMAGE_URL.to_string())}
+            background_image_url={Some(AttrValue::from(HERO_IMAGE_URL))}
             height={"60vh".to_string()}
         >
             <div class="mt-4 flex justify-center gap-4">
@@ -28,7 +28,7 @@ pub fn hero_header_demo_section() -> Html {
             id=\"hero-header-demo\"
             title=\"Welcome to TailYew\"
             subtitle={Some(\"Build elegant Rust+Yew apps with beautiful defaults\".to_string())}
-            background_image_url={Some(\"https://source.unsplash.com/1600x900/?technology\".to_string())}
+            background_image_url={Some(AttrValue::from(\"https://source.unsplash.com/1600x900/?technology\"))}
             height={\"60vh\".to_string()}
         >
             <div class=\"mt-4 flex justify-center gap-4\">
@@ -61,15 +61,15 @@ pub fn hero_header_demo_section() -> Html {
             values: vec![
                 "String".into(),
                 "Option<String>".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
                 "Classes".into(),
                 "Classes".into(),
                 "String".into(),
                 "Classes".into(),
                 "String".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
                 "Children".into(),
             ],
         },

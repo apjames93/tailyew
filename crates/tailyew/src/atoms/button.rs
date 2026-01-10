@@ -38,16 +38,16 @@ pub struct ButtonProps {
 
     /// Optional `form="..."` attribute so you can submit an external `<form id=…>`
     #[prop_or_default]
-    pub form: Option<String>,
+    pub form: Option<AttrValue>,
 
     #[prop_or_default]
     pub children: Children,
 
     #[prop_or_default]
-    pub aria_label: Option<String>,
+    pub aria_label: Option<AttrValue>,
 
     #[prop_or_default]
-    pub role: Option<String>,
+    pub role: Option<AttrValue>,
 }
 
 #[component(Button)]

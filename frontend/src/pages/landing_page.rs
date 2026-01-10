@@ -36,7 +36,7 @@ pub fn landing_page() -> Html {
             <HeroHeader
                 title="TailYew: Build Beautiful Rust Frontends"
                 subtitle={Some("A component system for Yew, styled with Tailwind. Build fast. Look great. Stay in Rust.".to_string())}
-                background_image_url={Some(HERO_IMAGE_URL.to_string())}
+                background_image_url={Some(AttrValue::from(HERO_IMAGE_URL))}
             >
                 <div class="flex flex-col items-center space-y-4 mt-6">
 

@@ -77,9 +77,9 @@ pub fn image_demo_section() -> Html {
                 "Classes".into(),
                 "Option<String>".into(),
                 "Option<String>".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
             ],
         },
         Column {

@@ -9,7 +9,7 @@ pub struct IconBaseProps {
     #[prop_or(1.5)]
     pub stroke_width: f32,
     #[prop_or_default]
-    pub label: Option<String>,
+    pub label: Option<AttrValue>,
     #[prop_or(false)]
     pub decorative: bool,
     #[prop_or_default]

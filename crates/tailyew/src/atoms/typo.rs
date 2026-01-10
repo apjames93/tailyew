@@ -30,19 +30,19 @@ pub struct TypoProps {
     pub class: Classes,
 
     #[prop_or_default]
-    pub style: Option<String>,
+    pub style: Option<AttrValue>,
 
     #[prop_or_default]
-    pub id: Option<String>,
+    pub id: Option<AttrValue>,
 
     #[prop_or_default]
-    pub aria_label: Option<String>,
+    pub aria_label: Option<AttrValue>,
 
     #[prop_or_default]
-    pub aria_describedby: Option<String>,
+    pub aria_describedby: Option<AttrValue>,
 
     #[prop_or_default]
-    pub role: Option<String>,
+    pub role: Option<AttrValue>,
 }
 
 #[component(Typo)]
