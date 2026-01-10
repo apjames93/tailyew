@@ -234,7 +234,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     {
         let show_dropdown = show_dropdown.clone();
         let dropdown_ref = dropdown_ref.clone();
-        use_effect(move || {
+        use_effect_with((), move |_| {
             let listener = gloo::events::EventListener::new(
                 &gloo::utils::document(),
                 "mousedown",
@@ -255,7 +255,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     // cancel outstanding timeout on unmount
     {
         let timeout_handle = timeout_handle.clone();
-        use_effect(move || {
+        use_effect_with((), move |_| {
             move || {
                 if let Some(handle) = timeout_handle.borrow_mut().take() {
                     handle.cancel();
@@ -269,11 +269,14 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         let input_ref = input_ref.clone();
         let apply_validity = apply_validity.clone();
         let selected_item = selected_item.clone();
-        use_effect(move || {
-            if let Some(input_el) = input_ref.cast::<HtmlInputElement>() {
-                apply_validity(&input_el, selected_item.is_some());
-            }
-        });
+        use_effect_with(
+            (input_ref.clone(), selected_item.is_some()),
+            move |(input_ref, is_selected)| {
+                if let Some(input_el) = input_ref.cast::<HtmlInputElement>() {
+                    apply_validity(&input_el, *is_selected);
+                }
+            },
+        );
     }
 
     let base_id = input_id.clone();

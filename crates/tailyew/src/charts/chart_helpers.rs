@@ -106,7 +106,7 @@ pub fn use_get_chart_theme() -> UseStateHandle<String> {
 
     let theme_clone = theme.clone();
 
-    use_effect(move || {
+    use_effect_with((), move |_| {
         let document = window().unwrap().document().unwrap();
         let element = document.document_element().unwrap();
         let element_for_closure = element.clone();
@@ -133,6 +133,8 @@ pub fn use_get_chart_theme() -> UseStateHandle<String> {
             .expect("failed to observe <html>");
 
         callback.forget();
+
+        move || observer.disconnect()
     });
 
     theme

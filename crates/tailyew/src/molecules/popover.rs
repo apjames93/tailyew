@@ -52,7 +52,7 @@ pub fn popover(props: &PopoverProps) -> Html {
         let popover_ref = popover_ref.clone();
         let open = open.clone();
 
-        use_effect(move || {
+        use_effect_with((), move |_| {
             let closure =
                 Closure::<dyn Fn(MouseEvent)>::wrap(Box::new(move |event: MouseEvent| {
                     if let Some(popover) = popover_ref.cast::<web_sys::HtmlElement>() {

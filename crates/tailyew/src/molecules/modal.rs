@@ -48,8 +48,8 @@ pub fn modal(props: &ModalProps) -> Html {
     {
         let node_ref = node_ref.clone();
         let is_open = *is_open;
-        use_effect(move || {
-            if is_open {
+        use_effect_with(is_open, move |is_open| {
+            if *is_open {
                 if let Some(node) = node_ref.cast::<web_sys::HtmlElement>() {
                     let _ = node.focus();
                 }
@@ -60,7 +60,7 @@ pub fn modal(props: &ModalProps) -> Html {
     // Escape key closes modal
     {
         let on_close = on_close.clone();
-        use_effect(move || {
+        use_effect_with((), move |_| {
             let listener = EventListener::new(&document(), "keydown", move |event| {
                 if let Ok(event) = event.clone().dyn_into::<web_sys::KeyboardEvent>() {
                     if event.key() == "Escape" {
