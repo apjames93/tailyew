@@ -7,6 +7,14 @@ const HERO_IMAGE_URL: &str = "/static/images/TailYew.png";
 
 #[component(CardDemoSection)]
 pub fn card_demo_section() -> Html {
+    let hover_effect_classes = classes!(
+        "transition-transform",
+        "hover:scale-105",
+        "hover:shadow-2xl",
+        "duration-300",
+        "ease-in-out"
+    );
+
     let example = html! {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card
@@ -14,7 +22,7 @@ pub fn card_demo_section() -> Html {
                 subtitle={Some("Exploring the wild with Rust")}
                 description={Some("Dive into performance and safety with modern systems programming.")}
                 image_url={Some(HERO_IMAGE_URL.to_string())}
-                image_class={"transition-transform hover:scale-105 hover:shadow-2xl duration-300 ease-in-out"}
+                image_class={hover_effect_classes.clone()}
                 image_alt="TailYew"
             >
                 <Button button_type={ButtonType::Primary}>
@@ -32,7 +40,7 @@ pub fn card_demo_section() -> Html {
                 subtitle={Some("Sleek and responsive design")}
                 description={Some("Cards adapt beautifully to light and dark themes out of the box.")}
                 image_url={Some(HERO_IMAGE_URL.to_string())}
-                class={"transition-transform hover:scale-105 hover:shadow-2xl duration-300 ease-in-out"}
+                class={hover_effect_classes.clone()}
             />
         </div>
     };
@@ -43,7 +51,8 @@ pub fn card_demo_section() -> Html {
     subtitle={Some("Exploring the wild with Rust")}
     description={Some("Dive into performance and safety with modern systems programming.")}
     image_url={Some(HERO_IMAGE_URL.to_string())}
-    class={"transition-transform hover:scale-105 hover:shadow-2xl duration-300 ease-in-out"}
+    image_class={classes!(\"transition-transform\", \"hover:scale-105\", \"hover:shadow-2xl\", \"duration-300\", \"ease-in-out\")}
+    class={classes!(\"transition-transform\", \"hover:scale-105\", \"hover:shadow-2xl\", \"duration-300\", \"ease-in-out\")}
 >
     <Button button_type={ButtonType::Primary}>
         { "Read More" }
@@ -60,6 +69,7 @@ pub fn card_demo_section() -> Html {
                 "subtitle".into(),
                 "description".into(),
                 "image_url".into(),
+                "image_class".into(),
                 "children".into(),
                 "class".into(),
             ],
@@ -72,8 +82,9 @@ pub fn card_demo_section() -> Html {
                 "Option<String>".into(),
                 "Option<String>".into(),
                 "Option<String>".into(),
+                "Classes".into(),
                 "Children".into(),
-                "Option<String>".into(),
+                "Classes".into(),
             ],
         },
         Column {
@@ -84,8 +95,9 @@ pub fn card_demo_section() -> Html {
                 "Smaller subtitle text.".into(),
                 "Description content.".into(),
                 "Optional image to show above the card.".into(),
+                "Additional Tailwind classes for the image element.".into(),
                 "Optional children content (e.g. button).".into(),
-                "Additional Tailwind classes.".into(),
+                "Additional Tailwind classes for the card wrapper.".into(),
             ],
         },
     ];

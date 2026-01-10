@@ -12,37 +12,37 @@ pub fn avatar_group_demo_section() -> Html {
             src: Some(String::from("/static/images/TailYew.png")),
             fallback: Some(String::from("AJ")),
             alt: Some(String::from("Alex")),
-            class: None,
+            class: classes!(),
         },
         AvatarData {
             src: None,
             fallback: Some(String::from("B")),
             alt: Some(String::from("Bri")),
-            class: None,
+            class: classes!(),
         },
         AvatarData {
             src: Some(String::from("/static/images/TailYew.png")),
             fallback: None,
             alt: Some(String::from("C")),
-            class: None,
+            class: classes!(),
         },
         AvatarData {
             src: None,
             fallback: Some(String::from("D")),
             alt: Some(String::from("Dana")),
-            class: None,
+            class: classes!(),
         },
         AvatarData {
             src: None,
             fallback: Some(String::from("E")),
             alt: Some(String::from("Eli")),
-            class: None,
+            class: classes!(),
         },
         AvatarData {
             src: None,
             fallback: Some(String::from("F")),
             alt: Some(String::from("Fay")),
-            class: None,
+            class: classes!(),
         },
     ];
 
@@ -56,19 +56,19 @@ let avatars = vec![
         src: Some(String::from("/static/images/user1.png")),
         fallback: Some(String::from("AJ")),
         alt: Some(String::from("Alex")),
-        class: None,
+        class: classes!(),
     },
     AvatarData {
         src: None,
         fallback: Some(String::from("B")),
         alt: Some(String::from("Bri")),
-        class: None,
+        class: classes!(),
     },
     AvatarData {
         src: Some(String::from("/static/images/user3.png")),
         fallback: None,
         alt: Some(String::from("C")),
-        class: None,
+        class: classes!(),
     },
     // ...
 ];

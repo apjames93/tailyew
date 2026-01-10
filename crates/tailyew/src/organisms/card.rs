@@ -22,7 +22,7 @@ pub struct CardProps {
     #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
-    pub class: Option<String>,
+    pub class: Classes,
 }
 
 #[component(Card)]

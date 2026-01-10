@@ -130,7 +130,7 @@ fn nested_list_item(props: &NestedListItemProps) -> Html {
                     title={item.label.clone()}
                     compact={true}
                     class={classes!(row_class)}
-                    content_class="pl-2"
+                    content_class={classes!("pl-2")}
                     default_open={false}
                 >
                     // Inject label manually into Accordion header

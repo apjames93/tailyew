@@ -1,12 +1,12 @@
 use crate::atoms::Avatar;
 use yew::prelude::*;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Default)]
 pub struct AvatarData {
     pub src: Option<String>,
     pub fallback: Option<String>,
     pub alt: Option<String>,
-    pub class: Option<Classes>,
+    pub class: Classes,
 }
 
 #[derive(Properties, PartialEq, Clone)]

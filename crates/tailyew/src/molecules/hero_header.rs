@@ -9,13 +9,13 @@ pub struct HeroHeaderProps {
     #[prop_or_default]
     pub background_image_url: Option<String>,
     #[prop_or_default]
-    pub title_class: Option<String>,
+    pub title_class: Classes,
     #[prop_or_default]
-    pub subtitle_class: Option<String>,
+    pub subtitle_class: Classes,
     #[prop_or("50vh".to_string())]
     pub height: String,
     #[prop_or_default]
-    pub overlay_class: Option<String>,
+    pub overlay_class: Classes,
     #[prop_or("white".to_string())]
     pub text_color: String,
     #[prop_or_default]
@@ -47,21 +47,51 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
         aria_describedby,
     } = props.clone();
 
-    let style = if let Some(url) = background_image_url {
+    let style = if let Some(url) = background_image_url.clone() {
         format!(
-            "background-image: url('{}'); background-size: cover; background-position: center; height: {};",
+            "background-image: url('{}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: {}; height: auto;",
             url, height
         )
     } else {
-        format!("height: {};", height)
+        format!("min-height: {}; height: auto;", height)
     };
 
-    let base_title_class = classes!("text-4xl", "font-bold", title_class.unwrap_or_default());
+    let base_title_class = classes!(
+        "text-2xl",
+        "sm:text-3xl",
+        "md:text-4xl",
+        "lg:text-5xl",
+        "font-bold",
+        "leading-tight",
+        title_class.clone()
+    );
 
-    let base_subtitle_class = classes!("text-lg", "mt-2", subtitle_class.unwrap_or_default());
+    let base_subtitle_class = classes!(
+        "text-base",
+        "sm:text-lg",
+        "mt-2",
+        "sm:mt-3",
+        "leading-relaxed",
+        subtitle_class.clone()
+    );
 
     let base_overlay_class = classes!(
-        overlay_class.unwrap_or_else(|| "bg-black bg-opacity-50 p-6 rounded-lg".to_string())
+        "bg-black",
+        "bg-opacity-50",
+        "p-4",
+        "sm:p-6",
+        "md:p-8",
+        "rounded-md",
+        "sm:rounded-lg",
+        "max-w-3xl",
+        "w-full",
+        "mx-auto",
+        "px-4",
+        "sm:px-6",
+        "text-center",
+        "space-y-4",
+        "sm:space-y-5",
+        overlay_class.clone()
     );
 
     let text_style = format!("color: {}", text_color);
@@ -80,10 +110,23 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
         aria_describedby.unwrap_or_default()
     };
 
+    let section_class = classes!(
+        "text-center",
+        "flex",
+        "items-center",
+        "justify-center",
+        "w-full",
+        "px-4",
+        "sm:px-6",
+        "py-10",
+        "md:py-14",
+        background_image_url.map(|_| "bg-cover bg-center bg-no-repeat")
+    );
+
     html! {
         <Section
             id={id.clone()}
-            class="text-center flex items-center justify-center"
+            class={section_class}
             style={style}
         >
             <header
@@ -118,7 +161,7 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
                     }
                 }
 
-                <Section class="mt-4">
+                <Section class="mt-4 sm:mt-6 w-full">
                     { children }
                 </Section>
             </header>

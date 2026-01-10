@@ -33,7 +33,7 @@ pub fn switch(route: Route) -> Html {
 pub fn app() -> Html {
     let my_theme = Theme {
         name: "system".into(),
-        class: None,
+        class: classes!(),
     };
 
     html! {

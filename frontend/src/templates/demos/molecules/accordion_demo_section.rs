@@ -19,7 +19,7 @@ pub fn accordion_demo_section() -> Html {
             <Accordion
                 title="Can I customize components?"
                 heading_tag={TagType::H3}
-                content_class="bg-yellow-50 dark:bg-yellow-900"
+                content_class={classes!("bg-yellow-50", "dark:bg-yellow-900")}
             >
                 <Typo>{"Yes! You can extend or override any component using standard Rust and Yew patterns."}</Typo>
             </Accordion>
