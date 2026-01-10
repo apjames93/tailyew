@@ -251,22 +251,21 @@ pub fn input(props: &InputProps) -> Html {
         .cloned()
         .or_else(|| error_title.map(|s| s.to_string()))
         .unwrap_or_default();
+    let title_attr = (!title.is_empty()).then_some(title.clone());
 
     // a11y fallbacks
-    let effective_aria_label = aria_label.unwrap_or_else(|| label.clone());
-    let effective_aria_labelledby = aria_labelledby.unwrap_or_else(|| id.clone());
-    let effective_aria_describedby = aria_describedby.or_else(|| {
-        if !title.is_empty() {
-            Some(id.clone())
-        } else {
-            None
-        }
-    });
+    let effective_aria_label = aria_label.or_else(|| (!label.is_empty()).then_some(label.clone()));
+    let effective_aria_labelledby =
+        aria_labelledby.or_else(|| (!id.is_empty()).then_some(id.clone()));
+    let effective_aria_describedby =
+        aria_describedby.or_else(|| (!title.is_empty()).then_some(id.clone()));
+
+    let id_attr = (!id.is_empty()).then_some(id.clone());
 
     let input_element = html! {
         <input
-            id={id.clone()}
-            name={id.clone()}
+            id={id_attr.clone()}
+            name={id_attr.clone()}
             type={input_type.to_string()}
             value={(*value).clone()}
             placeholder={placeholder}
@@ -274,7 +273,7 @@ pub fn input(props: &InputProps) -> Html {
             oninput={oninput}
             min={min}
             max={max}
-            title={title}
+            title={title_attr}
             required={required}
             disabled={disabled}
             pattern={form_pattern.as_ref().cloned().unwrap_or_else(|| ".*".to_string())}

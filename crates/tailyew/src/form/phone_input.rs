@@ -109,7 +109,7 @@ pub fn phone_input(props: &PhoneInputProps) -> Html {
                 type="tel"
                 placeholder={placeholder}
                 value={(*phone_number).clone()}
-                pattern={pattern.unwrap_or_default()}
+                pattern={pattern.clone()}
                 class={input_classes}
                 oninput={oninput}
             />

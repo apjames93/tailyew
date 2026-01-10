@@ -308,15 +308,9 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 autocomplete={"off"}
                 on_change={Some(oninput)}
                 on_focus={Some(on_focus)}
-                aria_label={Some(AttrValue::from(
-                    format!("search-{}", aria_label.unwrap_or_default())
-                ))}
-                aria_labelledby={Some(AttrValue::from(
-                    format!("search-{}", aria_labelledby.unwrap_or_default())
-                ))}
-                aria_describedby={Some(AttrValue::from(
-                    format!("search-{}", aria_describedby.unwrap_or_default())
-                ))}
+                aria_label={aria_label.clone().map(|v| AttrValue::from(format!("search-{v}")))}
+                aria_labelledby={aria_labelledby.clone().map(|v| AttrValue::from(format!("search-{v}")))}
+                aria_describedby={aria_describedby.clone().map(|v| AttrValue::from(format!("search-{v}")))}
             />
 
             {

@@ -101,11 +101,11 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
     let title_id: AttrValue = format!("{}-title", base_id).into();
     let subtitle_id: AttrValue = format!("{}-subtitle", base_id).into();
 
-    let resolved_aria_labelledby = aria_labelledby.unwrap_or_else(|| title_id.clone());
+    let resolved_aria_labelledby = aria_labelledby.or_else(|| Some(title_id.clone()));
     let resolved_aria_describedby = if subtitle.is_some() {
-        aria_describedby.unwrap_or_else(|| subtitle_id.clone())
+        aria_describedby.or_else(|| Some(subtitle_id.clone()))
     } else {
-        aria_describedby.unwrap_or_default()
+        aria_describedby
     };
 
     let section_class = classes!(
@@ -131,7 +131,7 @@ pub fn hero_header(props: &HeroHeaderProps) -> Html {
                 class={base_overlay_class}
                 role="banner"
                 aria-labelledby={resolved_aria_labelledby.clone()}
-                aria-describedby={if resolved_aria_describedby.is_empty() { None } else { Some(resolved_aria_describedby.clone()) }}
+                aria-describedby={resolved_aria_describedby.clone()}
             >
                 <Typo
                     tag={TagType::H1}

@@ -37,19 +37,20 @@ pub struct ImageProps {
 
 #[component(Image)]
 pub fn image(props: &ImageProps) -> Html {
-    let style = format!(
-        "{}{}",
-        props
-            .width
-            .as_ref()
-            .map(|w| format!("width:{};", w))
-            .unwrap_or_default(),
-        props
-            .height
-            .as_ref()
-            .map(|h| format!("height:{};", h))
-            .unwrap_or_default()
-    );
+    let style = {
+        let mut parts = String::new();
+        if let Some(w) = &props.width {
+            parts.push_str(&format!("width:{};", w));
+        }
+        if let Some(h) = &props.height {
+            parts.push_str(&format!("height:{};", h));
+        }
+        if parts.is_empty() {
+            None
+        } else {
+            Some(AttrValue::from(parts))
+        }
+    };
 
     // Auto role="presentation" for alt="" unless overridden
     let resolved_role = if props.alt.is_empty() && props.role.is_none() {

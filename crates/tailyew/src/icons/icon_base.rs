@@ -18,8 +18,6 @@ pub struct IconBaseProps {
 
 #[component(IconBase)]
 pub fn icon_base(props: &IconBaseProps) -> Html {
-    let aria_label = props.label.clone().unwrap_or_default();
-
     html! {
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +34,7 @@ pub fn icon_base(props: &IconBaseProps) -> Html {
                 props.class.clone()
             )}
             role="img"
-            aria-label={(!props.decorative).then_some(aria_label.clone())}
+            aria-label={(!props.decorative).then_some(props.label.clone()).flatten()}
             aria-hidden={props.decorative.then_some("true")}
         >
             { for props.children.iter() }
