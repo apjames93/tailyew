@@ -25,9 +25,11 @@ pub fn popover(props: &PopoverProps) -> Html {
     let popover_ref = use_node_ref();
     let open = use_state(|| *is_open);
 
-    // Sync internal state with prop if changed
-    if *open != *is_open {
-        open.set(*is_open);
+    {
+        let open = open.clone();
+        use_effect_with(*is_open, move |is_open| {
+            open.set(*is_open);
+        });
     }
 
     let on_close = on_close.clone();

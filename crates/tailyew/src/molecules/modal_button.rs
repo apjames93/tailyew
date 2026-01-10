@@ -61,6 +61,13 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
 
     let modal_open = use_state(|| *is_open);
 
+    {
+        let modal_open = modal_open.clone();
+        use_effect_with(*is_open, move |is_open| {
+            modal_open.set(*is_open);
+        });
+    }
+
     let toggle_modal = {
         let modal_open = modal_open.clone();
         Callback::from(move |_| modal_open.set(!*modal_open))
