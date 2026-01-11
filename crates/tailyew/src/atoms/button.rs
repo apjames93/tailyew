@@ -48,6 +48,12 @@ pub struct ButtonProps {
 
     #[prop_or_default]
     pub role: Option<AttrValue>,
+
+    #[prop_or_default]
+    pub aria_expanded: Option<AttrValue>,
+
+    #[prop_or_default]
+    pub aria_controls: Option<AttrValue>,
 }
 
 #[component(Button)]
@@ -61,6 +67,8 @@ pub fn button(props: &ButtonProps) -> Html {
         children,
         aria_label,
         role,
+        aria_expanded,
+        aria_controls,
     } = props;
 
     // Shared focus ring for non-disabled buttons
@@ -114,9 +122,11 @@ pub fn button(props: &ButtonProps) -> Html {
             aria-disabled={Some(disabled.to_string())}
             role={role.clone()}
             aria-label={aria_label.clone()}
+            aria-expanded={aria_expanded.clone()}
+            aria-controls={aria_controls.clone()}
             // only emit `form="…"`, if Some
             form={form.clone()}
-        >
+    >
             { for children.iter() }
         </button>
     }

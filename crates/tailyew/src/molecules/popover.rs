@@ -1,3 +1,4 @@
+use js_sys::Date;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
 use web_sys::{MouseEvent, Node};
@@ -24,6 +25,7 @@ pub fn popover(props: &PopoverProps) -> Html {
 
     let popover_ref = use_node_ref();
     let open = use_state(|| *is_open);
+    let content_id = use_state(|| AttrValue::from(format!("popover-panel-{}", Date::now() as u64)));
 
     {
         let open = open.clone();
@@ -98,12 +100,18 @@ pub fn popover(props: &PopoverProps) -> Html {
 
     html! {
         <div ref={popover_ref} class="relative inline-block">
-            <div class="cursor-pointer" onclick={toggle}>
+            <div
+                class="cursor-pointer"
+                onclick={toggle}
+                aria-expanded={Some(AttrValue::from((*open).to_string()))}
+                aria-controls={Some((*content_id).clone())}
+            >
                 { trigger.clone() }
             </div>
 
             if *open {
                 <div
+                    id={(*content_id).clone()}
                     class={classes!(
                         "absolute", "z-50", "w-64", "md:w-80", "lg:w-96", "mt-2",
                         "p-4", "rounded", "shadow-xl", "border", "bg-white", "dark:bg-gray-800",

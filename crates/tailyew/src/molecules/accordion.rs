@@ -1,5 +1,6 @@
 use crate::atoms::{TagType, Typo};
 use crate::icons::ArrowDownIcon;
+use js_sys::Date;
 use wasm_bindgen::JsCast;
 use yew::prelude::*;
 
@@ -165,6 +166,8 @@ pub fn accordion(props: &AccordionProps) -> Html {
         )
     };
 
+    let panel_id = use_state(|| AttrValue::from(format!("accordion-panel-{}", Date::now() as u64)));
+
     // Tailwind transition class handling
     let visibility_classes = if compact {
         classes!(
@@ -204,7 +207,7 @@ pub fn accordion(props: &AccordionProps) -> Html {
                 onclick={toggle_open}
                 onkeypress={on_keypress}
                 aria-expanded={(*is_open).to_string()}
-                aria-controls="accordion-panel"
+                aria-controls={(*panel_id).clone()}
             >
                 <Typo class={"w-full text-left"} tag={heading_tag}>{ title }</Typo>
                 {
@@ -217,7 +220,7 @@ pub fn accordion(props: &AccordionProps) -> Html {
             </div>
 
             <div
-                id="accordion-panel"
+                id={(*panel_id).clone()}
                 class={classes!(base_content_classes, visibility_classes)}
             >
                 { for children.iter() }

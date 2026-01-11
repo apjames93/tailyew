@@ -21,6 +21,8 @@ pub fn button_demo_section() -> Html {
                 "disabled".into(),
                 "aria_label".into(),
                 "role".into(),
+                "aria_expanded".into(),
+                "aria_controls".into(),
             ],
         },
         Column {
@@ -30,6 +32,8 @@ pub fn button_demo_section() -> Html {
                 "ButtonType".into(),
                 "Callback<MouseEvent>".into(),
                 "bool".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
                 "Option<AttrValue>".into(),
                 "Option<AttrValue>".into(),
             ],
@@ -43,6 +47,8 @@ pub fn button_demo_section() -> Html {
                 "Disables the button.".into(),
                 "ARIA label for accessibility.".into(),
                 "ARIA role for accessibility.".into(),
+                "ARIA expanded state when button controls collapsible content.".into(),
+                "ID of the element controlled by this button.".into(),
             ],
         },
     ];

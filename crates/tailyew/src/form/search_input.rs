@@ -2,6 +2,7 @@ use crate::form_deserializer::*;
 use crate::SelectOption;
 use crate::{Input, InputType, Li, Typo, Ul, XIcon};
 use gloo_timers::callback::Timeout;
+use js_sys::Date;
 use serde::Deserialize;
 use web_sys::{HtmlElement, HtmlInputElement};
 use yew::prelude::*;
@@ -110,6 +111,8 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     let filtered = use_state(Vec::<SelectOption>::new);
     let show_dropdown = use_state(|| false);
     let timeout_handle = use_mut_ref(|| None::<Timeout>);
+    let dropdown_id =
+        use_state(|| AttrValue::from(format!("search-dropdown-{}", Date::now() as u64)));
 
     let apply_validity = {
         let error_title = error_title.clone();
@@ -319,6 +322,9 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 autocomplete={"off"}
                 on_change={Some(oninput)}
                 on_focus={Some(on_focus)}
+                aria_expanded={Some(AttrValue::from((*show_dropdown).to_string()))}
+                aria_controls={Some((*dropdown_id).clone())}
+                aria_haspopup={Some(AttrValue::from("listbox"))}
                 aria_label={aria_label.clone().map(|v| AttrValue::from(format!("search-{v}")))}
                 aria_labelledby={aria_labelledby.clone().map(|v| AttrValue::from(format!("search-{v}")))}
                 aria_describedby={aria_describedby.clone().map(|v| AttrValue::from(format!("search-{v}")))}
@@ -331,20 +337,22 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                             <div class="rounded-t border border-b-0 bg-white dark:bg-gray-900 dark:border-gray-700 px-4 pt-3 pb-1">
                                 <Typo>{"Select a value from the list"}</Typo>
                             </div>
-                            <Ul class="absolute max-h-60 overflow-auto z-50 w-full bg-white shadow rounded-b border-t-0 border dark:bg-gray-900 dark:border-gray-700 transition-all duration-200 ease-in-out">
-                                { for filtered.iter().map(|item| {
-                                    let on_click = on_click_item.clone();
-                                    let item_clone = item.clone();
-                                    html! {
-                                        <Li
-                                            class="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 transition-colors duration-150"
-                                            onclick={Callback::from(move |_| on_click.emit(item_clone.clone()))}
-                                        >
-                                            { html! { item.label.clone() } }
-                                        </Li>
-                                    }
-                                }) }
-                            </Ul>
+                            <div id={(*dropdown_id).clone()}>
+                                <Ul class="absolute max-h-60 overflow-auto z-50 w-full bg-white shadow rounded-b border-t-0 border dark:bg-gray-900 dark:border-gray-700 transition-all duration-200 ease-in-out">
+                                    { for filtered.iter().map(|item| {
+                                        let on_click = on_click_item.clone();
+                                        let item_clone = item.clone();
+                                        html! {
+                                            <Li
+                                                class="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 transition-colors duration-150"
+                                                onclick={Callback::from(move |_| on_click.emit(item_clone.clone()))}
+                                            >
+                                                { html! { item.label.clone() } }
+                                            </Li>
+                                        }
+                                    }) }
+                                </Ul>
+                            </div>
                         </div>
                     }
                 } else {

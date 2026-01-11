@@ -88,6 +88,18 @@ pub struct InputProps {
     )]
     pub aria_labelledby: Option<AttrValue>,
 
+    #[prop_or_default]
+    #[serde(default, rename = "aria-expanded", deserialize_with = "de_option_attr")]
+    pub aria_expanded: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, rename = "aria-controls", deserialize_with = "de_option_attr")]
+    pub aria_controls: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, rename = "aria-haspopup", deserialize_with = "de_option_attr")]
+    pub aria_haspopup: Option<AttrValue>,
+
     // Also skip NodeRef / validation callbacks:
     #[prop_or_default]
     #[serde(skip)]
@@ -151,6 +163,9 @@ pub fn input(props: &InputProps) -> Html {
         aria_describedby,
         aria_label,
         aria_labelledby,
+        aria_expanded,
+        aria_controls,
+        aria_haspopup,
         node_ref,
         validate,
     } = props.clone();
@@ -283,6 +298,9 @@ pub fn input(props: &InputProps) -> Html {
             aria-describedby={effective_aria_describedby}
             aria-label={effective_aria_label}
             aria-labelledby={effective_aria_labelledby}
+            aria-expanded={aria_expanded}
+            aria-controls={aria_controls}
+            aria-haspopup={aria_haspopup}
             onfocus={on_focus}
             ref={node_ref}
         />
