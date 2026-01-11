@@ -60,15 +60,23 @@ pub fn modal(props: &ModalProps) -> Html {
     // Escape key closes modal
     {
         let on_close = on_close.clone();
-        use_effect_with((), move |_| {
-            let listener = EventListener::new(&document(), "keydown", move |event| {
-                if let Ok(event) = event.clone().dyn_into::<web_sys::KeyboardEvent>() {
-                    if event.key() == "Escape" {
-                        on_close.emit(());
+        use_effect_with(*is_open, move |is_open| {
+            let is_open = *is_open;
+            let listener = if is_open {
+                Some(EventListener::new(&document(), "keydown", move |event| {
+                    if let Ok(event) = event.clone().dyn_into::<web_sys::KeyboardEvent>() {
+                        if event.key() == "Escape" {
+                            on_close.emit(());
+                        }
                     }
-                }
-            });
-            || drop(listener)
+                }))
+            } else {
+                None
+            };
+
+            move || {
+                drop(listener);
+            }
         });
     }
 

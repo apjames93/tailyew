@@ -234,22 +234,33 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     {
         let show_dropdown = show_dropdown.clone();
         let dropdown_ref = dropdown_ref.clone();
-        use_effect_with((), move |_| {
-            let listener = gloo::events::EventListener::new(
-                &gloo::utils::document(),
-                "mousedown",
-                move |event| {
-                    if let Some(target) = event.target_dyn_into::<HtmlElement>() {
-                        if let Some(dropdown) = dropdown_ref.cast::<HtmlElement>() {
-                            if !dropdown.contains(Some(&target)) {
-                                show_dropdown.set(false);
+        use_effect_with(
+            (*show_dropdown, dropdown_ref.clone()),
+            move |(is_open, dropdown_ref)| {
+                let is_open = *is_open;
+                let dropdown_ref = dropdown_ref.clone();
+                let show_dropdown = show_dropdown.clone();
+
+                let listener = if is_open {
+                    Some(gloo::events::EventListener::new(
+                        &gloo::utils::document(),
+                        "mousedown",
+                        move |event| {
+                            if let Some(target) = event.target_dyn_into::<HtmlElement>() {
+                                if let Some(dropdown) = dropdown_ref.cast::<HtmlElement>() {
+                                    if !dropdown.contains(Some(&target)) {
+                                        show_dropdown.set(false);
+                                    }
+                                }
                             }
-                        }
-                    }
-                },
-            );
-            move || drop(listener)
-        });
+                        },
+                    ))
+                } else {
+                    None
+                };
+                move || drop(listener)
+            },
+        );
     }
 
     // cancel outstanding timeout on unmount

@@ -54,32 +54,46 @@ pub fn popover(props: &PopoverProps) -> Html {
         let popover_ref = popover_ref.clone();
         let open = open.clone();
 
-        use_effect_with((), move |_| {
-            let closure =
-                Closure::<dyn Fn(MouseEvent)>::wrap(Box::new(move |event: MouseEvent| {
-                    if let Some(popover) = popover_ref.cast::<web_sys::HtmlElement>() {
-                        if let Some(target) = event.target().and_then(|t| t.dyn_into::<Node>().ok())
-                        {
-                            if !popover.contains(Some(&target)) {
-                                open.set(false);
+        use_effect_with(
+            (*open, popover_ref.clone()),
+            move |(is_open, popover_ref)| {
+                let is_open = *is_open;
+                let popover_ref = popover_ref.clone();
+
+                let cleanup = if is_open {
+                    let closure =
+                        Closure::<dyn Fn(MouseEvent)>::wrap(Box::new(move |event: MouseEvent| {
+                            if let Some(popover) = popover_ref.cast::<web_sys::HtmlElement>() {
+                                if let Some(target) =
+                                    event.target().and_then(|t| t.dyn_into::<Node>().ok())
+                                {
+                                    if !popover.contains(Some(&target)) {
+                                        open.set(false);
+                                    }
+                                }
                             }
-                        }
+                        }));
+
+                    let window = web_sys::window().unwrap();
+                    window
+                        .add_event_listener_with_callback("click", closure.as_ref().unchecked_ref())
+                        .unwrap();
+
+                    Some((window, closure))
+                } else {
+                    None
+                };
+
+                move || {
+                    if let Some((window, closure)) = cleanup {
+                        let _ = window.remove_event_listener_with_callback(
+                            "click",
+                            closure.as_ref().unchecked_ref(),
+                        );
                     }
-                }));
-
-            let window = web_sys::window().unwrap();
-            window
-                .add_event_listener_with_callback("click", closure.as_ref().unchecked_ref())
-                .unwrap();
-
-            // Keep the closure alive
-            let _closure = closure;
-            move || {
-                window
-                    .remove_event_listener_with_callback("click", _closure.as_ref().unchecked_ref())
-                    .unwrap();
-            }
-        });
+                }
+            },
+        );
     }
 
     html! {
