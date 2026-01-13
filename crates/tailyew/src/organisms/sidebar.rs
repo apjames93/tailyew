@@ -2,6 +2,9 @@ use crate::{
     atoms::{Button, ButtonType, Typo},
     organisms::{NestedItem, NestedList},
 };
+use gloo::events::EventListener;
+use wasm_bindgen::JsCast;
+use web_sys::window;
 use yew::prelude::*;
 
 #[derive(PartialEq, Clone, Default)]
@@ -78,6 +81,28 @@ pub fn sidebar(props: &SidebarProps) -> Html {
     } else {
         html! {}
     };
+
+    {
+        let active_index = active_index.clone();
+        use_effect_with(*active_index, move |active| {
+            let mut listener: Option<EventListener> = None;
+
+            if active.is_some() {
+                if let Some(win) = window() {
+                    let active_index = active_index.clone();
+                    listener = Some(EventListener::new(&win, "keydown", move |event| {
+                        if let Some(key_event) = event.dyn_ref::<web_sys::KeyboardEvent>() {
+                            if key_event.key() == "Escape" {
+                                active_index.set(None);
+                            }
+                        }
+                    }));
+                }
+            }
+
+            move || drop(listener)
+        });
+    }
 
     html! {
         <>
