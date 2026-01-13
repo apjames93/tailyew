@@ -4,6 +4,7 @@ use crate::{Input, InputType, Li, Typo, Ul, XIcon};
 use gloo_timers::callback::Timeout;
 use js_sys::Date;
 use serde::Deserialize;
+use wasm_bindgen::JsCast;
 use web_sys::{HtmlElement, HtmlInputElement};
 use yew::prelude::*;
 
@@ -261,9 +262,35 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 } else {
                     None
                 };
-                move || drop(listener)
+                move || {
+                    drop(listener);
+                }
             },
         );
+    }
+
+    {
+        let show_dropdown = show_dropdown.clone();
+        use_effect_with(*show_dropdown, move |is_open| {
+            let listener = if *is_open {
+                let show_dropdown = show_dropdown.clone();
+                Some(gloo::events::EventListener::new(
+                    &gloo::utils::document(),
+                    "keydown",
+                    move |e| {
+                        if let Some(evt) = e.dyn_ref::<web_sys::KeyboardEvent>() {
+                            if evt.key() == "Escape" {
+                                show_dropdown.set(false);
+                            }
+                        }
+                    },
+                ))
+            } else {
+                None
+            };
+
+            move || drop(listener)
+        });
     }
 
     // cancel outstanding timeout on unmount

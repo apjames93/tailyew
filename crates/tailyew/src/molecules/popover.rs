@@ -55,6 +55,7 @@ pub fn popover(props: &PopoverProps) -> Html {
     {
         let popover_ref = popover_ref.clone();
         let open = open.clone();
+        let on_close = on_close.clone();
 
         use_effect_with(
             (*open, popover_ref.clone()),
@@ -71,6 +72,9 @@ pub fn popover(props: &PopoverProps) -> Html {
                                 {
                                     if !popover.contains(Some(&target)) {
                                         open.set(false);
+                                        if let Some(cb) = &on_close {
+                                            cb.emit(event);
+                                        }
                                     }
                                 }
                             }
@@ -96,6 +100,33 @@ pub fn popover(props: &PopoverProps) -> Html {
                 }
             },
         );
+    }
+
+    {
+        let open = open.clone();
+        let on_close = on_close.clone();
+        use_effect_with(*open, move |is_open| {
+            let listener = if *is_open {
+                Some(gloo::events::EventListener::new(
+                    &web_sys::window().unwrap(),
+                    "keydown",
+                    move |e| {
+                        if let Some(evt) = e.dyn_ref::<web_sys::KeyboardEvent>() {
+                            if evt.key() == "Escape" {
+                                open.set(false);
+                                if let Some(cb) = &on_close {
+                                    cb.emit(web_sys::MouseEvent::new("keydown").unwrap());
+                                }
+                            }
+                        }
+                    },
+                ))
+            } else {
+                None
+            };
+
+            move || drop(listener)
+        });
     }
 
     html! {
