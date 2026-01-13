@@ -28,7 +28,7 @@ pub struct ButtonProps {
     pub button_type: ButtonType,
 
     #[prop_or_default]
-    pub onclick: Option<Callback<MouseEvent>>,
+    pub on_click: Option<Callback<MouseEvent>>,
 
     #[prop_or(false)]
     pub disabled: bool,
@@ -60,7 +60,7 @@ pub struct ButtonProps {
 pub fn button(props: &ButtonProps) -> Html {
     let ButtonProps {
         button_type,
-        onclick,
+        on_click,
         disabled,
         class,
         form,
@@ -107,17 +107,17 @@ pub fn button(props: &ButtonProps) -> Html {
 
     // If this is a submit‐type button, we let the form attribute handle submission,
     // and we don't wire up an onclick
-    let onclick_callback = if *button_type == ButtonType::Submit {
+    let on_click_callback = if *button_type == ButtonType::Submit {
         None
     } else {
-        onclick.clone()
+        on_click.clone()
     };
 
     html! {
         <button
             class={button_classes}
             type={button_type.as_str()}
-            onclick={onclick_callback}
+            onclick={on_click_callback}
             disabled={*disabled}
             aria-disabled={Some(disabled.to_string())}
             role={role.clone()}

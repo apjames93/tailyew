@@ -252,7 +252,7 @@ pub fn json_input(props: &JsonInputProps) -> Html {
                             html! {
                                 <Button
                                     button_type={ButtonType::Danger}
-                                    onclick={remove_cb.clone()}
+                                    on_click={remove_cb.clone()}
                                     class="absolute top-2 right-2 p-1"
                                 >
                                     <DeleteIcon />
@@ -267,7 +267,7 @@ pub fn json_input(props: &JsonInputProps) -> Html {
             { if props.display_buttons {
                 html! {
                     <div class="mt-4 flex justify-end">
-                        <Button button_type={ButtonType::Primary} onclick={on_add.clone()} class="px-4 py-2">
+                        <Button button_type={ButtonType::Primary} on_click={on_add.clone()} class="px-4 py-2">
                             <AddIcon />
                         </Button>
                     </div>

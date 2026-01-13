@@ -18,9 +18,10 @@ pub struct AppBarProps {
     pub position: AppBarPosition,
 
     #[prop_or_default]
-    pub logo_onclick: Option<Callback<MouseEvent>>,
+    pub logo_on_click: Option<Callback<MouseEvent>>,
+
     #[prop_or_default]
-    pub title_onclick: Option<Callback<MouseEvent>>,
+    pub title_on_click: Option<Callback<MouseEvent>>,
 }
 
 #[component(AppBar)]
@@ -30,8 +31,8 @@ pub fn app_bar(props: &AppBarProps) -> Html {
         logo_url,
         nested_list,
         position,
-        logo_onclick,
-        title_onclick,
+        logo_on_click,
+        title_on_click,
     } = props.clone();
 
     let drawer_open = use_state(|| false);
@@ -59,30 +60,30 @@ pub fn app_bar(props: &AppBarProps) -> Html {
             <div class="flex items-center justify-between w-full">
                 // Left: Logo
                 { logo_url.map(|url| {
-                    let maybe_logo_onclick = logo_onclick.clone();
+                    let maybe_logo_on_click = logo_on_click.clone();
                     html! {
                         <img
                             src={url}
                             class={classes!(
                                 "h-8", "w-8",
-                                maybe_logo_onclick.as_ref().map(|_| "cursor-pointer")
+                                maybe_logo_on_click.as_ref().map(|_| "cursor-pointer")
                             )}
                             alt="Logo"
-                            onclick={maybe_logo_onclick.unwrap_or_else(|| Callback::from(|_| {}))} // no-op if none
+                            onclick={maybe_logo_on_click.unwrap_or_else(|| Callback::from(|_| {}))} // no-op if none
                         />
                     }
                 }) }
 
                 // Title
                 { title.map(|text| {
-                    let maybe_title_onclick = title_onclick.clone();
+                    let maybe_title_on_click = title_on_click.clone();
                     html! {
                         <div
                             class={classes!(
                                 "absolute", "left-1/2", "transform", "-translate-x-1/2",
-                                maybe_title_onclick.as_ref().map(|_| "cursor-pointer")
+                                maybe_title_on_click.as_ref().map(|_| "cursor-pointer")
                             )}
-                            onclick={maybe_title_onclick.unwrap_or_else(|| Callback::from(|_| {}))} // no-op if none
+                            onclick={maybe_title_on_click.unwrap_or_else(|| Callback::from(|_| {}))} // no-op if none
                         >
                             <span class="text-xl font-bold text-gray-900 dark:text-gray-100">
                                 { text }
@@ -93,7 +94,7 @@ pub fn app_bar(props: &AppBarProps) -> Html {
 
                 // Right: Drawer toggle button
                 <div class="flex items-center">
-                    <Button button_type={ButtonType::Icon} onclick={toggle_drawer} class="p-2">
+                    <Button button_type={ButtonType::Icon} on_click={toggle_drawer} class="p-2">
                         { if *drawer_open {
                             html! { <span class="text-2xl">{ "✖" }</span> }
                         } else {

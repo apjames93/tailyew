@@ -20,7 +20,7 @@ pub fn a_component_demo_section() -> Html {
                 "children".into(),
                 "target".into(),
                 "class".into(),
-                "onclick".into(),
+                "on_click".into(),
                 "aria_label".into(),
                 "aria_describedby".into(),
                 "role".into(),
@@ -63,7 +63,7 @@ pub fn a_component_demo_section() -> Html {
             github_source_path="atoms/a.rs"
             title="Anchor (A) Component"
             description={Some(html! {
-                <p>{"The `A` component wraps a standard HTML anchor tag with Tailwind styles and optional props like `target`, `class`, and `onclick`."}</p>
+                <p>{"The `A` component wraps a standard HTML anchor tag with Tailwind styles and optional props like `target`, `class`, and `on_click`."}</p>
             })}
             example={example}
             usage_code={USAGE_CODE}

@@ -372,7 +372,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                                         html! {
                                             <Li
                                                 class="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 transition-colors duration-150"
-                                                onclick={Callback::from(move |_| on_click.emit(item_clone.clone()))}
+                                                on_click={Callback::from(move |_| on_click.emit(item_clone.clone()))}
                                             >
                                                 { html! { item.label.clone() } }
                                             </Li>
@@ -392,7 +392,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                     html! {
                         <Ul class="text-sm text-gray-700 dark:text-gray-300">
                             <Li
-                                onclick={if disabled { None } else { Some(on_clear_selection) }}
+                                on_click={if disabled { None } else { Some(on_clear_selection) }}
                                 icon={if disabled { None } else { Some(html! { <XIcon size={12} /> }) }}
                                 class="hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-50 dark:bg-gray-800 rounded px-4 py-2 flex items-center justify-left"
                             >

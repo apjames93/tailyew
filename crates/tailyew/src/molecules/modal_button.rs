@@ -90,7 +90,7 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
         <div>
             <Button
                 button_type={button_type.clone()}
-                onclick={toggle_modal.clone()}
+                on_click={toggle_modal.clone()}
             >
                 { for trigger_children.iter() }
             </Button>

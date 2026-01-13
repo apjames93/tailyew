@@ -35,7 +35,7 @@ pub fn nav_bar() -> Html {
           logo_url={Some("/static/images/logo.png")}
           position={AppBarPosition::Top}
           nested_list={nested_list}
-          logo_onclick={Callback::from(|_| {
+          logo_on_click={Callback::from(|_| {
             let _ = web_sys::window()
                 .unwrap()
                 .open_with_url("https://github.com/apjames93/tailyew");

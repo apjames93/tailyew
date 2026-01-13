@@ -123,7 +123,7 @@ pub fn stepper(props: &StepperProps) -> Html {
                     <Button
                         button_type={ButtonType::Secondary}
                         disabled={*internal_step == 0}
-                        onclick={go_to_previous_step}
+                        on_click={go_to_previous_step}
                     >
                         { "Previous" }
                     </Button>
@@ -131,7 +131,7 @@ pub fn stepper(props: &StepperProps) -> Html {
                     <Button
                         button_type={ButtonType::Primary}
                         disabled={*internal_step == steps.len() - 1}
-                        onclick={go_to_next_step}
+                        on_click={go_to_next_step}
                     >
                         { "Next" }
                     </Button>

@@ -140,7 +140,7 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                                 <Button
                                     button_type={ButtonType::Ghost}
                                     class="flex items-center gap-2 p-2 px-4 w-full hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    onclick={toggle.clone()}
+                                    on_click={toggle.clone()}
                                     aria_expanded={Some(AttrValue::from(is_active.to_string()))}
                                     aria_controls={Some(panel_id.clone())}
                                 >

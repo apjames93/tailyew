@@ -15,7 +15,6 @@ pub struct SelectProps {
     #[serde(default, deserialize_with = "de_attr")]
     pub id: AttrValue,
 
-    // plain Vec<SelectOption> – no custom deserializer here
     #[prop_or_default]
     #[serde(default)]
     pub options: Vec<SelectOption>,
@@ -39,6 +38,7 @@ pub struct SelectProps {
     #[prop_or_default]
     #[serde(skip)]
     pub on_change: Option<Callback<String>>,
+
     #[prop_or(false)]
     #[serde(default)]
     pub disabled: bool,

@@ -83,7 +83,7 @@ html! {
                     spacing="space-y-1"
                 >
                     <Li
-                        onclick={Callback::from(|_| {
+                        on_click={Callback::from(|_| {
                             web_sys::console::log_1(&"Item clicked!".into());
                         })}
                         icon_position={IconPosition::Right}

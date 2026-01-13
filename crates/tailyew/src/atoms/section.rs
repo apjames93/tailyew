@@ -16,7 +16,7 @@ pub struct SectionProps {
     pub id: Option<AttrValue>,
 
     #[prop_or_default]
-    pub onclick: Option<Callback<MouseEvent>>,
+    pub on_click: Option<Callback<MouseEvent>>,
 
     #[prop_or_default]
     pub style: Option<AttrValue>,
@@ -42,7 +42,7 @@ pub fn section(props: &SectionProps) -> Html {
         class,
         container_class,
         id,
-        onclick,
+        on_click,
         style,
         children,
         with_container,
@@ -55,7 +55,7 @@ pub fn section(props: &SectionProps) -> Html {
             <section
                 id={id.clone()}
                 class={base_classes}
-                onclick={onclick.clone()}
+                onclick={on_click.clone()}
                 style={style.clone()}
                 aria-label={aria_label.clone()}
                 aria-labelledby={aria_labelledby.clone()}
@@ -70,7 +70,7 @@ pub fn section(props: &SectionProps) -> Html {
             <section
                 id={id.clone()}
                 class={base_classes}
-                onclick={onclick.clone()}
+                onclick={on_click.clone()}
                 style={style.clone()}
                 aria-label={aria_label.clone()}
                 aria-labelledby={aria_labelledby.clone()}

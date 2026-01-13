@@ -17,7 +17,7 @@ pub fn button_demo_section() -> Html {
             values: vec![
                 "children".into(),
                 "button_type".into(),
-                "onclick".into(),
+                "on_click".into(),
                 "disabled".into(),
                 "aria_label".into(),
                 "role".into(),

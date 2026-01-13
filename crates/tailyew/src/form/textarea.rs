@@ -8,26 +8,34 @@ pub struct TextareaProps {
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_attr")]
     pub id: AttrValue,
+
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_attr")]
     pub label: AttrValue,
+
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_attr")]
     pub default_value: AttrValue,
+
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_attr")]
     pub placeholder: AttrValue,
+
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_classes")]
     pub class: Classes,
+
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_classes")]
     pub container_class: Classes,
+
     #[prop_or(false)]
     pub required: bool,
+
     #[prop_or_default]
     #[serde(skip)]
     pub on_change: Option<Callback<String>>,
+
     #[prop_or(5)]
     pub rows: usize,
 }

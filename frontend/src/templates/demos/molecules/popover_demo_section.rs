@@ -24,7 +24,7 @@ pub fn popover_demo_section() -> Html {
                 trigger={html! {
                     <Button
                         button_type={ButtonType::Primary}
-                        onclick={toggle_popover.clone()}
+                        on_click={toggle_popover.clone()}
                     >
                         { "Open Popover" }
                     </Button>
@@ -57,7 +57,7 @@ let close_popover = {
 html! {
     <Popover
         trigger={html! {
-            <Button button_type={ButtonType::Primary} onclick={toggle_popover}>
+            <Button button_type={ButtonType::Primary} on_click={toggle_popover}>
                 { "Open Popover" }
             </Button>
         }}

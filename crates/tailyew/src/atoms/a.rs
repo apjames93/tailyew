@@ -13,7 +13,7 @@ pub struct AProps {
     pub class: Classes,
 
     #[prop_or_default]
-    pub onclick: Option<Callback<MouseEvent>>,
+    pub on_click: Option<Callback<MouseEvent>>,
 
     #[prop_or_default]
     pub aria_label: Option<AttrValue>,
@@ -38,7 +38,7 @@ pub fn a(props: &AProps) -> Html {
         children,
         target,
         class,
-        onclick,
+        on_click,
         aria_label,
         aria_describedby,
         role,
@@ -61,7 +61,7 @@ pub fn a(props: &AProps) -> Html {
         class.clone(),
     );
 
-    let on_click_handler = onclick.clone().map(|cb| {
+    let on_click_handler = on_click.clone().map(|cb| {
         Callback::from(move |e: MouseEvent| {
             e.prevent_default();
             cb.emit(e);

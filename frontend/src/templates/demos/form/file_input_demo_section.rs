@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 const USAGE_CODE: &str = r#"
 let file = use_state(|| "".to_string());
-let onchange = {
+let on_change = {
     let file = file.clone();
     Callback::from(move |name: String| file.set(name))
 };
@@ -16,7 +16,7 @@ html! {
         label="Upload Resume"
         initial_file_name=""
         accept={Some(".pdf,.docx")}
-        onchange={Some(onchange)}
+        on_change={Some(on_change)}
     />
 }
 "#;
@@ -34,7 +34,7 @@ pub fn file_input_demo_section() -> Html {
                 "initial_file_name".into(),
                 "accept".into(),
                 "class".into(),
-                "onchange".into(),
+                "on_change".into(),
             ],
         },
         Column {
@@ -79,18 +79,18 @@ pub fn file_input_demo_section() -> Html {
 #[component(FileInputUsage)]
 fn file_input_usage() -> Html {
     let file = use_state(|| "".to_string());
-    let onchange = {
+    let on_change = {
         let file = file.clone();
         Callback::from(move |name: String| file.set(name))
     };
 
     html! {
-        <FileInput
-            id="resume"
+            <FileInput
+                id="resume"
             label="Upload Resume"
             initial_file_name=""
             accept={".pdf,.docx"}
-            onchange={onchange}
+            on_change={on_change}
         />
     }
 }
