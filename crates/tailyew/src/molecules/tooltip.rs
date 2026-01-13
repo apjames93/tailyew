@@ -39,6 +39,16 @@ pub fn tooltip(props: &TooltipProps) -> Html {
         Callback::from(move |_| show.set(false))
     };
 
+    let on_focus = {
+        let show = show.clone();
+        Callback::from(move |_| show.set(true))
+    };
+
+    let on_blur = {
+        let show = show.clone();
+        Callback::from(move |_| show.set(false))
+    };
+
     let position_class = match position {
         TooltipPosition::Top => vec![
             "bottom-full",
@@ -75,6 +85,8 @@ pub fn tooltip(props: &TooltipProps) -> Html {
             class="relative inline-block"
             onmouseenter={on_mouse_enter}
             onmouseleave={on_mouse_leave}
+            onfocus={on_focus}
+            onblur={on_blur}
         >
             <div aria-describedby={Some((*tooltip_id).clone())}>{ trigger }</div>
 
