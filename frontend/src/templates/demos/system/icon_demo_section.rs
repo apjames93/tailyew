@@ -41,7 +41,7 @@ pub fn icon_demo_section() -> Html {
                 "Classes".into(),
                 "u32".into(),
                 "f32".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
                 "bool".into(),
                 "Children".into(),
             ],

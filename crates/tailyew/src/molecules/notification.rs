@@ -138,7 +138,7 @@ pub fn notification(props: &NotificationProps) -> Html {
                     if show_close {
                         html! {
                             <Button
-                                onclick={on_close_click}
+                                on_click={on_close_click}
                                 button_type={ButtonType::Icon}
                                 class="shrink-0"
                             >

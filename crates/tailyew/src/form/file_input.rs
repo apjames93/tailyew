@@ -27,7 +27,7 @@ pub struct FileInputProps {
 
     #[prop_or_default]
     #[serde(skip)]
-    pub onchange: Option<Callback<String>>,
+    pub on_change: Option<Callback<String>>,
 }
 
 #[component(FileInput)]
@@ -38,20 +38,20 @@ pub fn file_input(props: &FileInputProps) -> Html {
         initial_file_name,
         accept,
         class,
-        onchange,
+        on_change,
     } = props;
 
     let file_name = use_state(|| initial_file_name.clone());
 
-    let onchange_internal = {
+    let on_change_internal = {
         let file_name = file_name.clone();
-        let onchange = onchange.clone();
+        let on_change = on_change.clone();
         Callback::from(move |e: Event| {
             let input: HtmlInputElement = e.target_unchecked_into();
             if let Some(file) = input.files().and_then(|files| files.get(0)) {
                 let name = file.name();
                 file_name.set(name.clone().into());
-                if let Some(cb) = onchange.clone() {
+                if let Some(cb) = on_change.clone() {
                     cb.emit(name);
                 }
             } else {
@@ -100,7 +100,7 @@ pub fn file_input(props: &FileInputProps) -> Html {
                 type="file"
                 class={input_classes}
                 accept={accept.clone()}
-                onchange={onchange_internal}
+                onchange={on_change_internal}
                 aria-label={label.to_string()}
                 aria-describedby={format!("{id}-file-name")}
             />

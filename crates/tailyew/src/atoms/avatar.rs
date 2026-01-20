@@ -4,15 +4,15 @@ use yew::prelude::*;
 pub struct AvatarProps {
     /// The image URL to display
     #[prop_or_default]
-    pub src: Option<String>,
+    pub src: Option<AttrValue>,
 
     /// Fallback text (e.g. initials) if image fails or is not provided
     #[prop_or_default]
-    pub fallback: Option<String>,
+    pub fallback: Option<AttrValue>,
 
     /// Alt text for accessibility
     #[prop_or_default]
-    pub alt: Option<String>,
+    pub alt: Option<AttrValue>,
 
     /// Tailwind sizing (e.g. w-10 h-10 or w-16 h-16)
     #[prop_or_else(|| "w-12 h-12".into())]
@@ -62,7 +62,7 @@ pub fn avatar(props: &AvatarProps) -> Html {
         html! {
             <img
                 src={src}
-                alt={alt.unwrap_or_else(|| "Avatar".to_string())}
+                alt={alt.unwrap_or_else(|| AttrValue::from("Avatar"))}
                 class={classes!(base_classes.clone(), "object-cover")}
                 onclick={on_click}
             />
@@ -73,7 +73,7 @@ pub fn avatar(props: &AvatarProps) -> Html {
                 class={base_classes}
                 onclick={on_click}
                 role="img"
-                aria-label={alt.clone().unwrap_or_else(|| "Avatar".to_string())}
+                aria-label={alt.clone().unwrap_or_else(|| AttrValue::from("Avatar"))}
             >
                 <span class="text-base leading-none text-center">
                     { fallback.unwrap_or_else(|| "?".into()) }

@@ -68,7 +68,7 @@ pub fn theme_toggle() -> Html {
 
     html! {
         <div>
-            <Button onclick={toggle_theme}>
+            <Button on_click={toggle_theme}>
                 {
                     if *theme == "light" {
                         html! { "🌞 Light Mode" }

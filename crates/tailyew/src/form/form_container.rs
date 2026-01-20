@@ -23,7 +23,7 @@ pub struct FormProps {
     pub show_submit_button: bool,
 
     #[prop_or_default]
-    pub id: Option<String>,
+    pub id: Option<AttrValue>,
 
     #[prop_or_default]
     pub extra_footer_buttons: Option<Callback<Callback<()>, Html>>,

@@ -19,7 +19,7 @@ pub struct BarChartIconProps {
 
     /// Accessible label
     #[prop_or_default]
-    pub label: Option<String>,
+    pub label: Option<AttrValue>,
 
     /// If true, hide from screen readers
     #[prop_or(false)]
@@ -27,7 +27,7 @@ pub struct BarChartIconProps {
 
     /// Optional explicit stroke/fill color for the bars
     #[prop_or_default]
-    pub color: Option<String>,
+    pub color: Option<AttrValue>,
 }
 
 /// Bar chart icon for TailYew
@@ -36,11 +36,11 @@ pub fn bar_chart_icon(props: &BarChartIconProps) -> Html {
     let stroke_or_fill = props
         .color
         .clone()
-        .unwrap_or_else(|| "currentColor".to_string());
+        .unwrap_or_else(|| AttrValue::from("currentColor"));
 
     // give it a default label if user didn't set one and it's not decorative
     let label = if props.label.is_none() && !props.decorative {
-        Some("Bar chart".to_string())
+        Some(AttrValue::from("Bar chart"))
     } else {
         props.label.clone()
     };

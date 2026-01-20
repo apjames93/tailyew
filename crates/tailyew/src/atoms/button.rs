@@ -28,7 +28,7 @@ pub struct ButtonProps {
     pub button_type: ButtonType,
 
     #[prop_or_default]
-    pub onclick: Option<Callback<MouseEvent>>,
+    pub on_click: Option<Callback<MouseEvent>>,
 
     #[prop_or(false)]
     pub disabled: bool,
@@ -38,29 +38,37 @@ pub struct ButtonProps {
 
     /// Optional `form="..."` attribute so you can submit an external `<form id=…>`
     #[prop_or_default]
-    pub form: Option<String>,
+    pub form: Option<AttrValue>,
 
     #[prop_or_default]
     pub children: Children,
 
     #[prop_or_default]
-    pub aria_label: Option<String>,
+    pub aria_label: Option<AttrValue>,
 
     #[prop_or_default]
-    pub role: Option<String>,
+    pub role: Option<AttrValue>,
+
+    #[prop_or_default]
+    pub aria_expanded: Option<AttrValue>,
+
+    #[prop_or_default]
+    pub aria_controls: Option<AttrValue>,
 }
 
 #[component(Button)]
 pub fn button(props: &ButtonProps) -> Html {
     let ButtonProps {
         button_type,
-        onclick,
+        on_click,
         disabled,
         class,
         form,
         children,
         aria_label,
         role,
+        aria_expanded,
+        aria_controls,
     } = props;
 
     // Shared focus ring for non-disabled buttons
@@ -99,24 +107,26 @@ pub fn button(props: &ButtonProps) -> Html {
 
     // If this is a submit‐type button, we let the form attribute handle submission,
     // and we don't wire up an onclick
-    let onclick_callback = if *button_type == ButtonType::Submit {
+    let on_click_callback = if *button_type == ButtonType::Submit {
         None
     } else {
-        onclick.clone()
+        on_click.clone()
     };
 
     html! {
         <button
             class={button_classes}
             type={button_type.as_str()}
-            onclick={onclick_callback}
+            onclick={on_click_callback}
             disabled={*disabled}
             aria-disabled={Some(disabled.to_string())}
             role={role.clone()}
             aria-label={aria_label.clone()}
+            aria-expanded={aria_expanded.clone()}
+            aria-controls={aria_controls.clone()}
             // only emit `form="…"`, if Some
             form={form.clone()}
-        >
+    >
             { for children.iter() }
         </button>
     }

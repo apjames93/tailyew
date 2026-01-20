@@ -130,7 +130,7 @@ fn nested_list_item(props: &NestedListItemProps) -> Html {
                     title={item.label.clone()}
                     compact={true}
                     class={classes!(row_class)}
-                    content_class="pl-2"
+                    content_class={classes!("pl-2")}
                     default_open={false}
                 >
                     // Inject label manually into Accordion header
@@ -144,19 +144,18 @@ fn nested_list_item(props: &NestedListItemProps) -> Html {
     } else {
         html! {
             <Li class="w-full">
-                <div
-                    role="button"
-                    tabindex={0}
+                <button
+                    type="button"
                     onclick={handle_click}
                     class={classes!(
                         "w-full", "px-4", "py-3", "flex", "items-center", "rounded-lg", "shadow-md",
                         "transition", "text-sm", "font-medium", "text-gray-900", "dark:text-gray-100",
-                        "hover:bg-gray-200", "dark:hover:bg-gray-700",
+                        "hover:bg-gray-200", "dark:hover:bg-gray-700", "text-left",
                         row_class
                     )}
                 >
                     { item.label.clone() }
-                </div>
+                </button>
             </Li>
         }
     }

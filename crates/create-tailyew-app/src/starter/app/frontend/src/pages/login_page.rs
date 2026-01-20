@@ -81,11 +81,11 @@ pub fn login_page() -> Html {
                 id="login-card"
                 title="Login"
                 subtitle={Some("Please log in to continue.".to_string())}
-                class={Some("max-w-md w-full".to_string())}
+                class={classes!("max-w-md", "w-full")}
             >
                     <Form
                         onsubmit_callback={onsubmit_callback}
-                        form_class={"space-y-4"}
+                        form_class={classes!("space-y-4")}
                     >
                         <Input
                             label="Email"

@@ -7,15 +7,15 @@ pub struct Theme {
     /// Tailwind-compatible theme name (for `data-theme`)
     pub name: String,
 
-    /// Optional override classes to be merged into the root
-    pub class: Option<String>,
+    /// Override classes to be merged into the root
+    pub class: Classes,
 }
 
 impl Default for Theme {
     fn default() -> Self {
         Self {
             name: "system".to_string(),
-            class: None,
+            class: Classes::default(),
         }
     }
 }
@@ -50,7 +50,7 @@ pub fn init_theme(props: &InitProps) -> Html {
         _ => "", // system = no explicit root class
     };
 
-    let extra_theme_class = theme.class.unwrap_or_default();
+    let extra_theme_class = theme.class.clone();
 
     html! {
         <div

@@ -155,7 +155,7 @@ pub fn form_demo_section() -> Html {
         html! {
             <Button
                 button_type={ButtonType::Ghost}
-                onclick={Callback::from(move |_| console::log_1(&"Extra Action Clicked".into()))}
+                on_click={Callback::from(move |_| console::log_1(&"Extra Action Clicked".into()))}
             >
                 { "Extra Action" }
             </Button>

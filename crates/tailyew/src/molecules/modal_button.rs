@@ -37,11 +37,11 @@ pub struct ModalButtonProps {
 
     /// ARIA label (for screen readers if no heading)
     #[prop_or_default]
-    pub aria_label: Option<String>,
+    pub aria_label: Option<AttrValue>,
 
     /// ID of the heading element for aria-labelledby
     #[prop_or_default]
-    pub aria_labelledby: Option<String>,
+    pub aria_labelledby: Option<AttrValue>,
 }
 
 #[component(ModalButton)]
@@ -60,6 +60,13 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
     } = props;
 
     let modal_open = use_state(|| *is_open);
+
+    {
+        let modal_open = modal_open.clone();
+        use_effect_with(*is_open, move |is_open| {
+            modal_open.set(*is_open);
+        });
+    }
 
     let toggle_modal = {
         let modal_open = modal_open.clone();
@@ -83,7 +90,7 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
         <div>
             <Button
                 button_type={button_type.clone()}
-                onclick={toggle_modal.clone()}
+                on_click={toggle_modal.clone()}
             >
                 { for trigger_children.iter() }
             </Button>

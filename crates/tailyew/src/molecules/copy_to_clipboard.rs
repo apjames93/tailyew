@@ -87,7 +87,7 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
     html! {
         <Button
             button_type={current_type}
-            onclick={onclick}
+            on_click={onclick}
             class={class}
         >
             { content }

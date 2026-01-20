@@ -1,5 +1,3 @@
-// frontend/src/templates/demos/a_demo/a_component_usage.rs
-
 html! {
     <div class="flex flex-col items-start gap-2">
         <A href="https://example.com">{ "Visit Example" }</A>
@@ -11,7 +9,7 @@ html! {
         <A
             href="#"
             class="text-red-500"
-            onclick={Callback::from(|_| web_sys::console::log_1(&"Anchor clicked!".into()))}
+            on_click={Callback::from(|_| web_sys::console::log_1(&"Anchor clicked!".into()))}
         >
             { "Custom class with click" }
         </A>
@@ -30,9 +28,6 @@ html! {
         >
             { "What is this?" }
         </A>
-        <p id="help-desc" class="text-sm text-gray-500 dark:text-gray-400">
-            { "This link provides more information about the topic." }
-        </p>
 
         <A
             href="https://example.com/role"

@@ -21,7 +21,7 @@ pub fn li_demo_section() -> Html {
                 "icon".into(),
                 "bordered".into(),
                 "background".into(),
-                "onclick".into(),
+                "on_click".into(),
             ],
         },
         Column {

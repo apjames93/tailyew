@@ -48,8 +48,8 @@ pub fn app_bar_demo_section() -> Html {
                 logo_url={Some(AttrValue::from(LOGO_IMAGE_URL))}
                 nested_list={nested_list}
                 position={AppBarPosition::Static}
-                logo_onclick={Some(on_logo_click)}
-                title_onclick={Some(on_title_click)}
+                logo_on_click={Some(on_logo_click)}
+                title_on_click={Some(on_title_click)}
             />
         </div>
     };
@@ -62,8 +62,8 @@ pub fn app_bar_demo_section() -> Html {
                 "logo_url".into(),
                 "nested_list".into(),
                 "position".into(),
-                "logo_onclick".into(),
-                "title_onclick".into(),
+                "logo_on_click".into(),
+                "title_on_click".into(),
             ],
         },
         Column {

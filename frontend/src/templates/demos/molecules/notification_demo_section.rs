@@ -25,7 +25,7 @@ pub fn notification_demo_section() -> Html {
 
     let example = html! {
         <div class="space-y-4">
-            <Button button_type={ButtonType::Primary} onclick={on_show_all.clone()}>
+            <Button button_type={ButtonType::Primary} on_click={on_show_all.clone()}>
                 { "Show All Notifications" }
             </Button>
 
@@ -79,7 +79,7 @@ pub fn notification_demo_section() -> Html {
     };
 
     let usage_code = r#"
-<Button onclick={on_show_all} button_type={ButtonType::Primary}>
+<Button on_click={on_show_all} button_type={ButtonType::Primary}>
     "Show All Notifications"
 </Button>
 

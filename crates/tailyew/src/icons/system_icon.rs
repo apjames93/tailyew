@@ -14,13 +14,13 @@ pub struct SystemIconProps {
     pub stroke_width: f32,
 
     #[prop_or_default]
-    pub label: Option<String>,
+    pub label: Option<AttrValue>,
 
     #[prop_or(false)]
     pub decorative: bool,
 
     #[prop_or_default]
-    pub color: Option<String>,
+    pub color: Option<AttrValue>,
 }
 
 #[component(SystemIcon)]
@@ -28,10 +28,10 @@ pub fn system_icon(props: &SystemIconProps) -> Html {
     let stroke_color = props
         .color
         .clone()
-        .unwrap_or_else(|| "currentColor".to_string());
+        .unwrap_or_else(|| AttrValue::from("currentColor"));
 
     let label = if props.label.is_none() && !props.decorative {
-        Some("System".to_string())
+        Some(AttrValue::from("System"))
     } else {
         props.label.clone()
     };

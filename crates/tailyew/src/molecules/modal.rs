@@ -23,9 +23,9 @@ pub struct ModalProps {
     #[prop_or(ModalSize::Large)]
     pub size: ModalSize,
     #[prop_or_default]
-    pub aria_label: Option<String>,
+    pub aria_label: Option<AttrValue>,
     #[prop_or_default]
-    pub aria_labelledby: Option<String>,
+    pub aria_labelledby: Option<AttrValue>,
 }
 
 #[component(Modal)]
@@ -48,8 +48,8 @@ pub fn modal(props: &ModalProps) -> Html {
     {
         let node_ref = node_ref.clone();
         let is_open = *is_open;
-        use_effect(move || {
-            if is_open {
+        use_effect_with(is_open, move |is_open| {
+            if *is_open {
                 if let Some(node) = node_ref.cast::<web_sys::HtmlElement>() {
                     let _ = node.focus();
                 }
@@ -60,15 +60,23 @@ pub fn modal(props: &ModalProps) -> Html {
     // Escape key closes modal
     {
         let on_close = on_close.clone();
-        use_effect(move || {
-            let listener = EventListener::new(&document(), "keydown", move |event| {
-                if let Ok(event) = event.clone().dyn_into::<web_sys::KeyboardEvent>() {
-                    if event.key() == "Escape" {
-                        on_close.emit(());
+        use_effect_with(*is_open, move |is_open| {
+            let is_open = *is_open;
+            let listener = if is_open {
+                Some(EventListener::new(&document(), "keydown", move |event| {
+                    if let Ok(event) = event.clone().dyn_into::<web_sys::KeyboardEvent>() {
+                        if event.key() == "Escape" {
+                            on_close.emit(());
+                        }
                     }
-                }
-            });
-            || drop(listener)
+                }))
+            } else {
+                None
+            };
+
+            move || {
+                drop(listener);
+            }
         });
     }
 
@@ -135,7 +143,7 @@ pub fn modal(props: &ModalProps) -> Html {
                 <div class="flex justify-between items-center border-b pb-4 border-gray-200 dark:border-gray-700 mb-4 sticky top-0 z-10 bg-white dark:bg-gray-800">
                     <Typo tag={TagType::H2} class="text-lg">{ html! { title.clone() } }</Typo>
                     <Button
-                        onclick={on_close_click}
+                        on_click={on_close_click}
                         button_type={ButtonType::Icon}
                     >
                         <XIcon />

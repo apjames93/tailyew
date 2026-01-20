@@ -2,6 +2,9 @@ use crate::{
     atoms::{Button, ButtonType, Typo},
     organisms::{NestedItem, NestedList},
 };
+use gloo::events::EventListener;
+use wasm_bindgen::JsCast;
+use web_sys::window;
 use yew::prelude::*;
 
 #[derive(PartialEq, Clone, Default)]
@@ -79,6 +82,28 @@ pub fn sidebar(props: &SidebarProps) -> Html {
         html! {}
     };
 
+    {
+        let active_index = active_index.clone();
+        use_effect_with(*active_index, move |active| {
+            let mut listener: Option<EventListener> = None;
+
+            if active.is_some() {
+                if let Some(win) = window() {
+                    let active_index = active_index.clone();
+                    listener = Some(EventListener::new(&win, "keydown", move |event| {
+                        if let Some(key_event) = event.dyn_ref::<web_sys::KeyboardEvent>() {
+                            if key_event.key() == "Escape" {
+                                active_index.set(None);
+                            }
+                        }
+                    }));
+                }
+            }
+
+            move || drop(listener)
+        });
+    }
+
     html! {
         <>
             { overlay }
@@ -111,6 +136,7 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                 {
                     for icon_list.iter().enumerate().map(|(i, btn)| {
                         let is_active = *active_index == Some(i);
+                        let panel_id = AttrValue::from(format!("sidebar-panel-{i}"));
 
                         let toggle = {
                             let active_index = active_index.clone();
@@ -139,7 +165,9 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                                 <Button
                                     button_type={ButtonType::Ghost}
                                     class="flex items-center gap-2 p-2 px-4 w-full hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    onclick={toggle.clone()}
+                                    on_click={toggle.clone()}
+                                    aria_expanded={Some(AttrValue::from(is_active.to_string()))}
+                                    aria_controls={Some(panel_id.clone())}
                                 >
                                     { btn.icon.clone() }
                                     {
@@ -157,7 +185,7 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                                 {
                                     if is_active {
                                         html! {
-                                            <div class="pl-4 pr-2 py-2">
+                                            <div id={panel_id} class="pl-4 pr-2 py-2">
                                                 <NestedList
                                                     list={btn.list.clone()}
                                                     on_select={on_select_internal.clone()}

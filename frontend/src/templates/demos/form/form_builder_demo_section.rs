@@ -454,7 +454,7 @@ pub fn form_builder_demo_section() -> Html {
                         extra_footer_buttons={Some(Callback::from(move |close: Callback<()>| html! {
                             <Button
                                 button_type={ButtonType::Ghost}
-                                onclick={Callback::from(move |_| close.emit(()))}
+                                on_click={Callback::from(move |_| close.emit(()))}
                             >
                                 {"Cancel"}
                             </Button>

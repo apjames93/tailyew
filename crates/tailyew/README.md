@@ -114,7 +114,7 @@ You’ll get:
 In your `Cargo.toml`:
 
 ```toml
-tailyew = "0.1.43" # Yew 0.22 compatible
+tailyew = "0.1.44" # Yew 0.22 compatible
 ```
 
 ---

@@ -1,3 +1,4 @@
+use js_sys::Date;
 use yew::prelude::*;
 
 /// Enum for positioning the tooltip relative to its trigger
@@ -26,6 +27,7 @@ pub fn tooltip(props: &TooltipProps) -> Html {
         position,
     } = props.clone();
     let show = use_state(|| false);
+    let tooltip_id = use_state(|| AttrValue::from(format!("tooltip-{}", Date::now() as u64)));
 
     let on_mouse_enter = {
         let show = show.clone();
@@ -33,6 +35,16 @@ pub fn tooltip(props: &TooltipProps) -> Html {
     };
 
     let on_mouse_leave = {
+        let show = show.clone();
+        Callback::from(move |_| show.set(false))
+    };
+
+    let on_focus = {
+        let show = show.clone();
+        Callback::from(move |_| show.set(true))
+    };
+
+    let on_blur = {
         let show = show.clone();
         Callback::from(move |_| show.set(false))
     };
@@ -73,11 +85,14 @@ pub fn tooltip(props: &TooltipProps) -> Html {
             class="relative inline-block"
             onmouseenter={on_mouse_enter}
             onmouseleave={on_mouse_leave}
+            onfocus={on_focus}
+            onblur={on_blur}
         >
-            <div>{ trigger }</div>
+            <div aria-describedby={Some((*tooltip_id).clone())}>{ trigger }</div>
 
             if *show {
                 <div
+                    id={(*tooltip_id).clone()}
                     class={classes!(
                         "absolute", "z-50", "text-xs", "px-3", "py-2", "rounded",
                         "shadow-lg", "whitespace-nowrap",

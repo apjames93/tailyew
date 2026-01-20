@@ -81,6 +81,13 @@ pub fn switch(props: &SwitchProps) -> Html {
     // Internal checked state, seeded from the prop
     let is_checked = use_state(|| checked);
 
+    {
+        let is_checked = is_checked.clone();
+        use_effect_with(checked, move |checked| {
+            is_checked.set(*checked);
+        });
+    }
+
     let handle_change = {
         let is_checked = is_checked.clone();
         let on_change = on_change.clone();

@@ -1,3 +1,4 @@
+use js_sys::Date;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
 use web_sys::{MouseEvent, Node};
@@ -24,10 +25,13 @@ pub fn popover(props: &PopoverProps) -> Html {
 
     let popover_ref = use_node_ref();
     let open = use_state(|| *is_open);
+    let content_id = use_state(|| AttrValue::from(format!("popover-panel-{}", Date::now() as u64)));
 
-    // Sync internal state with prop if changed
-    if *open != *is_open {
-        open.set(*is_open);
+    {
+        let open = open.clone();
+        use_effect_with(*is_open, move |is_open| {
+            open.set(*is_open);
+        });
     }
 
     let on_close = on_close.clone();
@@ -51,43 +55,94 @@ pub fn popover(props: &PopoverProps) -> Html {
     {
         let popover_ref = popover_ref.clone();
         let open = open.clone();
+        let on_close = on_close.clone();
 
-        use_effect(move || {
-            let closure =
-                Closure::<dyn Fn(MouseEvent)>::wrap(Box::new(move |event: MouseEvent| {
-                    if let Some(popover) = popover_ref.cast::<web_sys::HtmlElement>() {
-                        if let Some(target) = event.target().and_then(|t| t.dyn_into::<Node>().ok())
-                        {
-                            if !popover.contains(Some(&target)) {
+        use_effect_with(
+            (*open, popover_ref.clone()),
+            move |(is_open, popover_ref)| {
+                let is_open = *is_open;
+                let popover_ref = popover_ref.clone();
+
+                let cleanup = if is_open {
+                    let closure =
+                        Closure::<dyn Fn(MouseEvent)>::wrap(Box::new(move |event: MouseEvent| {
+                            if let Some(popover) = popover_ref.cast::<web_sys::HtmlElement>() {
+                                if let Some(target) =
+                                    event.target().and_then(|t| t.dyn_into::<Node>().ok())
+                                {
+                                    if !popover.contains(Some(&target)) {
+                                        open.set(false);
+                                        if let Some(cb) = &on_close {
+                                            cb.emit(event);
+                                        }
+                                    }
+                                }
+                            }
+                        }));
+
+                    let window = web_sys::window().unwrap();
+                    window
+                        .add_event_listener_with_callback("click", closure.as_ref().unchecked_ref())
+                        .unwrap();
+
+                    Some((window, closure))
+                } else {
+                    None
+                };
+
+                move || {
+                    if let Some((window, closure)) = cleanup {
+                        let _ = window.remove_event_listener_with_callback(
+                            "click",
+                            closure.as_ref().unchecked_ref(),
+                        );
+                    }
+                }
+            },
+        );
+    }
+
+    {
+        let open = open.clone();
+        let on_close = on_close.clone();
+        use_effect_with(*open, move |is_open| {
+            let listener = if *is_open {
+                Some(gloo::events::EventListener::new(
+                    &web_sys::window().unwrap(),
+                    "keydown",
+                    move |e| {
+                        if let Some(evt) = e.dyn_ref::<web_sys::KeyboardEvent>() {
+                            if evt.key() == "Escape" {
                                 open.set(false);
+                                if let Some(cb) = &on_close {
+                                    cb.emit(web_sys::MouseEvent::new("keydown").unwrap());
+                                }
                             }
                         }
-                    }
-                }));
+                    },
+                ))
+            } else {
+                None
+            };
 
-            let window = web_sys::window().unwrap();
-            window
-                .add_event_listener_with_callback("click", closure.as_ref().unchecked_ref())
-                .unwrap();
-
-            // Keep the closure alive
-            let _closure = closure;
-            move || {
-                window
-                    .remove_event_listener_with_callback("click", _closure.as_ref().unchecked_ref())
-                    .unwrap();
-            }
+            move || drop(listener)
         });
     }
 
     html! {
         <div ref={popover_ref} class="relative inline-block">
-            <div class="cursor-pointer" onclick={toggle}>
+            <div
+                class="cursor-pointer"
+                onclick={toggle}
+                aria-expanded={Some(AttrValue::from((*open).to_string()))}
+                aria-controls={Some((*content_id).clone())}
+            >
                 { trigger.clone() }
             </div>
 
             if *open {
                 <div
+                    id={(*content_id).clone()}
                     class={classes!(
                         "absolute", "z-50", "w-64", "md:w-80", "lg:w-96", "mt-2",
                         "p-4", "rounded", "shadow-xl", "border", "bg-white", "dark:bg-gray-800",

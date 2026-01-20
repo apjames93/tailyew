@@ -12,7 +12,7 @@ html! {
 
       <Typo tag={TagType::P}>
           { "This is a paragraph with a description. " }
-          <Typo tag={TagType::Span} id="desc" class="text-sm text-gray-500">
+          <Typo tag={TagType::Span} id="desc" class={classes!("text-sm", "text-gray-500")}>
               { "This description is referenced by the paragraph." }
           </Typo>
       </Typo>
@@ -20,6 +20,7 @@ html! {
       <Typo
           tag={TagType::P}
           aria_describedby="desc"
+          style={Some(AttrValue::from("color: var(--brand, #2563eb);"))}
       >
           { "This paragraph references the description below." }
       </Typo>
@@ -33,7 +34,7 @@ html! {
 
       <Typo
           tag={TagType::Span}
-          class="bg-yellow-100 px-1 rounded"
+          class={classes!("bg-yellow-100", "px-1", "rounded")}
           aria_label="Highlighted span"
       >
           { "This is a styled span" }

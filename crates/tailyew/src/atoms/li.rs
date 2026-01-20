@@ -36,7 +36,7 @@ pub struct LiProps {
     pub background: Classes,
 
     #[prop_or_default]
-    pub onclick: Option<Callback<MouseEvent>>,
+    pub on_click: Option<Callback<MouseEvent>>,
 }
 
 #[component(Li)]
@@ -50,7 +50,7 @@ pub fn li(props: &LiProps) -> Html {
         hover,
         icon,
         icon_position,
-        onclick,
+        on_click,
     } = props;
 
     let icon_section = icon.as_ref().map(|icon| {
@@ -97,7 +97,7 @@ pub fn li(props: &LiProps) -> Html {
         } else {
             None
         },
-        if onclick.is_some() {
+        if on_click.is_some() {
             Some("cursor-pointer")
         } else {
             None
@@ -114,7 +114,7 @@ pub fn li(props: &LiProps) -> Html {
     };
 
     html! {
-        <li class={li_classes} onclick={onclick.clone()}>
+        <li class={li_classes} onclick={on_click.clone()}>
             <div class={row_classes}>
                 { leading_icon }
                 <div class={content_classes}>{ for children.iter() }</div>

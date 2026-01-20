@@ -2,7 +2,9 @@ use crate::form_deserializer::*;
 use crate::SelectOption;
 use crate::{Input, InputType, Li, Typo, Ul, XIcon};
 use gloo_timers::callback::Timeout;
+use js_sys::Date;
 use serde::Deserialize;
+use wasm_bindgen::JsCast;
 use web_sys::{HtmlElement, HtmlInputElement};
 use yew::prelude::*;
 
@@ -110,6 +112,8 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     let filtered = use_state(Vec::<SelectOption>::new);
     let show_dropdown = use_state(|| false);
     let timeout_handle = use_mut_ref(|| None::<Timeout>);
+    let dropdown_id =
+        use_state(|| AttrValue::from(format!("search-dropdown-{}", Date::now() as u64)));
 
     let apply_validity = {
         let error_title = error_title.clone();
@@ -234,20 +238,57 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     {
         let show_dropdown = show_dropdown.clone();
         let dropdown_ref = dropdown_ref.clone();
-        use_effect(move || {
-            let listener = gloo::events::EventListener::new(
-                &gloo::utils::document(),
-                "mousedown",
-                move |event| {
-                    if let Some(target) = event.target_dyn_into::<HtmlElement>() {
-                        if let Some(dropdown) = dropdown_ref.cast::<HtmlElement>() {
-                            if !dropdown.contains(Some(&target)) {
+        use_effect_with(
+            (*show_dropdown, dropdown_ref.clone()),
+            move |(is_open, dropdown_ref)| {
+                let is_open = *is_open;
+                let dropdown_ref = dropdown_ref.clone();
+                let show_dropdown = show_dropdown.clone();
+
+                let listener = if is_open {
+                    Some(gloo::events::EventListener::new(
+                        &gloo::utils::document(),
+                        "mousedown",
+                        move |event| {
+                            if let Some(target) = event.target_dyn_into::<HtmlElement>() {
+                                if let Some(dropdown) = dropdown_ref.cast::<HtmlElement>() {
+                                    if !dropdown.contains(Some(&target)) {
+                                        show_dropdown.set(false);
+                                    }
+                                }
+                            }
+                        },
+                    ))
+                } else {
+                    None
+                };
+                move || {
+                    drop(listener);
+                }
+            },
+        );
+    }
+
+    {
+        let show_dropdown = show_dropdown.clone();
+        use_effect_with(*show_dropdown, move |is_open| {
+            let listener = if *is_open {
+                let show_dropdown = show_dropdown.clone();
+                Some(gloo::events::EventListener::new(
+                    &gloo::utils::document(),
+                    "keydown",
+                    move |e| {
+                        if let Some(evt) = e.dyn_ref::<web_sys::KeyboardEvent>() {
+                            if evt.key() == "Escape" {
                                 show_dropdown.set(false);
                             }
                         }
-                    }
-                },
-            );
+                    },
+                ))
+            } else {
+                None
+            };
+
             move || drop(listener)
         });
     }
@@ -255,7 +296,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     // cancel outstanding timeout on unmount
     {
         let timeout_handle = timeout_handle.clone();
-        use_effect(move || {
+        use_effect_with((), move |_| {
             move || {
                 if let Some(handle) = timeout_handle.borrow_mut().take() {
                     handle.cancel();
@@ -269,11 +310,14 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         let input_ref = input_ref.clone();
         let apply_validity = apply_validity.clone();
         let selected_item = selected_item.clone();
-        use_effect(move || {
-            if let Some(input_el) = input_ref.cast::<HtmlInputElement>() {
-                apply_validity(&input_el, selected_item.is_some());
-            }
-        });
+        use_effect_with(
+            (input_ref.clone(), selected_item.is_some()),
+            move |(input_ref, is_selected)| {
+                if let Some(input_el) = input_ref.cast::<HtmlInputElement>() {
+                    apply_validity(&input_el, *is_selected);
+                }
+            },
+        );
     }
 
     let base_id = input_id.clone();
@@ -305,15 +349,12 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 autocomplete={"off"}
                 on_change={Some(oninput)}
                 on_focus={Some(on_focus)}
-                aria_label={Some(AttrValue::from(
-                    format!("search-{}", aria_label.unwrap_or_default())
-                ))}
-                aria_labelledby={Some(AttrValue::from(
-                    format!("search-{}", aria_labelledby.unwrap_or_default())
-                ))}
-                aria_describedby={Some(AttrValue::from(
-                    format!("search-{}", aria_describedby.unwrap_or_default())
-                ))}
+                aria_expanded={Some(AttrValue::from((*show_dropdown).to_string()))}
+                aria_controls={Some((*dropdown_id).clone())}
+                aria_haspopup={Some(AttrValue::from("listbox"))}
+                aria_label={aria_label.clone().map(|v| AttrValue::from(format!("search-{v}")))}
+                aria_labelledby={aria_labelledby.clone().map(|v| AttrValue::from(format!("search-{v}")))}
+                aria_describedby={aria_describedby.clone().map(|v| AttrValue::from(format!("search-{v}")))}
             />
 
             {
@@ -323,20 +364,22 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                             <div class="rounded-t border border-b-0 bg-white dark:bg-gray-900 dark:border-gray-700 px-4 pt-3 pb-1">
                                 <Typo>{"Select a value from the list"}</Typo>
                             </div>
-                            <Ul class="absolute max-h-60 overflow-auto z-50 w-full bg-white shadow rounded-b border-t-0 border dark:bg-gray-900 dark:border-gray-700 transition-all duration-200 ease-in-out">
-                                { for filtered.iter().map(|item| {
-                                    let on_click = on_click_item.clone();
-                                    let item_clone = item.clone();
-                                    html! {
-                                        <Li
-                                            class="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 transition-colors duration-150"
-                                            onclick={Callback::from(move |_| on_click.emit(item_clone.clone()))}
-                                        >
-                                            { html! { item.label.clone() } }
-                                        </Li>
-                                    }
-                                }) }
-                            </Ul>
+                            <div id={(*dropdown_id).clone()}>
+                                <Ul class="absolute max-h-60 overflow-auto z-50 w-full bg-white shadow rounded-b border-t-0 border dark:bg-gray-900 dark:border-gray-700 transition-all duration-200 ease-in-out">
+                                    { for filtered.iter().map(|item| {
+                                        let on_click = on_click_item.clone();
+                                        let item_clone = item.clone();
+                                        html! {
+                                            <Li
+                                                class="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 transition-colors duration-150"
+                                                on_click={Callback::from(move |_| on_click.emit(item_clone.clone()))}
+                                            >
+                                                { html! { item.label.clone() } }
+                                            </Li>
+                                        }
+                                    }) }
+                                </Ul>
+                            </div>
                         </div>
                     }
                 } else {
@@ -349,7 +392,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                     html! {
                         <Ul class="text-sm text-gray-700 dark:text-gray-300">
                             <Li
-                                onclick={if disabled { None } else { Some(on_clear_selection) }}
+                                on_click={if disabled { None } else { Some(on_clear_selection) }}
                                 icon={if disabled { None } else { Some(html! { <XIcon size={12} /> }) }}
                                 class="hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-50 dark:bg-gray-800 rounded px-4 py-2 flex items-center justify-left"
                             >

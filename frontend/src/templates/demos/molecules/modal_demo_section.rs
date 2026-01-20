@@ -18,7 +18,7 @@ pub fn modal_demo_section() -> Html {
 
     let example = html! {
         <>
-            <Button button_type={ButtonType::Primary} onclick={toggle_modal.clone()}>
+            <Button button_type={ButtonType::Primary} on_click={toggle_modal.clone()}>
                 { "Open Modal" }
             </Button>
 
@@ -46,7 +46,7 @@ let close_modal = {
 
 html! {
     <>
-        <Button button_type={ButtonType::Primary} onclick={toggle_modal}>
+        <Button button_type={ButtonType::Primary} on_click={toggle_modal}>
             { "Open Modal" }
         </Button>
 
@@ -83,8 +83,8 @@ html! {
                 "Callback<()>".into(),
                 "Children".into(),
                 "ModalSize".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
             ],
         },
         Column {

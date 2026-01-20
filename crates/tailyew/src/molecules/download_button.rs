@@ -114,7 +114,7 @@ pub fn download_button(props: &DownloadButtonProps) -> Html {
     html! {
         <Button
             button_type={button_type}
-            onclick={onclick}
+            on_click={onclick}
             class={class}
         >
             { label }

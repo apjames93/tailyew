@@ -7,22 +7,22 @@ use yew::prelude::*;
 #[derive(Properties, PartialEq, Clone)]
 pub struct CardProps {
     #[prop_or_default]
-    pub id: Option<String>,
+    pub id: Option<AttrValue>,
     pub title: String,
     #[prop_or_default]
     pub subtitle: Option<String>,
     #[prop_or_default]
     pub description: Option<String>,
     #[prop_or_default]
-    pub image_url: Option<String>,
+    pub image_url: Option<AttrValue>,
     #[prop_or_default]
-    pub image_alt: Option<String>,
+    pub image_alt: Option<AttrValue>,
     #[prop_or_default]
     pub image_class: Classes,
     #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
-    pub class: Option<String>,
+    pub class: Classes,
 }
 
 #[component(Card)]
@@ -45,20 +45,15 @@ pub fn card(props: &CardProps) -> Html {
         "overflow-hidden",
         "bg-white",
         "dark:bg-gray-800",
-        // "transition-transform",
-        // "hover:scale-105",
-        // "hover:shadow-2xl",
-        // "duration-300",
-        // "ease-in-out",
         class.clone()
     );
 
     html! {
-        <div id={id.clone().unwrap_or_default()} class={card_classes}>
+        <div id={id.clone()} class={card_classes}>
             if let Some(url) = image_url {
                 <Image
                     src={url.clone()}
-                    alt={image_alt.clone().unwrap_or("Card Image".to_string())}
+                    alt={image_alt.clone().unwrap_or_else(|| AttrValue::from("Card Image"))}
                     class={classes!("w-full", "h-48", "object-cover", image_class.clone())}
                 />
             }

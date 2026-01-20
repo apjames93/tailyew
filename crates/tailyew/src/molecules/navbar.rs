@@ -17,7 +17,7 @@ pub struct NavBarProps {
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
-    pub id: Option<String>,
+    pub id: Option<AttrValue>,
     #[prop_or_default]
     pub position: AppBarPosition,
 }

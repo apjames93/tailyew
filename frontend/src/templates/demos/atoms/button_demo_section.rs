@@ -17,10 +17,12 @@ pub fn button_demo_section() -> Html {
             values: vec![
                 "children".into(),
                 "button_type".into(),
-                "onclick".into(),
+                "on_click".into(),
                 "disabled".into(),
                 "aria_label".into(),
                 "role".into(),
+                "aria_expanded".into(),
+                "aria_controls".into(),
             ],
         },
         Column {
@@ -30,8 +32,10 @@ pub fn button_demo_section() -> Html {
                 "ButtonType".into(),
                 "Callback<MouseEvent>".into(),
                 "bool".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
             ],
         },
         Column {
@@ -43,6 +47,8 @@ pub fn button_demo_section() -> Html {
                 "Disables the button.".into(),
                 "ARIA label for accessibility.".into(),
                 "ARIA role for accessibility.".into(),
+                "ARIA expanded state when button controls collapsible content.".into(),
+                "ID of the element controlled by this button.".into(),
             ],
         },
     ];

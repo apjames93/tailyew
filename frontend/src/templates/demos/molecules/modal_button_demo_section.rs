@@ -72,7 +72,7 @@ pub fn modal_button_demo_section() -> Html {
                         html! {
                             <Button
                                 button_type={ButtonType::Primary}
-                                onclick={{
+                                on_click={{
                                     let close_modal = close_modal.clone();
                                     let on_confirm = on_confirm.clone();
                                     Callback::from(move |_| {
@@ -117,7 +117,7 @@ pub fn modal_button_demo_section() -> Html {
                         html! {
                             <Button
                                 button_type={ButtonType::Primary}
-                                onclick={{
+                                on_click={{
                                     let close_modal = close_modal.clone();
                                     let on_confirm = on_confirm.clone();
                                     Callback::from(move |_| {
@@ -151,7 +151,7 @@ pub fn modal_button_demo_section() -> Html {
                             <>
                                 <Button
                                     button_type={ButtonType::Secondary}
-                                    onclick={{
+                                    on_click={{
                                         let close_modal = close_modal.clone();
                                         let on_decline = on_decline.clone();
                                         Callback::from(move |_| {
@@ -165,7 +165,7 @@ pub fn modal_button_demo_section() -> Html {
 
                                 <Button
                                     button_type={ButtonType::Danger}
-                                    onclick={{
+                                    on_click={{
                                         let close_modal = close_modal.clone();
                                         let on_confirm = on_confirm.clone();
                                         Callback::from(move |_| {
@@ -194,8 +194,8 @@ pub fn modal_button_demo_section() -> Html {
     footer={Some(Callback::from(move |close_modal: Callback<()>| {
         html! {
             <>
-                <Button button_type={ButtonType::Secondary} onclick={...}>{"Decline"}</Button>
-                <Button button_type={ButtonType::Danger} onclick={...}>{"Confirm"}</Button>
+                <Button button_type={ButtonType::Secondary} on_click={...}>{"Decline"}</Button>
+                <Button button_type={ButtonType::Danger} on_click={...}>{"Confirm"}</Button>
             </>
         }
     }))}
@@ -227,9 +227,9 @@ pub fn modal_button_demo_section() -> Html {
                 "Html".into(),
                 "bool".into(),
                 "Option<Callback<()>>".into(),
-                "Option<Callback<Callback<()>>>".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
+                "Option<Callback<Callback<()>, Html>>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
                 "ModalSize".into(),
             ],
         },

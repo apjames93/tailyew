@@ -66,7 +66,7 @@ pub fn getting_started() -> Html {
             <div class="pt-4">
                 <Button
                     button_type={ButtonType::Primary}
-                    onclick={Callback::from(|_| {
+                    on_click={Callback::from(|_| {
                         let _ = web_sys::window()
                             .unwrap()
                             .open_with_url("https://github.com/apjames93/tailyew");

@@ -56,7 +56,7 @@ pub fn form_modal_demo_section() -> Html {
             html! {
                 <Button
                     button_type={ButtonType::Secondary}
-                    onclick={
+                    on_click={
                         let close_modal = close_modal.clone();
                         Callback::from(move |_| {
                             web_sys::console::log_1(&format!("{cancel_label} Cancel clicked").into());

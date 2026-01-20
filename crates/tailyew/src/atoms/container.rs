@@ -8,7 +8,7 @@ pub struct ContainerProps {
 
     /// Optional DOM id
     #[prop_or_default]
-    pub id: Option<String>,
+    pub id: Option<AttrValue>,
 
     /// Child elements to render inside the container
     pub children: Children,
