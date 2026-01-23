@@ -17,6 +17,10 @@
 
 TailYew helps you build fast, beautiful, **dark-mode ready** Yew apps — with minimal styling effort.
 
+🧪 **Dogfooded in production**  
+The TailYew demo site and documentation at [tailyew.com](https://tailyew.com) are built entirely with TailYew itself. We actively dogfood the library to validate APIs, accessibility, and real-world usage as the system evolves.
+
+
 - 🌗 **Dark mode** with Tailwind's `dark:` utilities  
 - 🧹 **Reusable components**: Buttons, Modals, Forms, Accordions, Tabs  
 - 📙 **Markdown rendering** auto-maps to TailYew components (`Typo`, `A`, `Image`, `CodeBlock`) and supports embedded `FormBuilder` blocks  

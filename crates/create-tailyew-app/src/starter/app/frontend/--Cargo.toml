@@ -17,7 +17,7 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 uuid = { workspace = true }
 
-tailyew = "0.1.43"
+tailyew = "0.1.44"
 yew-router = "0.18.0"
 yew = { version = "0.22", features = ["csr", "ssr"] }
 gloo = "0.11.0"

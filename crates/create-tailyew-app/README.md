@@ -110,6 +110,9 @@ This launches your dev server at [http://localhost:9001](http://localhost:9001).
 
 Explore live components: [tailyew.com/demo/getting\_started](https://tailyew.com/demo/getting_started)
 
+🧪 **Dogfooded in production**  
+The TailYew demo site and documentation at [tailyew.com](https://tailyew.com) are built entirely with TailYew itself. We actively dogfood the library to validate APIs, accessibility, and real-world usage as the system evolves.
+
 ---
 
 ## 🎬 Dev server

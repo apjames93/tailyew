@@ -96,8 +96,25 @@ pub fn landing_page() -> Html {
             // FAQ
             <Section id="faq" class="max-w-3xl mx-auto">
                 <Typo tag={TagType::H2}>{ "Frequently Asked Questions" }</Typo>
+                <Accordion title="Is this site built with TailYew?">
+                    <Typo tag={TagType::P}>
+                        { "Yes. This entire demo site—including the landing page, component demos, and documentation—is built using TailYew itself. We actively dogfood the library to validate APIs, accessibility, and real-world usage." }
+                    </Typo>
+                </Accordion>
                 <Accordion title="Is TailYew production-ready?">
-                    <Typo tag={TagType::P}>{ "I dont know I am using it on some side projects." }</Typo>
+                    <Typo tag={TagType::P}>
+                        { "TailYew is actively developed and used in real applications today. While many components are stable, the project continues to evolve as we refine component APIs, accessibility, and long-term maintainability." }
+                    </Typo>
+                </Accordion>
+                <Accordion title="How stable is the API?">
+                    <Typo tag={TagType::P}>
+                        { "We aim for consistency, but TailYew is still evolving. Breaking changes may occur between minor versions as patterns and abstractions improve." }
+                    </Typo>
+                </Accordion>
+                <Accordion title="Who is TailYew for?">
+                    <Typo tag={TagType::P}>
+                        { "TailYew is designed for developers building real-world Yew applications who want a consistent design system, strong accessibility defaults, and Tailwind-powered customization—without relying on JavaScript frameworks." }
+                    </Typo>
                 </Accordion>
                 <Accordion title="How can I contribute?">
                     <Typo tag={TagType::P}>{ "Open issues, suggest components, or submit PRs on GitHub. We welcome community involvement!" }</Typo>
