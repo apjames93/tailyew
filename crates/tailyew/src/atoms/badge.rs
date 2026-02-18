@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -62,19 +63,42 @@ pub fn badge(props: &BadgeProps) -> Html {
         html! { {content.clone()} }
     };
 
+    let wrapper_classes = use_themed_classes(
+        "Badge",
+        "root",
+        classes!("relative", "inline-block"),
+        Classes::default(),
+    );
+    let badge_classes = use_themed_classes(
+        "Badge",
+        "badge",
+        classes!(
+            "absolute",
+            "flex",
+            "items-center",
+            "justify-center",
+            "rounded-full",
+            "text-xs",
+            "px-1.5",
+            "h-5",
+            "min-w-[1.25rem]",
+            "transform",
+            "translate-x-1/2",
+            "-translate-y-1/2",
+            if is_dot { "w-2 h-2 p-0" } else { "" },
+            color.clone(),
+            position.clone(),
+        ),
+        class.clone(),
+    );
+
     html! {
-        <div class="relative inline-block">
+        <div class={wrapper_classes}>
             { for children.iter() }
             {
                 if !should_hide {
                     html! {
-                        <span class={classes!(
-                            "absolute", "flex", "items-center", "justify-center", "rounded-full", "text-xs", "px-1.5", "h-5", "min-w-[1.25rem]", "transform", "translate-x-1/2", "-translate-y-1/2",
-                            if is_dot { "w-2 h-2 p-0" } else { "" },
-                            color,
-                            position,
-                            class,
-                        )}>
+                        <span class={badge_classes.clone()}>
                             { if is_dot { html! {} } else { display_content } }
                         </span>
                     }

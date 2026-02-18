@@ -1,5 +1,6 @@
 use crate::form::Label;
 use crate::form_deserializer::*;
+use crate::system::use_themed_classes;
 use serde::Deserialize;
 use web_sys::HtmlTextAreaElement;
 use yew::prelude::*;
@@ -70,9 +71,14 @@ pub fn textarea(props: &TextareaProps) -> Html {
         })
     };
 
-    let div_class = classes!("flex", "flex-col", "space-y-2", container_class.clone());
+    let div_class = use_themed_classes(
+        "Textarea",
+        "root",
+        classes!("flex", "flex-col", "space-y-2"),
+        container_class.clone(),
+    );
 
-    let textarea_classes = classes!(
+    let textarea_defaults = classes!(
         "px-4",
         "py-2",
         "border",
@@ -88,8 +94,9 @@ pub fn textarea(props: &TextareaProps) -> Html {
         "dark:border-gray-600",
         "dark:text-gray-200",
         "dark:focus:ring-green-400",
-        class.clone()
     );
+    let textarea_classes =
+        use_themed_classes("Textarea", "textarea", textarea_defaults, class.clone());
 
     html! {
         <div class={div_class}>

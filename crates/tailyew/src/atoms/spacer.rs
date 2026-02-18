@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 /// A simple vertical or horizontal spacer used for layout control.
@@ -29,8 +30,9 @@ pub fn spacer(props: &SpacerProps) -> Html {
     } else {
         format!("display: block; height: {}px; width: 100%;", size)
     };
+    let spacer_classes = use_themed_classes("Spacer", "root", Classes::default(), class.clone());
 
     html! {
-        <div style={style} class={class.clone()} />
+        <div style={style} class={spacer_classes} />
     }
 }

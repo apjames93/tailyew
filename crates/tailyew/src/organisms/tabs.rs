@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use web_sys::{HtmlElement, KeyboardEvent, ScrollBehavior, ScrollIntoViewOptions};
 use yew::{prelude::*, AttrValue};
 
@@ -30,6 +31,59 @@ pub fn tabs(props: &TabsProps) -> Html {
     let active_tab_index = use_state(|| 0);
     let base_id_for_click = base_id.clone();
     let tab_refs = use_mut_ref(Vec::<NodeRef>::new);
+    let root_classes = use_themed_classes(
+        "Tabs",
+        "root",
+        classes!("tabs-component", "w-full", "p-2"),
+        Classes::default(),
+    );
+    let active_trigger_classes = use_themed_classes(
+        "Tabs",
+        "trigger",
+        classes!(
+            "px-4",
+            "py-2",
+            "text-blue-500",
+            "dark:text-blue-300",
+            "border-b-2",
+            "border-blue-500",
+            "dark:border-blue-300",
+            "font-medium",
+            "cursor-pointer",
+            "transition",
+            "duration-200",
+            "focus:outline-none",
+            "focus:ring-2",
+            "focus:ring-offset-2",
+            "focus:ring-blue-300"
+        ),
+        Classes::default(),
+    );
+    let inactive_trigger_classes = use_themed_classes(
+        "Tabs",
+        "trigger",
+        classes!(
+            "px-4",
+            "py-2",
+            "text-gray-600",
+            "dark:text-gray-400",
+            "border-b-2",
+            "border-transparent",
+            "font-medium",
+            "cursor-pointer",
+            "hover:text-blue-500",
+            "dark:hover:text-blue-300",
+            "transition",
+            "duration-200",
+            "focus:outline-none",
+            "focus:ring-2",
+            "focus:ring-offset-2",
+            "focus:ring-blue-300"
+        ),
+        Classes::default(),
+    );
+    let content_classes =
+        use_themed_classes("Tabs", "content", classes!("mt-4"), Classes::default());
 
     {
         let mut refs = tab_refs.borrow_mut();
@@ -60,19 +114,6 @@ pub fn tabs(props: &TabsProps) -> Html {
         })
     };
 
-    // Helper for styling tabs
-    let tab_styles = |is_active: bool| {
-        let base = if is_active {
-            "px-4 py-2 text-blue-500 dark:text-blue-300 border-b-2 border-blue-500 dark:border-blue-300 font-medium cursor-pointer transition duration-200"
-        } else {
-            "px-4 py-2 text-gray-600 dark:text-gray-400 border-b-2 border-transparent font-medium cursor-pointer hover:text-blue-500 dark:hover:text-blue-300 transition duration-200"
-        };
-        format!(
-            "{} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300",
-            base
-        )
-    };
-
     // Render content for active tab
     let content = props
         .items
@@ -84,7 +125,7 @@ pub fn tabs(props: &TabsProps) -> Html {
     let active_panel_id = format!("{}-panel-{}", base_id, *active_tab_index);
 
     html! {
-        <div class="tabs-component w-full p-2">
+        <div class={root_classes}>
             <div
                 class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory border-b border-gray-200 dark:border-gray-700"
                 role="tablist"
@@ -97,6 +138,11 @@ pub fn tabs(props: &TabsProps) -> Html {
                     };
                     let tab_id = format!("{}-tab-{}", base_id, index);
                     let panel_id = format!("{}-panel-{}", base_id, index);
+                    let trigger_classes = if is_active {
+                        active_trigger_classes.clone()
+                    } else {
+                        inactive_trigger_classes.clone()
+                    };
                     let onclick = {
                         let on_tab_click = on_tab_click.clone();
                         Callback::from(move |_| on_tab_click.emit(index))
@@ -136,7 +182,7 @@ pub fn tabs(props: &TabsProps) -> Html {
                         <div
                             key={index}
                             id={tab_id.clone()}
-                            class={classes!("flex-shrink-", "snap-start", tab_styles(is_active))}
+                            class={classes!("flex-shrink-", "snap-start", trigger_classes)}
                             role="tab"
                             tabindex={if is_active { "0" } else { "-1" }}
                             aria-selected={is_active.to_string()}
@@ -154,7 +200,7 @@ pub fn tabs(props: &TabsProps) -> Html {
             <div
                 id={active_panel_id}
                 role="tabpanel"
-                class="mt-4"
+                class={content_classes}
                 aria-labelledby={active_tab_id}
                 tabindex="0"
             >

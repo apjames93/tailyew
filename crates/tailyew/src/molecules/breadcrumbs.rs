@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -29,9 +30,15 @@ pub fn breadcrumbs(props: &BreadcrumbsProps) -> Html {
 
     let items: Vec<Html> = children.iter().collect();
     let len = items.len();
+    let root_classes = use_themed_classes(
+        "Breadcrumbs",
+        "root",
+        classes!("w-full", "overflow-x-auto", "py-2"),
+        class.clone(),
+    );
 
     html! {
-        <nav aria-label={aria_label.clone()} class={classes!("w-full", "overflow-x-auto", "py-2", class.clone())}>
+        <nav aria-label={aria_label.clone()} class={root_classes}>
             <ol class="flex items-center gap-x-2 text-sm text-gray-600 dark:text-gray-300">
                 {
                     for items.iter().enumerate().flat_map(|(i, item)| {

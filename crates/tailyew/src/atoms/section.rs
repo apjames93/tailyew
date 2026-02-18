@@ -1,4 +1,5 @@
 use crate::atoms::Container;
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -48,7 +49,14 @@ pub fn section(props: &SectionProps) -> Html {
         with_container,
     } = props;
 
-    let base_classes = classes!(background_color.clone().unwrap_or_default(), class.clone(),);
+    let defaults = classes!(background_color.clone().unwrap_or_default());
+    let base_classes = use_themed_classes("Section", "root", defaults, class.clone());
+    let themed_container_class = use_themed_classes(
+        "Section",
+        "container",
+        Classes::default(),
+        container_class.clone(),
+    );
 
     if *with_container {
         html! {
@@ -60,7 +68,7 @@ pub fn section(props: &SectionProps) -> Html {
                 aria-label={aria_label.clone()}
                 aria-labelledby={aria_labelledby.clone()}
             >
-                <Container class={container_class.clone()}>
+                <Container class={themed_container_class}>
                     { for children.iter() }
                 </Container>
             </section>

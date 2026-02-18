@@ -1,6 +1,7 @@
 // src/organisms/card.rs
 
 use crate::atoms::{Image, TagType, Typo};
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 /// Properties for the Card component
@@ -39,13 +40,25 @@ pub fn card(props: &CardProps) -> Html {
         class,
     } = props;
 
-    let card_classes = classes!(
+    let root_defaults = classes!(
         "rounded-lg",
         "shadow-lg",
         "overflow-hidden",
         "bg-white",
         "dark:bg-gray-800",
-        class.clone()
+    );
+    let card_classes = use_themed_classes("Card", "root", root_defaults, class.clone());
+    let image_classes = use_themed_classes(
+        "Card",
+        "image",
+        classes!("w-full", "h-48", "object-cover"),
+        image_class.clone(),
+    );
+    let body_classes = use_themed_classes(
+        "Card",
+        "body",
+        classes!("p-6", "space-y-2"),
+        Classes::default(),
     );
 
     html! {
@@ -54,11 +67,11 @@ pub fn card(props: &CardProps) -> Html {
                 <Image
                     src={url.clone()}
                     alt={image_alt.clone().unwrap_or_else(|| AttrValue::from("Card Image"))}
-                    class={classes!("w-full", "h-48", "object-cover", image_class.clone())}
+                    class={image_classes}
                 />
             }
 
-            <div class="p-6 space-y-2">
+            <div class={body_classes}>
                 <Typo tag={TagType::H3}>{ html! { title.clone() } }</Typo>
 
                 if let Some(sub) = subtitle {

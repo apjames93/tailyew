@@ -1,5 +1,6 @@
 use crate::form::Label;
 use crate::form_deserializer::*;
+use crate::system::use_themed_classes;
 use regex::Regex;
 use serde::Deserialize;
 use std::fmt;
@@ -225,7 +226,13 @@ pub fn input(props: &InputProps) -> Html {
         })
     };
 
-    let input_classes = classes!(
+    let wrapper_classes = use_themed_classes(
+        "Input",
+        "root",
+        classes!("flex", "flex-col", "mb-4"),
+        Classes::default(),
+    );
+    let input_defaults = classes!(
         "w-full",
         "px-4",
         "py-2",
@@ -243,8 +250,8 @@ pub fn input(props: &InputProps) -> Html {
         "dark:border-gray-600",
         "dark:focus:ring-primary-dark",
         "dark:focus:border-primary-dark",
-        class.clone()
     );
+    let input_classes = use_themed_classes("Input", "input", input_defaults, class.clone());
 
     let title = validation_error
         .as_ref()
@@ -295,7 +302,7 @@ pub fn input(props: &InputProps) -> Html {
         html! { input_element }
     } else {
         html! {
-            <div class="flex flex-col mb-4">
+            <div class={wrapper_classes}>
                 <Label for_id={id.clone()} text={label.clone()} required={required} class={classes!("mb-2")} />
                 { input_element }
             </div>

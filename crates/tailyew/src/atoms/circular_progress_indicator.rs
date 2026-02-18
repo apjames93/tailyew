@@ -1,5 +1,6 @@
 // crates/tailyew/src/atoms/circular_progress_indicator.rs
 
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -25,7 +26,7 @@ pub fn circular_progress_indicator(props: &CircularProgressIndicatorProps) -> Ht
         class,
     } = props;
 
-    let spinner_classes = classes!(
+    let defaults = classes!(
         "border-4",
         "border-t-4",
         "border-transparent",
@@ -33,8 +34,9 @@ pub fn circular_progress_indicator(props: &CircularProgressIndicatorProps) -> Ht
         "animate-spin",
         size_class.clone(),
         color_class.clone(),
-        class.clone(),
     );
+    let spinner_classes =
+        use_themed_classes("CircularProgressIndicator", "root", defaults, class.clone());
 
     html! {
         <div class={spinner_classes} aria-label="Loading" role="status"></div>

@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 /// Define the possible HTML tag types for the Button component
@@ -93,7 +94,7 @@ pub fn button(props: &ButtonProps) -> Html {
     };
 
     // Combine final class list
-    let button_classes = classes!(
+    let defaults = classes!(
         "py-2",
         "px-4",
         "rounded-lg",
@@ -102,8 +103,8 @@ pub fn button(props: &ButtonProps) -> Html {
         "duration-150",
         button_style,
         disabled_style,
-        class.clone()
     );
+    let button_classes = use_themed_classes("Button", "root", defaults, class.clone());
 
     // If this is a submit‐type button, we let the form attribute handle submission,
     // and we don't wire up an onclick

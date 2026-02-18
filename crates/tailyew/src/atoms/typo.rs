@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 /// Semantic tags for the Typo component
@@ -73,7 +74,7 @@ pub fn typo(props: &TypoProps) -> Html {
         TagType::Span => "text-sm text-gray-600 dark:text-gray-400",
     };
 
-    let all_classes = classes!(base_classes, class.clone());
+    let all_classes = use_themed_classes("Typo", "root", classes!(base_classes), class.clone());
 
     // Smart default: auto-role alert for errors
     let resolved_role = match (&tag, &role) {

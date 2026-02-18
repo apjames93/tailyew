@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 use crate::icons::icon_base::IconBase;
@@ -24,6 +25,8 @@ pub struct AtomIconProps {
 
 #[component(AtomIcon)]
 pub fn atom_icon(props: &AtomIconProps) -> Html {
+    let icon_class =
+        use_themed_classes("AtomIcon", "root", Classes::default(), props.class.clone());
     let stroke_color = props
         .color
         .clone()
@@ -37,7 +40,7 @@ pub fn atom_icon(props: &AtomIconProps) -> Html {
 
     html! {
         <IconBase
-            class={props.class.clone()}
+            class={icon_class}
             size={props.size}
             stroke_width={props.stroke_width}
             label={label}

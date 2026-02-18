@@ -6,7 +6,7 @@ use yew_router::prelude::*;
 mod pages;
 mod templates;
 use pages::{AppRouter, DemoPage, LandingPage, NotFoundPage};
-use tailyew::system::{InitTheme, Theme};
+use tailyew::system::{InitTheme, Theme, ThemeOverrides};
 
 /// Define the application routes and implement the `Routable` trait
 #[derive(Clone, Routable, PartialEq, Debug)]
@@ -33,6 +33,7 @@ pub fn app() -> Html {
     let my_theme = Theme {
         name: "system".into(),
         class: classes!(),
+        overrides: ThemeOverrides::default(),
     };
 
     html! {

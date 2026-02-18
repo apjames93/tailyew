@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 use crate::icons::icon_base::IconBase;
@@ -25,6 +26,12 @@ pub struct PolylineProps {
 
 #[component(PolylineIcon)]
 pub fn polyline_icon(props: &PolylineProps) -> Html {
+    let icon_class = use_themed_classes(
+        "PolylineIcon",
+        "root",
+        Classes::default(),
+        props.class.clone(),
+    );
     let stroke_color = props
         .color
         .clone()
@@ -38,7 +45,7 @@ pub fn polyline_icon(props: &PolylineProps) -> Html {
 
     html! {
         <IconBase
-            class={props.class.clone()}
+            class={icon_class}
             size={props.size}
             stroke_width={props.stroke_width}
             label={label}

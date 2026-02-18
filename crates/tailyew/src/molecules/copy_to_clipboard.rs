@@ -4,6 +4,7 @@ use web_sys::window;
 use yew::prelude::*;
 
 use crate::atoms::{Button, ButtonType};
+use crate::system::use_themed_classes;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct CopyToClipboardProps {
@@ -45,6 +46,8 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
         class,
         children,
     } = props.clone();
+    let button_class =
+        use_themed_classes("CopyToClipboard", "root", Classes::default(), class.clone());
 
     let copied = use_state(|| false);
 
@@ -88,7 +91,7 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
         <Button
             button_type={current_type}
             on_click={onclick}
-            class={class}
+            class={button_class}
         >
             { content }
         </Button>

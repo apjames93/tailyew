@@ -1,4 +1,5 @@
 use crate::form::{async_callback, FormBuilder, FormSubmitCallback, RenderFieldProps};
+use crate::system::use_themed_classes;
 use crate::{ButtonType, CopyIcon, CopyToClipboard};
 use serde::Deserialize;
 use web_sys::SubmitEvent;
@@ -35,6 +36,22 @@ pub fn code_block(props: &CodeBlockProps) -> Html {
         onsubmit,
         show_copy,
     } = props.clone();
+    let pre_classes = use_themed_classes(
+        "CodeBlock",
+        "root",
+        classes!(
+            "bg-gray-100",
+            "dark:bg-gray-800",
+            "p-4",
+            "rounded",
+            "overflow-auto",
+            "text-sm",
+            "font-mono",
+            "text-gray-800",
+            "dark:text-gray-100"
+        ),
+        class.clone(),
+    );
 
     // if the markdown fence says ` ```form `, try to parse the first text node as JSON:
     if language.as_deref() == Some("form") {
@@ -97,13 +114,7 @@ pub fn code_block(props: &CodeBlockProps) -> Html {
             } else {
                 html!{}
             }}
-            <pre class={classes!(
-                "bg-gray-100","dark:bg-gray-800",
-                "p-4","rounded","overflow-auto",
-                "text-sm","font-mono",
-                "text-gray-800","dark:text-gray-100",
-                class
-            )}>
+            <pre class={pre_classes}>
                 <code>{ for children.iter() }</code>
             </pre>
         </div>

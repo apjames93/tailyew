@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 use crate::icons::icon_base::IconBase;
@@ -26,6 +27,8 @@ pub struct FormIconProps {
 /// Form Icon component for TailYew
 #[component(FormIcon)]
 pub fn form_icon(props: &FormIconProps) -> Html {
+    let icon_class =
+        use_themed_classes("FormIcon", "root", Classes::default(), props.class.clone());
     let stroke_color = props
         .color
         .clone()
@@ -39,7 +42,7 @@ pub fn form_icon(props: &FormIconProps) -> Html {
 
     html! {
         <IconBase
-            class={props.class.clone()}
+            class={icon_class}
             size={props.size}
             stroke_width={props.stroke_width}
             label={label}

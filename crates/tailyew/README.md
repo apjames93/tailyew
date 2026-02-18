@@ -199,6 +199,17 @@ TailYew is committed to accessible UI components:
 
 ---
 
+
+# Custom Themes
+
+TailYew supports flexible theming using a combination of:
+
+* Tailwind semantic color tokens
+* Tailwind dark mode
+* TailYew runtime theme overrides
+* This allows you to completely restyle your application without modifying component code.
+
+---
 # 📁 Folder Structure
 
 ```bash

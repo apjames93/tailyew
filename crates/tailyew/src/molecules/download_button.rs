@@ -4,6 +4,7 @@ use web_sys::HtmlAnchorElement;
 use yew::prelude::*;
 
 use crate::atoms::{Button, ButtonType};
+use crate::system::use_themed_classes;
 
 #[derive(PartialEq, Clone)]
 pub enum FileType {
@@ -71,6 +72,8 @@ pub fn download_button(props: &DownloadButtonProps) -> Html {
         button_type,
         class,
     } = props.clone();
+    let button_class =
+        use_themed_classes("DownloadButton", "root", Classes::default(), class.clone());
 
     // Keep object URL alive across re-renders
     let blob_url = use_mut_ref(|| None::<ObjectUrl>);
@@ -115,7 +118,7 @@ pub fn download_button(props: &DownloadButtonProps) -> Html {
         <Button
             button_type={button_type}
             on_click={onclick}
-            class={class}
+            class={button_class}
         >
             { label }
         </Button>

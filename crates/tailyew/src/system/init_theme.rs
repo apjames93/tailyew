@@ -1,4 +1,4 @@
-// crates/tailyew/src/system/init.rs
+use super::{ThemeContext, ThemeOverrides};
 
 use yew::prelude::*;
 
@@ -9,6 +9,9 @@ pub struct Theme {
 
     /// Override classes to be merged into the root
     pub class: Classes,
+
+    /// Component/slot-level class overrides
+    pub overrides: ThemeOverrides,
 }
 
 impl Default for Theme {
@@ -16,6 +19,7 @@ impl Default for Theme {
         Self {
             name: "system".to_string(),
             class: Classes::default(),
+            overrides: ThemeOverrides::default(),
         }
     }
 }
@@ -51,6 +55,11 @@ pub fn init_theme(props: &InitProps) -> Html {
     };
 
     let extra_theme_class = theme.class.clone();
+    let theme_context = ThemeContext {
+        name: theme.name.clone().into(),
+        root_class: theme.class.clone(),
+        overrides: theme.overrides.clone(),
+    };
 
     html! {
         <div
@@ -61,7 +70,9 @@ pub fn init_theme(props: &InitProps) -> Html {
             )}
             data-theme={theme.name.clone()}
         >
-            { for children.iter() }
+            <ContextProvider<ThemeContext> context={theme_context}>
+                { for children.iter() }
+            </ContextProvider<ThemeContext>>
         </div>
     }
 }

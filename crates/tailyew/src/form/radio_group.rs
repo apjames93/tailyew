@@ -1,5 +1,6 @@
 use crate::form::Label;
 use crate::form_deserializer::{de_attr, de_classes};
+use crate::system::use_themed_classes;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
@@ -65,7 +66,12 @@ pub fn radio_group(props: &RadioGroupProps) -> Html {
     };
 
     // merge your custom classes into the container
-    let container_classes = classes!("flex", "flex-col", "space-y-4", class.clone());
+    let container_classes = use_themed_classes(
+        "RadioGroup",
+        "root",
+        classes!("flex", "flex-col", "space-y-4"),
+        class.clone(),
+    );
 
     let label_classes = classes!("text-gray-700", "dark:text-gray-300");
     let item_classes = classes!("flex", "items-center", "space-x-2");

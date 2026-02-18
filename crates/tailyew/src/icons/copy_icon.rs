@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 use crate::icons::icon_base::IconBase;
@@ -25,6 +26,8 @@ pub struct CopyIconProps {
 
 #[component(CopyIcon)]
 pub fn copy_icon(props: &CopyIconProps) -> Html {
+    let icon_class =
+        use_themed_classes("CopyIcon", "root", Classes::default(), props.class.clone());
     let stroke_color = props
         .color
         .clone()
@@ -38,7 +41,7 @@ pub fn copy_icon(props: &CopyIconProps) -> Html {
 
     html! {
         <IconBase
-            class={props.class.clone()}
+            class={icon_class}
             size={props.size}
             stroke_width={props.stroke_width}
             label={label}

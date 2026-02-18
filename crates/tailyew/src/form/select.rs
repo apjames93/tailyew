@@ -1,5 +1,6 @@
 use crate::form::Label;
 use crate::form_deserializer::*;
+use crate::system::use_themed_classes;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
@@ -71,7 +72,14 @@ pub fn select(props: &SelectProps) -> Html {
         })
     };
 
-    let select_classes = classes!(
+    let root_classes = use_themed_classes(
+        "Select",
+        "root",
+        classes!("flex", "flex-col", "space-y-2"),
+        Classes::default(),
+    );
+
+    let select_defaults = classes!(
         "w-full",
         "px-4",
         "py-2",
@@ -88,11 +96,11 @@ pub fn select(props: &SelectProps) -> Html {
         "dark:border-gray-600",
         "dark:text-gray-200",
         "dark:focus:ring-green-400",
-        class.clone()
     );
+    let select_classes = use_themed_classes("Select", "select", select_defaults, class.clone());
 
     html! {
-        <div class="flex flex-col space-y-2">
+        <div class={root_classes}>
             // only render a label if it's non-empty
             { if !label.is_empty() {
                 html! {

@@ -1,7 +1,7 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::atoms::{Button, ButtonType, Section, TagType, Typo};
 use tailyew::organisms::table::Column;
-use tailyew::system::{InitTheme, Theme};
+use tailyew::system::{InitTheme, Theme, ThemeOverrides};
 use yew::prelude::*;
 
 #[component(InitThemeDemoSection)]
@@ -11,6 +11,7 @@ pub fn init_theme_demo_section() -> Html {
             theme={Some(Theme {
                 name: "dark".into(),
                 class: classes!("p-4", "rounded-lg", "border", "border-gray-700", "bg-gray-900", "text-white"),
+                overrides: ThemeOverrides::default(),
             })}
         >
             <Section>
@@ -30,6 +31,7 @@ pub fn init_theme_demo_section() -> Html {
     theme={Some(Theme {
         name: "dark".into(),
         class: classes!("p-4", "rounded-lg", "border", "border-gray-700", "bg-gray-900", "text-white"),
+        overrides: ThemeOverrides::default(),
     })}
 >
     <Section>
@@ -51,7 +53,7 @@ pub fn init_theme_demo_section() -> Html {
         Column {
             header: "Description".into(),
             values: vec![
-                "Optional theme config. Accepts a `name` (light, dark, system) and `class` overrides.".into(),
+                "Optional theme config. Accepts `name`, root `class`, and component/slot `overrides`.".into(),
                 "Extra utility classes for layout/styling the root container.".into(),
             ],
         },

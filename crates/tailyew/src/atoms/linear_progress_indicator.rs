@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
@@ -14,14 +15,19 @@ pub struct LinearProgressProps {
 pub fn linear_progress_indicator(props: &LinearProgressProps) -> Html {
     let progress = props.progress.clamp(0, 100); // safe bounds
 
-    let bar_classes = classes!(
+    let defaults = classes!(
         "h-full",
         "transition-all",
         "duration-500",
         "bg-gradient-to-r",
         "from-blue-500",
         "to-green-500",
-        props.class.clone()
+    );
+    let bar_classes = use_themed_classes(
+        "LinearProgressIndicator",
+        "root",
+        defaults,
+        props.class.clone(),
     );
 
     html! {
