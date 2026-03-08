@@ -23,7 +23,7 @@ build-tailwind:
 build: clean
 	@echo "Starting Trunk build..."
 	make build-tailwind
-	trunk build --config Trunk.toml --dist dist
+	trunk build --config Trunk.toml --dist dist --release
 
 # =======================================
 # Run and Serve Targets

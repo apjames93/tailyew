@@ -1,9 +1,20 @@
 <!doctype html>
-<html lang="en" class="light">
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TailYew Starter</title>
+
+        <script>
+            try {
+                const savedTheme = localStorage.getItem("theme") || "light";
+
+                document.documentElement.className = savedTheme;
+            } catch (_) {
+                document.documentElement.className = "light";
+            }
+        </script>
+
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="/static/styles.css">
         <link rel="icon" type="image/png" href="/static/favicon.ico">
@@ -14,7 +25,12 @@
     <body>
         <div id="app"></div>
         <script>
-            if ("serviceWorker" in navigator) {
+            const isLocalhost =
+                window.location.hostname === "localhost" ||
+                window.location.hostname === "127.0.0.1" ||
+                window.location.hostname === "[::1]";
+
+            if (!isLocalhost && "serviceWorker" in navigator) {
                 navigator.serviceWorker.register("/static/service_worker.js").catch((error) =>
                     console.error("Service Worker registration failed:", error),
                 );
