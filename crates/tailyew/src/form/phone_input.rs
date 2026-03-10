@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::*;
 use regex::Regex;
 use serde::Deserialize;
@@ -91,18 +92,11 @@ pub fn phone_input(props: &PhoneInputProps) -> Html {
         class
     );
 
-    let label_classes = classes!(
-        "text-lg",
-        "font-semibold",
-        "text-gray-700",
-        "dark:text-gray-300"
-    );
-
     let error_classes = classes!("text-sm", "text-red-500", "dark:text-red-400");
 
     html! {
         <div class="flex flex-col space-y-2">
-            <label for={id.clone()} class={label_classes}>{ label }</label>
+            <Label for_id={id.clone()} text={label.clone()} />
             <input
                 id={id.clone()}
                 name={id.clone()}

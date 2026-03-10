@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::*;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
@@ -77,9 +78,7 @@ pub fn range_input(props: &RangeInputProps) -> Html {
 
     html! {
         <div class="flex flex-col space-y-2">
-            <label for={id.clone()} class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                { label }
-            </label>
+            <Label for_id={id.clone()} text={label.clone()} />
             <div class="flex items-center space-x-4">
                 <input
                     id={id.clone()}

@@ -341,6 +341,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 node_ref={input_ref.clone()}
                 id={search_id.clone()}
                 label={label.unwrap_or_else(|| "".into())}
+                required={required}
                 input_type={InputType::Search}
                 default_value={(*search_text).clone()}
                 placeholder={placeholder.unwrap_or_default()}

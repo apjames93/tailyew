@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::{de_attr, de_classes};
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
@@ -87,18 +88,11 @@ pub fn color_input(props: &ColorInputProps) -> Html {
         "dark:border-gray-600",
     );
 
-    let label_classes = classes!(
-        "text-lg",
-        "font-semibold",
-        "text-gray-700",
-        "dark:text-gray-200"
-    );
-
     let description_classes = classes!("text-gray-600", "dark:text-gray-400");
 
     html! {
         <div class="flex flex-col space-y-2">
-            <label for={id.clone()} class={label_classes}>{ label.clone() }</label>
+            <Label for_id={id.clone()} text={label.clone()} />
             <div class="flex items-center space-x-4">
                 <input
                     id={id.clone()}

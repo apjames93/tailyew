@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::{de_attr, de_option_attr};
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
@@ -89,7 +90,6 @@ pub fn checkbox(props: &CheckboxProps) -> Html {
     );
 
     let label_classes = classes!(
-        "text-lg",
         "ml-2",
         "cursor-pointer",
         "transition",
@@ -115,9 +115,12 @@ pub fn checkbox(props: &CheckboxProps) -> Html {
                     class={checkbox_classes}
                     onchange={handle_change}
                 />
-                <label for={id.clone()} class={label_classes}>
-                    { label.clone() }
-                </label>
+                <Label
+                    for_id={id.clone()}
+                    text={label.clone()}
+                    required={required}
+                    class={label_classes}
+                />
             </div>
             {
                 if let Some(desc) = &description {

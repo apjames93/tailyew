@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::*;
 use serde::Deserialize;
 use web_sys::HtmlTextAreaElement;
@@ -90,16 +91,9 @@ pub fn textarea(props: &TextareaProps) -> Html {
         class.clone()
     );
 
-    let label_classes = classes!(
-        "text-lg",
-        "font-semibold",
-        "text-gray-700",
-        "dark:text-gray-200"
-    );
-
     html! {
         <div class={div_class}>
-            <label for={id.clone()} class={label_classes}>{ label.clone() }</label>
+            <Label for_id={id.clone()} text={label.clone()} required={*required} />
             <textarea
                 id={id.clone()}
                 placeholder={placeholder.clone()}

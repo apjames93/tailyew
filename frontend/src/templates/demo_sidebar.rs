@@ -8,7 +8,7 @@ use crate::templates::demos::{
     CopyToClipboardDemoSection, DownloadButtonDemoSection, FileInputDemoSection,
     FormBuilderDemoSection, FormDemoSection, FormModalDemoSection, GettingStarted,
     HeroHeaderDemoSection, IconDemoSection, ImageDemoSection, InitThemeDemoSection,
-    InputDemoSection, JsonInputDemoSection, LiDemoSection, LineChartDemoSection,
+    InputDemoSection, JsonInputDemoSection, LabelDemoSection, LiDemoSection, LineChartDemoSection,
     LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection,
     NavBarDemoSection, NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection,
     PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection,
@@ -60,6 +60,11 @@ pub const FORM_LINKS: &[DemoLink] = &[
         name: "Input",
         route: "input",
         render: || html! { <InputDemoSection /> },
+    },
+    DemoLink {
+        name: "Label",
+        route: "label",
+        render: || html! { <LabelDemoSection /> },
     },
     DemoLink {
         name: "Search Input",
