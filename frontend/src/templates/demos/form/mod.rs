@@ -7,6 +7,9 @@ pub use json_input_demo_section::*;
 pub mod input_demo_section;
 pub use input_demo_section::*;
 
+pub mod label_demo_section;
+pub use label_demo_section::*;
+
 pub mod file_input_demo_section;
 pub use file_input_demo_section::*;
 

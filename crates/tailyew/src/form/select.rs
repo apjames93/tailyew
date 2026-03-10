@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::*;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
@@ -95,10 +96,7 @@ pub fn select(props: &SelectProps) -> Html {
             // only render a label if it's non-empty
             { if !label.is_empty() {
                 html! {
-                    <label for={id.clone()}
-                           class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                        { label.clone() }
-                    </label>
+                    <Label for_id={id.clone()} text={label.clone()} required={*required} />
                 }
             } else {
                 html!{}

@@ -1,7 +1,6 @@
 use crate::form::*;
 use crate::{TagType, Typo};
 use serde::Deserialize;
-use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone, Default, Deserialize)]
 pub struct RenderFieldProps {

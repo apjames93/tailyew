@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::*;
 use regex::Regex;
 use serde::Deserialize;
@@ -253,14 +254,6 @@ pub fn input(props: &InputProps) -> Html {
         class.clone()
     );
 
-    let label_classes = classes!(
-        "mb-2",
-        "text-lg",
-        "font-semibold",
-        "text-gray-700",
-        "dark:text-gray-300"
-    );
-
     let title = validation_error
         .as_ref()
         .cloned()
@@ -311,7 +304,7 @@ pub fn input(props: &InputProps) -> Html {
     } else {
         html! {
             <div class="flex flex-col mb-4">
-                <label for={id} class={label_classes}>{ label }</label>
+                <Label for_id={id.clone()} text={label.clone()} required={required} class={classes!("mb-2")} />
                 { input_element }
             </div>
         }

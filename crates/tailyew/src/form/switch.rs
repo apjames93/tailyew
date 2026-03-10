@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::{de_attr, de_option_attr};
 use serde::Deserialize;
 use wasm_bindgen::JsCast;
@@ -171,7 +172,6 @@ pub fn switch(props: &SwitchProps) -> Html {
     );
 
     let label_classes = classes!(
-        "text-lg",
         "ml-3",
         "cursor-pointer",
         "transition",
@@ -232,13 +232,13 @@ pub fn switch(props: &SwitchProps) -> Html {
                     <span class={thumb_classes} />
                 </button>
 
-                <label
-                    id={label_id}
-                    for={id.clone()}
+                <Label
+                    id={Some(AttrValue::from(label_id))}
+                    for_id={id.clone()}
+                    text={label.clone()}
+                    required={required}
                     class={label_classes}
-                >
-                    { label.clone() }
-                </label>
+                />
             </div>
             {
                 if let Some(desc) = &description {

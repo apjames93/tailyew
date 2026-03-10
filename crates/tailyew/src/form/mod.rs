@@ -1,5 +1,10 @@
+use yew::prelude::*;
+
 pub mod json_input;
 pub use json_input::*;
+
+pub mod label;
+pub use label::*;
 
 pub mod input;
 pub use input::*;
@@ -51,3 +56,18 @@ pub use form_deserializer::*;
 
 pub mod switch;
 pub use switch::*;
+
+pub(crate) fn render_label_with_required_indicator(label: &AttrValue, required: bool) -> Html {
+    html! {
+        <>
+            { label.clone() }
+            {
+                if required && !label.is_empty() {
+                    html! { <span aria-hidden="true">{ " *" }</span> }
+                } else {
+                    html! {}
+                }
+            }
+        </>
+    }
+}

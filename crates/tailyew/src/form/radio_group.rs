@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::{de_attr, de_classes};
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
@@ -66,12 +67,7 @@ pub fn radio_group(props: &RadioGroupProps) -> Html {
     // merge your custom classes into the container
     let container_classes = classes!("flex", "flex-col", "space-y-4", class.clone());
 
-    let label_classes = classes!(
-        "text-lg",
-        "font-semibold",
-        "text-gray-700",
-        "dark:text-gray-300"
-    );
+    let label_classes = classes!("text-gray-700", "dark:text-gray-300");
     let item_classes = classes!("flex", "items-center", "space-x-2");
     let input_classes = classes!(
         "h-4",
@@ -90,7 +86,7 @@ pub fn radio_group(props: &RadioGroupProps) -> Html {
         <div class={container_classes}>
             { // only show a legend/label if non-empty
               if !label.is_empty() {
-                html! { <label class={label_classes.clone()}>{ label.clone() }</label> }
+                html! { <Label text={label.clone()} class={label_classes.clone()} /> }
               } else {
                 html!{}
               }
@@ -99,11 +95,12 @@ pub fn radio_group(props: &RadioGroupProps) -> Html {
             <div class="flex flex-col space-y-2">
                 { for options.iter().map(|(value, text)| {
                     let checked = *selected == *value;
+                    let option_id = format!("{}-{}", id, value);
                     html! {
                         <div class={item_classes.clone()}>
                             <input
                                 type="radio"
-                                id={format!("{}-{}", id, value)}
+                                id={option_id.clone()}
                                 name={id.clone()}
                                 value={value.clone()}
                                 checked={checked}
@@ -111,12 +108,7 @@ pub fn radio_group(props: &RadioGroupProps) -> Html {
                                 onchange={onchange.clone()}
                                 class={input_classes.clone()}
                             />
-                            <label
-                                for={format!("{}-{}", id, value)}
-                                class={text_classes.clone()}
-                            >
-                                { text }
-                            </label>
+                            <Label for_id={option_id} text={text.clone()} class={text_classes.clone()} />
                         </div>
                     }
                 }) }

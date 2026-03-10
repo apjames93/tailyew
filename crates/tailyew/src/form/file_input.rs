@@ -1,3 +1,4 @@
+use crate::form::Label;
 use crate::form_deserializer::*;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
@@ -80,8 +81,6 @@ pub fn file_input(props: &FileInputProps) -> Html {
         class.clone()
     );
 
-    let label_classes = classes!("font-semibold", "text-gray-700", "dark:text-gray-300");
-
     let file_name_classes = classes!(
         "text-sm",
         "text-gray-600",
@@ -92,9 +91,7 @@ pub fn file_input(props: &FileInputProps) -> Html {
 
     html! {
         <div class="flex flex-col space-y-2">
-            <label for={id.clone()} class={label_classes}>
-                { label }
-            </label>
+            <Label for_id={id.clone()} text={label.clone()} />
             <input
                 id={id.clone()}
                 type="file"
