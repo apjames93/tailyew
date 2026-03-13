@@ -23,7 +23,7 @@ wasm-bindgen-futures = { workspace = true }
 
 tailyew = { path = "../crates/tailyew" }
 
-yew-router = "0.19.0"
+yew-router = "0.20.0"
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt"] }

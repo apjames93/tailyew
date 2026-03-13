@@ -1,3 +1,4 @@
 static/styles.css
 static/pkg/*
 dist/
+pnpm-lock.yaml
