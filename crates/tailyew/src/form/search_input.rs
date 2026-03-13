@@ -1,6 +1,6 @@
 use crate::form_deserializer::*;
 use crate::SelectOption;
-use crate::{Input, InputType, Li, Typo, Ul, XIcon};
+use crate::{Input, InputType, Label, Li, Typo, Ul, XIcon};
 use gloo_timers::callback::Timeout;
 use js_sys::Date;
 use serde::Deserialize;
@@ -331,17 +331,17 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 name={base_id.clone()}
                 value={selected_item.as_ref().map(|i| i.value.clone()).unwrap_or_default()}
                 aria-required={AttrValue::from(required.to_string())}
+                required={required}
                 aria-describedby={aria_describedby.clone()}
                 aria-label={aria_label.clone()}
                 aria-labelledby={aria_labelledby.clone()}
             />
 
             // the visible search input
+            <Label for_id={search_id.clone()} required={required} text={label.unwrap_or("".into())} />
             <Input
                 node_ref={input_ref.clone()}
                 id={search_id.clone()}
-                label={label.unwrap_or_else(|| "".into())}
-                required={required}
                 input_type={InputType::Search}
                 default_value={(*search_text).clone()}
                 placeholder={placeholder.unwrap_or_default()}

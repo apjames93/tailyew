@@ -15,7 +15,7 @@ exclude = [
 # Serialization and data types
 serde = { version = "1.0.215", features = ["derive"] }
 serde_json = "1.0.133"
-yew = { version = "0.22.1", features = ["csr", "ssr"] }
+yew = { version = "0.23.0", features = ["csr", "ssr"] }
 gloo = "0.11.0"
 gloo-timers = "0.3.0"
 

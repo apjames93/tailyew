@@ -53,7 +53,7 @@ pub fn form_inputs() -> Html {
                 label="Language"
                 placeholder="Choose a language"
                 items={language_options.clone()}
-                required={false}
+                required={true}
             />
             <Input id="email"    label="Email"       input_type={InputType::Email}    placeholder="Enter email" />
             <Input id="password" label="Password"    input_type={InputType::Password} placeholder="Enter password" />
