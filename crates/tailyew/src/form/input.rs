@@ -173,7 +173,6 @@ pub fn input(props: &InputProps) -> Html {
 
     let value = use_state(|| default_value.to_string());
     let validation_error = use_state(|| None::<String>);
-    let form_pattern = use_state(|| Some(String::from(".*"))); // fallback to valid
 
     let oninput = {
         let value = value.clone();
@@ -181,7 +180,6 @@ pub fn input(props: &InputProps) -> Html {
         let on_change = on_change.clone();
         let pattern = pattern.clone();
         let error_title = error_title.clone();
-        let form_pattern = form_pattern.clone();
         let validate = validate.clone();
 
         Callback::from(move |e: InputEvent| {
@@ -197,10 +195,8 @@ pub fn input(props: &InputProps) -> Html {
             if let Some(validate_fn) = &validate {
                 if let Some(error) = validate_fn.emit(new_val.clone()) {
                     validation_error.set(Some(error));
-                    form_pattern.set(Some("^$a".into())); // always fail
                 } else {
                     validation_error.set(None);
-                    form_pattern.set(Some(".*".into()));
                 }
                 return;
             }
@@ -210,7 +206,6 @@ pub fn input(props: &InputProps) -> Html {
                 Some(Ok(re)) => {
                     if re.is_match(&new_val) {
                         validation_error.set(None);
-                        form_pattern.set(Some(".*".into()));
                     } else {
                         validation_error.set(Some(
                             error_title
@@ -218,16 +213,13 @@ pub fn input(props: &InputProps) -> Html {
                                 .unwrap_or_else(|| "Invalid format.".into())
                                 .to_string(),
                         ));
-                        form_pattern.set(Some("^$a".into()));
                     }
                 }
                 Some(Err(err)) => {
                     validation_error.set(Some(format!("Invalid regex: {}", err)));
-                    form_pattern.set(Some("^$a".into()));
                 }
                 None => {
                     validation_error.set(None);
-                    form_pattern.set(Some(".*".into()));
                 }
             }
         })
@@ -284,7 +276,7 @@ pub fn input(props: &InputProps) -> Html {
             title={title_attr}
             required={required}
             disabled={disabled}
-            pattern={form_pattern.as_ref().cloned().unwrap_or_else(|| ".*".to_string())}
+            pattern={pattern}
             autocomplete={autocomplete}
             aria-invalid={AttrValue::from(validation_error.is_some().to_string())}
             aria-required={AttrValue::from(required.to_string())}
