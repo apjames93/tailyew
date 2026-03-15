@@ -1,5 +1,5 @@
 use crate::form::FormSubmitCallback;
-use crate::{CodeBlock, Image, Li, MarkerType, TagType, Typo, Ul, A};
+use crate::{A, CodeBlock, Image, Li, MarkerType, TagType, Typo, Ul};
 use pulldown_cmark::{CodeBlockKind, Event, HeadingLevel, Parser, Tag};
 use yew::prelude::*;
 

@@ -1,5 +1,6 @@
 // frontend/src/pages/demo_page.rs
 
+use crate::Route;
 use crate::templates::demos::{
     AComponentDemoSection, AccordionDemoSection, AppBarDemoSection, AvatarDemoSection,
     AvatarGroupDemoSection, BadgeDemoSection, BarChartDemoSection, BreadcrumbsDemoSection,
@@ -16,7 +17,6 @@ use crate::templates::demos::{
     SpacerDemoSection, StepperDemoSection, SwitchDemoSection, TableDemoSection, TabsDemoSection,
     TextareaDemoSection, TooltipDemoSection, TypoDemoSection, UlDemoSection,
 };
-use crate::Route;
 use tailyew::{
     AppsIcon, AtomIcon, BarChartIcon, FormIcon, NestedItem, PolylineIcon, Sidebar, SidebarButton,
     SystemIcon,

@@ -1,6 +1,6 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::atoms::{TagType, Typo};
-use tailyew::organisms::{table::Column, Stepper};
+use tailyew::organisms::{Stepper, table::Column};
 use yew::prelude::*;
 
 #[component(StepperDemoSection)]

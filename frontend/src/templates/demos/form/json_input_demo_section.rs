@@ -1,5 +1,5 @@
 use crate::templates::demos::DemoComponent;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use tailyew::atoms::{TagType, Typo};
 use tailyew::form::*;
 use tailyew::organisms::table::Column;

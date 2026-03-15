@@ -74,12 +74,11 @@ pub fn form(props: &FormProps) -> Html {
             e.prevent_default();
 
             // HTML5 form validation
-            if let Some(target) = e.target() {
-                if let Ok(form_el) = target.dyn_into::<HtmlFormElement>() {
-                    if !form_el.check_validity() {
-                        return;
-                    }
-                }
+            if let Some(target) = e.target()
+                && let Ok(form_el) = target.dyn_into::<HtmlFormElement>()
+                && !form_el.check_validity()
+            {
+                return;
             }
 
             loading.set(true);

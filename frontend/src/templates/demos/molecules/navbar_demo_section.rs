@@ -1,6 +1,6 @@
 use tailyew::atoms::{Button, ButtonType, TagType, Typo};
-use tailyew::molecules::navbar::AppBarPosition;
 use tailyew::molecules::NavBar;
+use tailyew::molecules::navbar::AppBarPosition;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 

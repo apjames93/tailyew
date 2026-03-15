@@ -1,6 +1,6 @@
 use crate::{
-    atoms::{Button, ButtonType, TagType, Typo},
     XIcon,
+    atoms::{Button, ButtonType, TagType, Typo},
 };
 use yew::prelude::*;
 

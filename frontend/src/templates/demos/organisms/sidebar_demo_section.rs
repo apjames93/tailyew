@@ -1,6 +1,6 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::atoms::Typo;
-use tailyew::organisms::{table::Column, NestedItem, Sidebar, SidebarButton, SidebarPosition};
+use tailyew::organisms::{NestedItem, Sidebar, SidebarButton, SidebarPosition, table::Column};
 use yew::prelude::*;
 
 #[component(SidebarDemoSection)]

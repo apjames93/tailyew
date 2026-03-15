@@ -3,7 +3,7 @@
 [package]
 name = "frontend"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 description = "TailYew frontend app using the tailyew component system"
 license = "MIT OR Apache-2.0"
 

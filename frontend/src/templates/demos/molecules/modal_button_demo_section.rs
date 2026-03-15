@@ -1,8 +1,8 @@
 use crate::templates::demos::DemoComponent;
+use tailyew::AddIcon;
 use tailyew::molecules::ModalButton;
 use tailyew::molecules::ModalSize;
 use tailyew::organisms::table::Column;
-use tailyew::AddIcon;
 use tailyew::{Button, ButtonType, TagType, Typo};
 use yew::prelude::*;
 

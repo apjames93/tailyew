@@ -1,4 +1,4 @@
-use crate::form::{async_callback, FormBuilder, FormSubmitCallback, RenderFieldProps};
+use crate::form::{FormBuilder, FormSubmitCallback, RenderFieldProps, async_callback};
 use crate::{ButtonType, CopyIcon, CopyToClipboard};
 use serde::Deserialize;
 use web_sys::SubmitEvent;
@@ -37,31 +37,31 @@ pub fn code_block(props: &CodeBlockProps) -> Html {
     } = props.clone();
 
     // if the markdown fence says ` ```form `, try to parse the first text node as JSON:
-    if language.as_deref() == Some("form") {
-        if let Some(VNode::VText(vt)) = children.iter().next() {
-            let raw = vt.text.trim();
-            match serde_json::from_str::<EmbeddedFormConfig>(raw) {
-                Ok(cfg) => {
-                    // fallback async onsubmit
-                    let submit_cb = onsubmit
-                        .clone()
-                        .unwrap_or_else(|| async_callback(|_e: SubmitEvent| async { Ok(None) }));
+    if language.as_deref() == Some("form")
+        && let Some(VNode::VText(vt)) = children.iter().next()
+    {
+        let raw = vt.text.trim();
+        match serde_json::from_str::<EmbeddedFormConfig>(raw) {
+            Ok(cfg) => {
+                // fallback async onsubmit
+                let submit_cb = onsubmit
+                    .clone()
+                    .unwrap_or_else(|| async_callback(|_e: SubmitEvent| async { Ok(None) }));
 
-                    return html! {
-                        <FormBuilder
-                            onsubmit={submit_cb}
-                            inputs={cfg.inputs}
-                            button_label={cfg.button_label}
-                        />
-                    };
-                }
-                Err(err) => {
-                    return html! {
-                        <pre class="bg-red-100 p-4 rounded text-red-600">
-                            { format!("⚠️ could not parse Form JSON: {}", err) }
-                        </pre>
-                    };
-                }
+                return html! {
+                    <FormBuilder
+                        onsubmit={submit_cb}
+                        inputs={cfg.inputs}
+                        button_label={cfg.button_label}
+                    />
+                };
+            }
+            Err(err) => {
+                return html! {
+                    <pre class="bg-red-100 p-4 rounded text-red-600">
+                        { format!("⚠️ could not parse Form JSON: {}", err) }
+                    </pre>
+                };
             }
         }
     }

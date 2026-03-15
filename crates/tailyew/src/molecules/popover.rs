@@ -1,6 +1,6 @@
 use js_sys::Date;
-use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
+use wasm_bindgen::closure::Closure;
 use web_sys::{MouseEvent, Node};
 use yew::prelude::*;
 
@@ -66,16 +66,14 @@ pub fn popover(props: &PopoverProps) -> Html {
                 let cleanup = if is_open {
                     let closure =
                         Closure::<dyn Fn(MouseEvent)>::wrap(Box::new(move |event: MouseEvent| {
-                            if let Some(popover) = popover_ref.cast::<web_sys::HtmlElement>() {
-                                if let Some(target) =
+                            if let Some(popover) = popover_ref.cast::<web_sys::HtmlElement>()
+                                && let Some(target) =
                                     event.target().and_then(|t| t.dyn_into::<Node>().ok())
-                                {
-                                    if !popover.contains(Some(&target)) {
-                                        open.set(false);
-                                        if let Some(cb) = &on_close {
-                                            cb.emit(event);
-                                        }
-                                    }
+                                && !popover.contains(Some(&target))
+                            {
+                                open.set(false);
+                                if let Some(cb) = &on_close {
+                                    cb.emit(event);
                                 }
                             }
                         }));
@@ -111,12 +109,12 @@ pub fn popover(props: &PopoverProps) -> Html {
                     &web_sys::window().unwrap(),
                     "keydown",
                     move |e| {
-                        if let Some(evt) = e.dyn_ref::<web_sys::KeyboardEvent>() {
-                            if evt.key() == "Escape" {
-                                open.set(false);
-                                if let Some(cb) = &on_close {
-                                    cb.emit(web_sys::MouseEvent::new("keydown").unwrap());
-                                }
+                        if let Some(evt) = e.dyn_ref::<web_sys::KeyboardEvent>()
+                            && evt.key() == "Escape"
+                        {
+                            open.set(false);
+                            if let Some(cb) = &on_close {
+                                cb.emit(web_sys::MouseEvent::new("keydown").unwrap());
                             }
                         }
                     },

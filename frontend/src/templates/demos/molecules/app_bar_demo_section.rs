@@ -2,7 +2,7 @@ use crate::templates::demos::DemoComponent;
 use tailyew::atoms::{Button, ButtonType};
 use tailyew::molecules::ThemeToggle;
 use tailyew::molecules::{AppBar, AppBarPosition};
-use tailyew::organisms::{table::Column, NestedItem};
+use tailyew::organisms::{NestedItem, table::Column};
 use web_sys::console;
 use yew::prelude::*;
 

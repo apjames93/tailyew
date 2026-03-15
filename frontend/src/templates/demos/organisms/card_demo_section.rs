@@ -1,6 +1,6 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::atoms::{Button, ButtonType};
-use tailyew::organisms::{table::Column, Card};
+use tailyew::organisms::{Card, table::Column};
 use yew::prelude::*;
 
 const HERO_IMAGE_URL: &str = "/static/images/TailYew.png";

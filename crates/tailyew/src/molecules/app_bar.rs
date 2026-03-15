@@ -4,7 +4,7 @@ use super::{AppBarPosition, NavBar};
 use crate::atoms::{Button, ButtonType};
 use crate::organisms::NestedItem;
 use crate::organisms::NestedList;
-use yew::{prelude::*, AttrValue};
+use yew::{AttrValue, prelude::*};
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct AppBarProps {

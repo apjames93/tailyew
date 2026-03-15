@@ -1,5 +1,5 @@
 use gloo::timers::callback::Timeout;
-use wasm_bindgen_futures::{spawn_local, JsFuture};
+use wasm_bindgen_futures::{JsFuture, spawn_local};
 use web_sys::window;
 use yew::prelude::*;
 
@@ -57,11 +57,11 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
             let copied = copied.clone();
 
             spawn_local(async move {
-                if let Some(clipboard) = window().map(|w| w.navigator().clipboard()) {
-                    if JsFuture::from(clipboard.write_text(&value)).await.is_ok() {
-                        copied.set(true);
-                        Timeout::new(2000, move || copied.set(false)).forget();
-                    }
+                if let Some(clipboard) = window().map(|w| w.navigator().clipboard())
+                    && JsFuture::from(clipboard.write_text(&value)).await.is_ok()
+                {
+                    copied.set(true);
+                    Timeout::new(2000, move || copied.set(false)).forget();
                 }
             });
         })

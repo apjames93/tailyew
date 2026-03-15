@@ -102,20 +102,19 @@ pub fn search_input_demo_section() -> Html {
                 if let Ok(resp) = Request::get("https://pokeapi.co/api/v2/pokemon?limit=20")
                     .send()
                     .await
+                    && let Ok(parsed) = resp.json::<PokemonResponse>().await
                 {
-                    if let Ok(parsed) = resp.json::<PokemonResponse>().await {
-                        let new_items = parsed
-                            .results
-                            .into_iter()
-                            .map(|p| SelectOption {
-                                label: p.name.clone(),
-                                value: p.name,
-                            })
-                            .collect::<Vec<_>>();
-                        let mut all = (*poke_items).clone();
-                        all.extend(new_items);
-                        poke_items.set(all);
-                    }
+                    let new_items = parsed
+                        .results
+                        .into_iter()
+                        .map(|p| SelectOption {
+                            label: p.name.clone(),
+                            value: p.name,
+                        })
+                        .collect::<Vec<_>>();
+                    let mut all = (*poke_items).clone();
+                    all.extend(new_items);
+                    poke_items.set(all);
                 }
             });
         })

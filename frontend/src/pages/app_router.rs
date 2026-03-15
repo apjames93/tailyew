@@ -1,5 +1,5 @@
 use crate::templates::{DemoSidebar, NavBar};
-use crate::{switch, Route};
+use crate::{Route, switch};
 use yew::prelude::*;
 use yew_router::prelude::*;
 

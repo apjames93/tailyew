@@ -1,5 +1,5 @@
-use crate::form_deserializer::*;
 use crate::SelectOption;
+use crate::form_deserializer::*;
 use crate::{Input, InputType, Label, Li, Typo, Ul, XIcon};
 use gloo_timers::callback::Timeout;
 use js_sys::Date;
@@ -155,7 +155,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
             let filtered = filtered.clone();
             let on_fetch_more = on_fetch_more.clone();
 
-            Timeout::new(debounce_ms, move || {
+            let new_timeout = Timeout::new(debounce_ms, move || {
                 let mut matches: Vec<SelectOption> = items
                     .iter()
                     .filter(|item| {
@@ -168,15 +168,16 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 matches.sort_by(|a, b| a.value.cmp(&b.value));
                 matches.dedup_by(|a, b| a.value == b.value);
 
-                if matches.is_empty() {
-                    if let Some(fetch) = on_fetch_more {
-                        fetch.emit(());
-                    }
+                if matches.is_empty()
+                    && let Some(fetch) = on_fetch_more
+                {
+                    fetch.emit(());
                 }
 
                 filtered.set(matches);
-            })
-            .forget();
+            });
+
+            timeout_handle.borrow_mut().replace(new_timeout);
         })
     };
 
@@ -250,12 +251,11 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                         &gloo::utils::document(),
                         "mousedown",
                         move |event| {
-                            if let Some(target) = event.target_dyn_into::<HtmlElement>() {
-                                if let Some(dropdown) = dropdown_ref.cast::<HtmlElement>() {
-                                    if !dropdown.contains(Some(&target)) {
-                                        show_dropdown.set(false);
-                                    }
-                                }
+                            if let Some(target) = event.target_dyn_into::<HtmlElement>()
+                                && let Some(dropdown) = dropdown_ref.cast::<HtmlElement>()
+                                && !dropdown.contains(Some(&target))
+                            {
+                                show_dropdown.set(false);
                             }
                         },
                     ))
@@ -278,10 +278,10 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                     &gloo::utils::document(),
                     "keydown",
                     move |e| {
-                        if let Some(evt) = e.dyn_ref::<web_sys::KeyboardEvent>() {
-                            if evt.key() == "Escape" {
-                                show_dropdown.set(false);
-                            }
+                        if let Some(evt) = e.dyn_ref::<web_sys::KeyboardEvent>()
+                            && evt.key() == "Escape"
+                        {
+                            show_dropdown.set(false);
                         }
                     },
                 ))
