@@ -60,18 +60,20 @@ pub fn typo(props: &TypoProps) -> Html {
     } = props;
 
     let base_classes = match tag {
-        TagType::H1 => "text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8",
-        TagType::H2 => "text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6",
-        TagType::H3 => "text-2xl font-medium text-gray-700 dark:text-gray-300 mb-5",
-        TagType::H4 => "text-xl font-medium text-gray-700 dark:text-gray-300 mb-4",
-        TagType::H5 => "text-lg font-medium text-gray-700 dark:text-gray-300 mb-3",
-        TagType::H6 => "text-base font-medium text-gray-700 dark:text-gray-300 mb-2",
-        TagType::BlockQuote => "border-l-4 pl-4 italic text-gray-600 dark:text-gray-400 my-4",
-        TagType::Emphasis => "italic text-gray-700 dark:text-gray-300",
-        TagType::Strong => "font-bold text-gray-900 dark:text-gray-100",
-        TagType::P => "text-base text-gray-800 dark:text-gray-300 mb-4",
-        TagType::Error => "text-sm text-red-600 dark:text-red-400 font-medium mt-2",
-        TagType::Span => "text-sm text-gray-600 dark:text-gray-400",
+        TagType::H1 => "text-4xl font-bold text-content dark:text-content-invert mb-8",
+        TagType::H2 => "text-3xl font-semibold text-content dark:text-content-invert mb-6",
+        TagType::H3 => "text-2xl font-medium text-content dark:text-content-invert mb-5",
+        TagType::H4 => "text-xl font-medium text-content dark:text-content-invert mb-4",
+        TagType::H5 => "text-lg font-medium text-content dark:text-content-invert mb-3",
+        TagType::H6 => "text-base font-medium text-content dark:text-content-invert mb-2",
+        TagType::BlockQuote => {
+            "border-l-4 border-border dark:border-border-dark pl-4 italic text-content-muted dark:text-content-muted-dark my-4"
+        }
+        TagType::Emphasis => "italic text-content dark:text-content-invert opacity-90",
+        TagType::Strong => "font-bold text-content dark:text-content-invert",
+        TagType::P => "text-base text-content dark:text-content-invert opacity-90 mb-4",
+        TagType::Error => "text-sm text-danger dark:text-danger-dark font-medium mt-2",
+        TagType::Span => "text-sm text-content-muted dark:text-content-muted-dark",
     };
 
     let all_classes = use_themed_classes("Typo", "root", classes!(base_classes), class.clone());

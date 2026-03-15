@@ -54,6 +54,12 @@ pub fn init_theme(props: &InitProps) -> Html {
         _ => "", // system = no explicit root class
     };
 
+    let root_defaults = classes!(
+        "bg-surface",
+        "text-content",
+        "dark:bg-surface-dark",
+        "dark:text-content-invert"
+    );
     let extra_theme_class = theme.class.clone();
     let theme_context = ThemeContext {
         name: theme.name.clone().into(),
@@ -64,6 +70,7 @@ pub fn init_theme(props: &InitProps) -> Html {
     html! {
         <div
             class={classes!(
+                root_defaults,
                 theme_class,
                 extra_theme_class,
                 class.clone()
