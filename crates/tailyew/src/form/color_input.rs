@@ -1,5 +1,6 @@
 use crate::form::Label;
 use crate::form_deserializer::{de_attr, de_classes};
+use crate::system::use_themed_classes;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
@@ -57,7 +58,13 @@ pub fn color_input(props: &ColorInputProps) -> Html {
         })
     };
 
-    let input_classes = classes!(
+    let root_classes = use_themed_classes(
+        "ColorInput",
+        "root",
+        classes!("flex", "flex-col", "space-y-2"),
+        Classes::default(),
+    );
+    let input_defaults = classes!(
         "w-16",
         "h-10",
         "p-1",
@@ -73,8 +80,8 @@ pub fn color_input(props: &ColorInputProps) -> Html {
         "dark:bg-gray-800",
         "dark:border-gray-600",
         "dark:text-gray-200",
-        class.clone(),
     );
+    let input_classes = use_themed_classes("ColorInput", "input", input_defaults, class.clone());
 
     let preview_classes = classes!(
         "w-10",
@@ -91,7 +98,7 @@ pub fn color_input(props: &ColorInputProps) -> Html {
     let description_classes = classes!("text-gray-600", "dark:text-gray-400");
 
     html! {
-        <div class="flex flex-col space-y-2">
+        <div class={root_classes}>
             <Label for_id={id.clone()} text={label.clone()} />
             <div class="flex items-center space-x-4">
                 <input

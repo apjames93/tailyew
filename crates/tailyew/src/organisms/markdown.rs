@@ -1,4 +1,5 @@
 use crate::form::FormSubmitCallback;
+use crate::system::use_themed_classes;
 use crate::{CodeBlock, Image, Li, MarkerType, TagType, Typo, Ul, A};
 use pulldown_cmark::{CodeBlockKind, Event, HeadingLevel, Parser, Tag};
 use yew::prelude::*;
@@ -16,9 +17,15 @@ pub struct MarkdownProps {
 pub fn markdown(props: &MarkdownProps) -> Html {
     let parser = Parser::new(&props.content);
     let nodes = markdown_to_yew(parser, props.on_form_submit.clone());
+    let classes = use_themed_classes(
+        "Markdown",
+        "root",
+        classes!("text-left", "max-w-none"),
+        props.class.clone(),
+    );
 
     html! {
-        <div class={classes!("text-left", "max-w-none", props.class.clone())}>
+        <div class={classes}>
             { nodes }
         </div>
     }

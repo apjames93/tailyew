@@ -1,5 +1,6 @@
 // src/atoms/delete_icon.rs
 
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 use crate::icons::icon_base::IconBase;
@@ -27,6 +28,12 @@ pub struct DeleteIconProps {
 
 #[component(DeleteIcon)]
 pub fn delete_icon(props: &DeleteIconProps) -> Html {
+    let icon_class = use_themed_classes(
+        "DeleteIcon",
+        "root",
+        Classes::default(),
+        props.class.clone(),
+    );
     let stroke_color = props
         .color
         .clone()
@@ -41,7 +48,7 @@ pub fn delete_icon(props: &DeleteIconProps) -> Html {
 
     html! {
         <IconBase
-            class={props.class.clone()}
+            class={icon_class}
             size={props.size}
             stroke_width={props.stroke_width}
             label={label}

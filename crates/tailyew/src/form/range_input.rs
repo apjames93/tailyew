@@ -1,5 +1,6 @@
 use crate::form::Label;
 use crate::form_deserializer::*;
+use crate::system::use_themed_classes;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
@@ -57,7 +58,14 @@ pub fn range_input(props: &RangeInputProps) -> Html {
         })
     };
 
-    let range_input_classes = classes!(
+    let root_classes = use_themed_classes(
+        "RangeInput",
+        "root",
+        classes!("flex", "flex-col", "space-y-2"),
+        Classes::default(),
+    );
+
+    let range_defaults = classes!(
         "w-full",
         "h-2",
         "rounded-lg",
@@ -71,13 +79,14 @@ pub fn range_input(props: &RangeInputProps) -> Html {
         "focus:ring-green-500",
         "dark:bg-gray-700",
         "dark:focus:ring-green-400",
-        class
     );
+    let range_input_classes =
+        use_themed_classes("RangeInput", "input", range_defaults, class.clone());
 
     let value_classes = classes!("text-gray-700", "font-medium", "dark:text-gray-200");
 
     html! {
-        <div class="flex flex-col space-y-2">
+        <div class={root_classes}>
             <Label for_id={id.clone()} text={label.clone()} />
             <div class="flex items-center space-x-4">
                 <input

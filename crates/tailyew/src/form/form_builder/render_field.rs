@@ -1,4 +1,5 @@
 use crate::form::*;
+use crate::system::use_themed_classes;
 use crate::{TagType, Typo};
 use serde::Deserialize;
 
@@ -35,7 +36,14 @@ pub struct RenderFieldProps {
 
 #[component(RenderField)]
 pub fn render_field(props: &RenderFieldProps) -> Html {
-    if let Some(input_props) = props.input.clone() {
+    let themed_class = use_themed_classes(
+        "RenderField",
+        "root",
+        Classes::default(),
+        props.class.clone(),
+    );
+
+    let field = if let Some(input_props) = props.input.clone() {
         html! { <Input ..input_props /> }
     } else if let Some(textarea_props) = props.textarea.clone() {
         html! { <Textarea ..textarea_props /> }
@@ -59,5 +67,11 @@ pub fn render_field(props: &RenderFieldProps) -> Html {
         html! { <SearchInput ..search_props /> }
     } else {
         html! { <Typo tag={TagType::Error}>{"Unknown field type"}</Typo> }
+    };
+
+    if themed_class.is_empty() {
+        field
+    } else {
+        html! { <div class={themed_class}>{ field }</div> }
     }
 }

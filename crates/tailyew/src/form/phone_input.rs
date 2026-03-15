@@ -1,5 +1,6 @@
 use crate::form::Label;
 use crate::form_deserializer::*;
+use crate::system::use_themed_classes;
 use regex::Regex;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
@@ -67,7 +68,13 @@ pub fn phone_input(props: &PhoneInputProps) -> Html {
         })
     };
 
-    let input_classes = classes!(
+    let root_classes = use_themed_classes(
+        "PhoneInput",
+        "root",
+        classes!("flex", "flex-col", "space-y-2"),
+        Classes::default(),
+    );
+    let input_defaults = classes!(
         "w-full",
         "px-4",
         "py-2",
@@ -89,13 +96,13 @@ pub fn phone_input(props: &PhoneInputProps) -> Html {
         } else {
             "border-red-500 focus:ring-red-500 focus:border-red-500"
         },
-        class
     );
+    let input_classes = use_themed_classes("PhoneInput", "input", input_defaults, class.clone());
 
     let error_classes = classes!("text-sm", "text-red-500", "dark:text-red-400");
 
     html! {
-        <div class="flex flex-col space-y-2">
+        <div class={root_classes}>
             <Label for_id={id.clone()} text={label.clone()} />
             <input
                 id={id.clone()}

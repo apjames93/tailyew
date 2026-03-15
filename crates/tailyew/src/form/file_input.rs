@@ -1,5 +1,6 @@
 use crate::form::Label;
 use crate::form_deserializer::*;
+use crate::system::use_themed_classes;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
@@ -61,7 +62,14 @@ pub fn file_input(props: &FileInputProps) -> Html {
         })
     };
 
-    let input_classes = classes!(
+    let root_classes = use_themed_classes(
+        "FileInput",
+        "root",
+        classes!("flex", "flex-col", "space-y-2"),
+        Classes::default(),
+    );
+
+    let input_defaults = classes!(
         "w-full",
         "px-4",
         "py-2",
@@ -78,8 +86,8 @@ pub fn file_input(props: &FileInputProps) -> Html {
         "dark:border-gray-600",
         "dark:focus:ring-primary-dark",
         "dark:focus:border-primary-dark",
-        class.clone()
     );
+    let input_classes = use_themed_classes("FileInput", "input", input_defaults, class.clone());
 
     let file_name_classes = classes!(
         "text-sm",
@@ -90,7 +98,7 @@ pub fn file_input(props: &FileInputProps) -> Html {
     );
 
     html! {
-        <div class="flex flex-col space-y-2">
+        <div class={root_classes}>
             <Label for_id={id.clone()} text={label.clone()} />
             <input
                 id={id.clone()}

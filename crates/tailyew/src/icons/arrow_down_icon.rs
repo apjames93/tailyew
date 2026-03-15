@@ -1,5 +1,6 @@
 // src/atoms/arrow_down_icon.rs
 
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 use crate::icons::icon_base::IconBase;
@@ -27,6 +28,12 @@ pub struct ArrowDownIconProps {
 
 #[component(ArrowDownIcon)]
 pub fn arrow_down_icon(props: &ArrowDownIconProps) -> Html {
+    let icon_class = use_themed_classes(
+        "ArrowDownIcon",
+        "root",
+        Classes::default(),
+        props.class.clone(),
+    );
     let stroke_color = props
         .color
         .clone()
@@ -40,7 +47,7 @@ pub fn arrow_down_icon(props: &ArrowDownIconProps) -> Html {
 
     html! {
         <IconBase
-            class={props.class.clone()}
+            class={icon_class}
             size={props.size}
             stroke_width={props.stroke_width}
             label={label}

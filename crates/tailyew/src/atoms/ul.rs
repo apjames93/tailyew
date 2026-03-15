@@ -1,5 +1,6 @@
 // crates/tailyew/src/atoms/ul.rs
 
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(PartialEq, Clone, Default)]
@@ -75,7 +76,7 @@ pub fn ul(props: &UlProps) -> Html {
 
     let padding_class = if has_markers { "pl-6" } else { "pl-0" };
 
-    let ul_classes = classes!(
+    let defaults = classes!(
         marker_type.as_class(),
         align_class,
         padding_class,
@@ -88,8 +89,8 @@ pub fn ul(props: &UlProps) -> Html {
         },
         marker_color.clone(),
         spacing_classes,
-        class.clone(),
     );
+    let ul_classes = use_themed_classes("Ul", "root", defaults, class.clone());
 
     html! {
         <ul class={ul_classes} style={list_style}>

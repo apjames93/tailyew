@@ -1,4 +1,5 @@
 use crate::form_deserializer::*;
+use crate::system::use_themed_classes;
 use crate::SelectOption;
 use crate::{Input, InputType, Label, Li, Typo, Ul, XIcon};
 use gloo_timers::callback::Timeout;
@@ -320,11 +321,20 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         );
     }
 
+    let root_classes = use_themed_classes(
+        "SearchInput",
+        "root",
+        classes!("relative", "space-y-2"),
+        Classes::default(),
+    );
+    let input_classes =
+        use_themed_classes("SearchInput", "input", Classes::default(), class.clone());
+
     let base_id = input_id.clone();
     let search_id = format!("search_{}", input_id);
 
     html! {
-        <div class="relative space-y-2" ref={dropdown_ref}>
+        <div class={root_classes} ref={dropdown_ref}>
             // hidden field to hold the actual value
             <input
                 type="hidden"
@@ -345,7 +355,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 input_type={InputType::Search}
                 default_value={(*search_text).clone()}
                 placeholder={placeholder.unwrap_or_default()}
-                class={class.clone()}
+                class={input_classes}
                 disabled={disabled}
                 autocomplete={"off"}
                 on_change={Some(oninput)}

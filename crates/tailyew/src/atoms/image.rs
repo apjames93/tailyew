@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 /// A generic image component with default styles for TailYew
@@ -37,6 +38,13 @@ pub struct ImageProps {
 
 #[component(Image)]
 pub fn image(props: &ImageProps) -> Html {
+    let image_classes = use_themed_classes(
+        "Image",
+        "root",
+        classes!("max-w-full", "h-auto"),
+        props.class.clone(),
+    );
+
     let style = {
         let mut parts = String::new();
         if let Some(w) = &props.width {
@@ -60,12 +68,12 @@ pub fn image(props: &ImageProps) -> Html {
     };
 
     html! {
-        <img
-            src={props.src.clone()}
-            alt={props.alt.clone()}
-            class={classes!("max-w-full", "h-auto", props.class.clone())}
-            style={style}
-            aria-label={props.aria_label.clone()}
+            <img
+                src={props.src.clone()}
+                alt={props.alt.clone()}
+                class={image_classes}
+                style={style}
+                aria-label={props.aria_label.clone()}
             aria-describedby={props.aria_describedby.clone()}
             role={resolved_role}
         />

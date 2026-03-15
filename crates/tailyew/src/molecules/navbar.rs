@@ -1,5 +1,6 @@
 // crates/tailyew/src/molecules/navbar.rs
 
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(PartialEq, Clone, Default)]
@@ -30,15 +31,20 @@ pub fn nav_bar(props: &NavBarProps) -> Html {
         id,
         position,
     } = props;
+    let defaults = classes!(
+        "bg-white",
+        "dark:bg-gray-900",
+        "shadow-md",
+        "transition-colors",
+        "duration-300",
+        get_position_class(position.clone()),
+    );
+    let nav_classes = use_themed_classes("NavBar", "root", defaults, class.clone());
 
     html! {
         <nav
             id={id.clone()}
-            class={classes!(
-                "bg-white", "dark:bg-gray-900", "shadow-md", "transition-colors", "duration-300",
-                get_position_class(position.clone()),
-                class.clone()
-            )}
+            class={nav_classes}
             role="navigation"
         >
             <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">

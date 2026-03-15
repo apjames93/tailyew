@@ -1,4 +1,5 @@
 use crate::atoms::Avatar;
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(Clone, PartialEq, Default)]
@@ -39,6 +40,29 @@ pub fn avatar_group(props: &AvatarGroupProps) -> Html {
         reverse,
         class,
     } = props.clone();
+    let root_classes = use_themed_classes("AvatarGroup", "root", classes!("flex"), class.clone());
+    let avatar_slot_classes = use_themed_classes(
+        "AvatarGroup",
+        "avatar",
+        Classes::default(),
+        Classes::default(),
+    );
+    let overflow_classes = use_themed_classes(
+        "AvatarGroup",
+        "overflow",
+        classes!(
+            "inline-flex",
+            "items-center",
+            "justify-center",
+            "rounded-full",
+            "bg-gray-300",
+            "dark:bg-gray-600",
+            "text-sm",
+            "text-white",
+            "font-medium"
+        ),
+        Classes::default(),
+    );
 
     let display_avatars = avatars.iter().take(max_visible);
     let extra_count = avatars.len().saturating_sub(max_visible);
@@ -53,7 +77,7 @@ pub fn avatar_group(props: &AvatarGroupProps) -> Html {
                     fallback={data.fallback.clone()}
                     alt={data.alt.clone()}
                     size={size.clone()}
-                    class={classes!(overlap_class, data.class.clone())}
+                    class={classes!(avatar_slot_classes.clone(), overlap_class, data.class.clone())}
                 />
             }
         })
@@ -61,11 +85,7 @@ pub fn avatar_group(props: &AvatarGroupProps) -> Html {
 
     if extra_count > 0 {
         items.push(html! {
-            <div class={classes!(
-                "inline-flex", "items-center", "justify-center", "rounded-full", "bg-gray-300", "dark:bg-gray-600", "text-sm", "text-white", "font-medium",
-                size.clone(),
-                "-ml-4"
-            )}>
+            <div class={classes!(overflow_classes.clone(), size.clone(), "-ml-4")}>
                 { format!("+{}", extra_count) }
             </div>
         });
@@ -76,7 +96,7 @@ pub fn avatar_group(props: &AvatarGroupProps) -> Html {
     }
 
     html! {
-        <div class={classes!("flex", class.clone())}>
+        <div class={root_classes}>
             { for items }
         </div>
     }

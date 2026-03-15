@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 /// Properties for the Anchor (A) component
@@ -46,7 +47,7 @@ pub fn a(props: &AProps) -> Html {
         include_referrer,
     } = props;
 
-    let merged_classes = classes!(
+    let defaults = classes!(
         "text-blue-500",
         "dark:text-blue-300",
         "hover:text-blue-700",
@@ -58,8 +59,8 @@ pub fn a(props: &AProps) -> Html {
         "transition-colors",
         "duration-200",
         "underline",
-        class.clone(),
     );
+    let merged_classes = use_themed_classes("A", "root", defaults, class.clone());
 
     let on_click_handler = on_click.clone().map(|cb| {
         Callback::from(move |e: MouseEvent| {

@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -21,9 +22,10 @@ pub fn container(props: &ContainerProps) -> Html {
         id,
         children,
     } = props;
+    let merged_classes = use_themed_classes("Container", "root", Classes::default(), class.clone());
 
     html! {
-        <div id={id.clone()} class={class.clone()}>
+        <div id={id.clone()} class={merged_classes}>
             { for children.iter() }
         </div>
     }

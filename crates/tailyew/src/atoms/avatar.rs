@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -38,7 +39,7 @@ pub fn avatar(props: &AvatarProps) -> Html {
         on_click,
     } = props.clone();
 
-    let mut base_classes = classes!(
+    let root_defaults = classes!(
         "inline-flex",
         "items-center",
         "justify-center",
@@ -50,20 +51,27 @@ pub fn avatar(props: &AvatarProps) -> Html {
         "font-semibold",
         "uppercase",
         "aspect-square",
-        size,
-        class,
+        size.clone(),
     );
+    let mut base_classes = use_themed_classes("Avatar", "root", root_defaults, class.clone());
 
     if on_click.is_some() {
         base_classes.push("cursor-pointer");
     }
+
+    let image_classes = use_themed_classes(
+        "Avatar",
+        "image",
+        classes!(base_classes.clone(), "object-cover"),
+        Classes::default(),
+    );
 
     if let Some(src) = src {
         html! {
             <img
                 src={src}
                 alt={alt.unwrap_or_else(|| AttrValue::from("Avatar"))}
-                class={classes!(base_classes.clone(), "object-cover")}
+                class={image_classes}
                 onclick={on_click}
             />
         }

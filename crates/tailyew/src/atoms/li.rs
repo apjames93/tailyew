@@ -1,5 +1,6 @@
 // crates/tailyew/src/atoms/li.rs
 
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 #[derive(PartialEq, Clone, Copy, Default)]
@@ -53,34 +54,54 @@ pub fn li(props: &LiProps) -> Html {
         on_click,
     } = props;
 
+    let left_icon_classes = use_themed_classes(
+        "Li",
+        "icon",
+        classes!(
+            "flex-shrink-0",
+            "inline-flex",
+            "items-center",
+            "justify-center",
+            "text-gray-500",
+            "dark:text-gray-300",
+            "mr-3",
+        ),
+        Classes::default(),
+    );
+    let right_icon_classes = use_themed_classes(
+        "Li",
+        "icon",
+        classes!(
+            "flex-shrink-0",
+            "inline-flex",
+            "items-center",
+            "justify-center",
+            "text-gray-500",
+            "dark:text-gray-300",
+            "ml-3",
+        ),
+        Classes::default(),
+    );
+
     let icon_section = icon.as_ref().map(|icon| {
-        let spacing_class = match icon_position {
-            IconPosition::Left => "mr-3",
-            IconPosition::Right => "ml-3",
+        let icon_classes = match icon_position {
+            IconPosition::Left => left_icon_classes.clone(),
+            IconPosition::Right => right_icon_classes.clone(),
         };
 
         html! {
-            <span class={classes!(
-                "flex-shrink-0",
-                "inline-flex",
-                "items-center",
-                "justify-center",
-                "text-gray-500",
-                "dark:text-gray-300",
-                spacing_class,
-            )}>
+            <span class={icon_classes}>
                 { icon.clone() }
             </span>
         }
     });
 
-    let li_classes = classes!(
+    let defaults = classes!(
         "transition-colors",
         "duration-200",
         "text-gray-800",
         "dark:text-gray-100",
         "rounded-md",
-        class.clone(),
         background.clone(),
         if *active {
             Some("bg-gray-100 dark:bg-gray-800 font-semibold")
@@ -103,6 +124,7 @@ pub fn li(props: &LiProps) -> Html {
             None
         },
     );
+    let li_classes = use_themed_classes("Li", "root", defaults, class.clone());
 
     let row_classes = classes!("flex", "items-center", "gap-2", "w-full");
     let content_classes = classes!("flex-1", "min-w-0", "text-sm");

@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 /// Where to render the legend relative to the chart.
@@ -37,11 +38,29 @@ pub fn chart_layout(props: &ChartLayoutProps) -> Html {
         legend_position,
         class,
     } = props.clone();
+    let root_defaults = match legend_position {
+        LegendPosition::Auto => classes!(
+            "flex",
+            "flex-col",
+            "sm:flex-row",
+            "gap-4",
+            "items-start",
+            "w-full"
+        ),
+        LegendPosition::Top | LegendPosition::Bottom => {
+            classes!("flex", "flex-col", "gap-3", "w-full")
+        }
+        LegendPosition::Left | LegendPosition::Right => {
+            classes!("flex", "flex-row", "gap-4", "items-start", "w-full")
+        }
+        LegendPosition::Hidden => classes!("w-full"),
+    };
+    let layout_class = use_themed_classes("ChartLayout", "root", root_defaults, class.clone());
 
     match legend_position {
         // Auto: legend on top for very small screens, to the right for sm+
         LegendPosition::Auto => html! {
-            <div class={classes!("flex", "flex-col", "sm:flex-row", "gap-4", "items-start", "w-full", class)}>
+            <div class={layout_class.clone()}>
                 // Legend: first on mobile (top), second on sm+ (right)
                 <div class="order-1 sm:order-2 w-full sm:w-auto sm:shrink-0">
                     { legend }
@@ -54,21 +73,21 @@ pub fn chart_layout(props: &ChartLayoutProps) -> Html {
         },
 
         LegendPosition::Top => html! {
-            <div class={classes!("flex", "flex-col", "gap-3", "w-full", class)}>
+            <div class={layout_class.clone()}>
                 { legend }
                 { chart }
             </div>
         },
 
         LegendPosition::Bottom => html! {
-            <div class={classes!("flex", "flex-col", "gap-3", "w-full", class)}>
+            <div class={layout_class.clone()}>
                 { chart }
                 { legend }
             </div>
         },
 
         LegendPosition::Left => html! {
-            <div class={classes!("flex", "flex-row", "gap-4", "items-start", "w-full", class)}>
+            <div class={layout_class.clone()}>
                 <div class="shrink-0">
                     { legend }
                 </div>
@@ -79,7 +98,7 @@ pub fn chart_layout(props: &ChartLayoutProps) -> Html {
         },
 
         LegendPosition::Right => html! {
-            <div class={classes!("flex", "flex-row", "gap-4", "items-start", "w-full", class)}>
+            <div class={layout_class.clone()}>
                 <div class="flex-1">
                     { chart }
                 </div>
@@ -89,7 +108,7 @@ pub fn chart_layout(props: &ChartLayoutProps) -> Html {
             </div>
         },
         LegendPosition::Hidden => html! {
-            <div class={classes!("w-full", class)}>
+            <div class={layout_class}>
                 { chart }
             </div>
         },

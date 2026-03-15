@@ -1,3 +1,4 @@
+use crate::system::use_themed_classes;
 use yew::prelude::*;
 
 use crate::icons::icon_base::IconBase;
@@ -33,6 +34,12 @@ pub struct BarChartIconProps {
 /// Bar chart icon for TailYew
 #[component(BarChartIcon)]
 pub fn bar_chart_icon(props: &BarChartIconProps) -> Html {
+    let icon_class = use_themed_classes(
+        "BarChartIcon",
+        "root",
+        Classes::default(),
+        props.class.clone(),
+    );
     let stroke_or_fill = props
         .color
         .clone()
@@ -47,7 +54,7 @@ pub fn bar_chart_icon(props: &BarChartIconProps) -> Html {
 
     html! {
         <IconBase
-            class={props.class.clone()}
+            class={icon_class}
             size={props.size}
             stroke_width={props.stroke_width}
             label={label}

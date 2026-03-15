@@ -1,5 +1,6 @@
 use crate::atoms::{TagType, Typo};
 use crate::icons::ArrowDownIcon;
+use crate::system::use_themed_classes;
 use js_sys::Date;
 use wasm_bindgen::JsCast;
 use yew::prelude::*;
@@ -89,8 +90,8 @@ pub fn accordion(props: &AccordionProps) -> Html {
         })
     };
 
-    let wrapper_classes = if compact {
-        classes!("rounded-lg", class.clone())
+    let wrapper_defaults = if compact {
+        classes!("rounded-lg")
     } else {
         classes!(
             "border",
@@ -99,11 +100,11 @@ pub fn accordion(props: &AccordionProps) -> Html {
             "rounded-lg",
             "overflow-hidden",
             "shadow-md",
-            class.clone()
         )
     };
+    let wrapper_classes = use_themed_classes("Accordion", "root", wrapper_defaults, class.clone());
 
-    let base_trigger_classes = if compact {
+    let trigger_defaults = if compact {
         classes!(
             "w-full",
             "bg-gray-200",
@@ -118,7 +119,6 @@ pub fn accordion(props: &AccordionProps) -> Html {
             "rounded-lg",
             "shadow-md",
             "transition",
-            trigger_classes.clone()
         )
     } else {
         classes!(
@@ -134,9 +134,14 @@ pub fn accordion(props: &AccordionProps) -> Html {
             "items-center",
             "transition",
             "duration-200",
-            trigger_classes.clone()
         )
     };
+    let base_trigger_classes = use_themed_classes(
+        "Accordion",
+        "trigger",
+        trigger_defaults,
+        trigger_classes.clone(),
+    );
 
     let arrow_classes = {
         let mut c = Classes::from(vec!["transform", "transition-transform", "duration-200"]);
@@ -149,8 +154,8 @@ pub fn accordion(props: &AccordionProps) -> Html {
         c
     };
 
-    let base_content_classes = if compact {
-        classes!("space-y-1", content_class.clone())
+    let content_defaults = if compact {
+        classes!("space-y-1")
     } else {
         classes!(
             "px-3",
@@ -162,9 +167,14 @@ pub fn accordion(props: &AccordionProps) -> Html {
             "transition-all",
             "duration-300",
             "ease-in-out",
-            content_class.clone()
         )
     };
+    let base_content_classes = use_themed_classes(
+        "Accordion",
+        "content",
+        content_defaults,
+        content_class.clone(),
+    );
 
     let panel_id = use_state(|| AttrValue::from(format!("accordion-panel-{}", Date::now() as u64)));
 
