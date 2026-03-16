@@ -1,6 +1,6 @@
 [package]
 name         = "create-tailyew-app"
-version      = "0.1.16"
+version      = "0.1.17"
 edition      = "2024"
 authors      = ["Alex James <apjames93@gmail.com>"]
 description  = "CLI to scaffold a new Tailyew Yew+Tailwind project"
@@ -17,7 +17,7 @@ categories   = ["command-line-utilities", "web-programming", "wasm"]
 path = "src/lib.rs"
 
 [dependencies]
-tailyew = "0.1.48"
+tailyew = "0.1.49"
 
 clap         = { version = "4", features = ["derive"] }
 include_dir  = "0.7.4"
