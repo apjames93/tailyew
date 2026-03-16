@@ -1,7 +1,7 @@
 use crate::templates::demos::{DemoComponent, FormInputs};
 use gloo_net::http::Request;
 use tailyew::form::*;
-use tailyew::{async_callback, Button, ButtonType, ModalSize};
+use tailyew::{Button, ButtonType, ModalSize, async_callback};
 use web_sys::SubmitEvent;
 use yew::prelude::*;
 

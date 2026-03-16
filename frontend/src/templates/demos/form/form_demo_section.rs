@@ -3,8 +3,8 @@ use gloo_net::http::Request;
 use tailyew::atoms::{Button, ButtonType, TagType, Typo};
 use tailyew::form::*;
 use tailyew::organisms::table::Column;
-use web_sys::console;
 use web_sys::SubmitEvent;
+use web_sys::console;
 use yew::prelude::*;
 
 const USAGE_CODE: &str = r#"

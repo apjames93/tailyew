@@ -87,17 +87,17 @@ pub fn sidebar(props: &SidebarProps) -> Html {
         use_effect_with(*active_index, move |active| {
             let mut listener: Option<EventListener> = None;
 
-            if active.is_some() {
-                if let Some(win) = window() {
-                    let active_index = active_index.clone();
-                    listener = Some(EventListener::new(&win, "keydown", move |event| {
-                        if let Some(key_event) = event.dyn_ref::<web_sys::KeyboardEvent>() {
-                            if key_event.key() == "Escape" {
-                                active_index.set(None);
-                            }
-                        }
-                    }));
-                }
+            if active.is_some()
+                && let Some(win) = window()
+            {
+                let active_index = active_index.clone();
+                listener = Some(EventListener::new(&win, "keydown", move |event| {
+                    if let Some(key_event) = event.dyn_ref::<web_sys::KeyboardEvent>()
+                        && key_event.key() == "Escape"
+                    {
+                        active_index.set(None);
+                    }
+                }));
             }
 
             move || drop(listener)

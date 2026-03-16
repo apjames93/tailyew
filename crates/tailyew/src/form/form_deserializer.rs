@@ -1,5 +1,5 @@
-use serde::de::{Deserializer, Error, SeqAccess, Visitor};
 use serde::Deserialize;
+use serde::de::{Deserializer, Error, SeqAccess, Visitor};
 use std::fmt;
 use yew::prelude::*;
 

@@ -31,21 +31,21 @@ pub fn theme_toggle() -> Html {
             theme.set(new_theme.to_string());
 
             // Apply theme class to document
-            if let Some(document) = window().and_then(|w| w.document()) {
-                if let Some(html_element) = document.document_element() {
-                    html_element
-                        .set_attribute("class", new_theme)
-                        .expect("Could not set class attribute");
-                }
+            if let Some(document) = window().and_then(|w| w.document())
+                && let Some(html_element) = document.document_element()
+            {
+                html_element
+                    .set_attribute("class", new_theme)
+                    .expect("Could not set class attribute");
             }
 
             // Save to localStorage after state update
-            if let Some(window) = window() {
-                if let Ok(Some(storage)) = window.local_storage() {
-                    storage
-                        .set_item("theme", new_theme)
-                        .expect("Failed to save theme to local storage");
-                }
+            if let Some(window) = window()
+                && let Ok(Some(storage)) = window.local_storage()
+            {
+                storage
+                    .set_item("theme", new_theme)
+                    .expect("Failed to save theme to local storage");
             }
         })
     };
@@ -56,12 +56,12 @@ pub fn theme_toggle() -> Html {
         use_effect_with(theme, move |theme| {
             web_sys::console::log_1(&format!("theme: {:?}", (*theme)).into());
 
-            if let Some(document) = window().and_then(|w| w.document()) {
-                if let Some(html_element) = document.document_element() {
-                    html_element
-                        .set_attribute("class", theme)
-                        .expect("Could not set initial theme class");
-                }
+            if let Some(document) = window().and_then(|w| w.document())
+                && let Some(html_element) = document.document_element()
+            {
+                html_element
+                    .set_attribute("class", theme)
+                    .expect("Could not set initial theme class");
             }
         });
     }

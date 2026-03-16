@@ -1,8 +1,8 @@
 use crate::templates::demos::DemoComponent;
 use serde_json::json;
 use tailyew::atoms::ButtonType;
-use tailyew::molecules::download_button::{DownloadSource, FileType};
 use tailyew::molecules::DownloadButton;
+use tailyew::molecules::download_button::{DownloadSource, FileType};
 use tailyew::organisms::table::Column;
 use yew::prelude::*;
 

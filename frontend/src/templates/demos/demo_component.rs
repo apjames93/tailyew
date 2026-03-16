@@ -1,5 +1,5 @@
 use tailyew::{
-    atoms::{Section, TagType, Typo, A},
+    atoms::{A, Section, TagType, Typo},
     molecules::CodeBlock,
     organisms::{Column, Table},
 };

@@ -216,16 +216,13 @@ pub fn switch(props: &SwitchProps) -> Html {
                         // Simulate toggle by dispatching a click on the hidden input
                         let id = id.clone();
                         Callback::from(move |_: MouseEvent| {
-                            if let Some(window) = web_sys::window() {
-                                if let Some(document) = window.document() {
-                                    if let Some(elem) = document.get_element_by_id(&id) {
-                                        if let Ok(input) = elem.dyn_into::<HtmlInputElement>() {
+                            if let Some(window) = web_sys::window()
+                                && let Some(document) = window.document()
+                                    && let Some(elem) = document.get_element_by_id(&id)
+                                        && let Ok(input) = elem.dyn_into::<HtmlInputElement>() {
                                             // this triggers `onchange`, which updates internal state
                                             input.click();
                                         }
-                                    }
-                                }
-                            }
                         })
                     }}
                 >

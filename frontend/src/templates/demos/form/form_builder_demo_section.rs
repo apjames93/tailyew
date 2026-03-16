@@ -1,10 +1,11 @@
 use crate::templates::demos::DemoComponent;
 use gloo_net::http::Request;
 use tailyew::{
-    async_callback, e_form_builder_values, Button, ButtonType, CheckboxProps, ColorInputProps,
-    Column, FileInputProps, FormBuilder, FormValue, InputProps, InputType, ModalButtonConfig,
-    ModalConfig, ModalSize, PhoneInputProps, RadioGroupProps, RangeInputProps, RenderFieldProps,
-    SearchInputProps, SelectOption, SelectProps, StateDropdownProps, TagType, TextareaProps, Typo,
+    Button, ButtonType, CheckboxProps, ColorInputProps, Column, FileInputProps, FormBuilder,
+    FormValue, InputProps, InputType, ModalButtonConfig, ModalConfig, ModalSize, PhoneInputProps,
+    RadioGroupProps, RangeInputProps, RenderFieldProps, SearchInputProps, SelectOption,
+    SelectProps, StateDropdownProps, TagType, TextareaProps, Typo, async_callback,
+    e_form_builder_values,
 };
 use web_sys::SubmitEvent;
 use yew::prelude::*;

@@ -1,5 +1,5 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::{Button, Typo, A};
+use tailyew::atoms::{A, Button, Typo};
 use tailyew::molecules::Breadcrumbs;
 use tailyew::organisms::table::Column;
 use yew::prelude::*;

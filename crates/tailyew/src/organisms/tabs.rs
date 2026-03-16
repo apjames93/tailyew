@@ -1,5 +1,5 @@
 use web_sys::{HtmlElement, KeyboardEvent, ScrollBehavior, ScrollIntoViewOptions};
-use yew::{prelude::*, AttrValue};
+use yew::{AttrValue, prelude::*};
 
 #[derive(Clone, PartialEq)]
 pub struct TabItem {
@@ -44,18 +44,14 @@ pub fn tabs(props: &TabsProps) -> Html {
         let base_id = base_id_for_click;
         Callback::from(move |index: usize| {
             active_tab_index.set(index);
-            if scroll_into_view {
-                if let Some(window) = web_sys::window() {
-                    if let Some(doc) = window.document() {
-                        if let Some(el) =
-                            doc.get_element_by_id(&format!("{}-tab-{}", base_id, index))
-                        {
-                            let opts = ScrollIntoViewOptions::new();
-                            opts.set_behavior(ScrollBehavior::Smooth);
-                            el.scroll_into_view_with_scroll_into_view_options(&opts);
-                        }
-                    }
-                }
+            if scroll_into_view
+                && let Some(window) = web_sys::window()
+                && let Some(doc) = window.document()
+                && let Some(el) = doc.get_element_by_id(&format!("{}-tab-{}", base_id, index))
+            {
+                let opts = ScrollIntoViewOptions::new();
+                opts.set_behavior(ScrollBehavior::Smooth);
+                el.scroll_into_view_with_scroll_into_view_options(&opts);
             }
         })
     };

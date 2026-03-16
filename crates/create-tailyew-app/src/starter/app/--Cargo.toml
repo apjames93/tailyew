@@ -6,7 +6,7 @@ members = [
 
 [workspace.package]
 # Add this if you want consistent metadata
-edition = "2021"
+edition = "2024"
 
 [workspace.dependencies]
 

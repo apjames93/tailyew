@@ -1,8 +1,8 @@
 use crate::{
-    atoms::{Button, ButtonType},
     Accordion, AddIcon, DeleteIcon,
+    atoms::{Button, ButtonType},
 };
-use serde_json::{json, Map, Value};
+use serde_json::{Map, Value, json};
 use uuid::Uuid;
 use yew::prelude::*;
 

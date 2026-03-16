@@ -30,7 +30,7 @@ format:
 # Run Clippy with all features and deny warnings
 lint:
 	@echo "🕵️  Linting code..."
-	cargo clippy --workspace --lib --bins --tests --all-features -- -D warnings
+	cargo clippy --workspace --lib --bins --tests --all-features --fix --allow-dirty --allow-staged -- -D warnings
 
 # Format and lint together
 pretty: format lint

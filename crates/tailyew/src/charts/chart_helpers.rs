@@ -1,6 +1,6 @@
 use js_sys::Array;
-use wasm_bindgen::{closure::Closure, JsCast};
-use web_sys::{window, CanvasRenderingContext2d, MutationObserver, MutationObserverInit};
+use wasm_bindgen::{JsCast, closure::Closure};
+use web_sys::{CanvasRenderingContext2d, MutationObserver, MutationObserverInit, window};
 use web_sys::{Element, ResizeObserver, ResizeObserverEntry};
 use yew::prelude::*;
 

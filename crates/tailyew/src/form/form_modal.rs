@@ -104,10 +104,8 @@ pub fn form_modal(props: &FormModalProps) -> Html {
                         if let Some(cb) = &on_success {
                             cb.emit(());
                         }
-                        if auto_close {
-                            if let Some(close) = &*close_cb.borrow() {
-                                close.emit(());
-                            }
+                        if auto_close && let Some(close) = &*close_cb.borrow() {
+                            close.emit(());
                         }
                     }
                     Err(_) => {

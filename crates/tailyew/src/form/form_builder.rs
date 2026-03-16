@@ -1,6 +1,6 @@
 use crate::{
-    form::{Form, FormSubmitCallback},
     FormModal, ModalButtonConfig,
+    form::{Form, FormSubmitCallback},
 };
 use yew::prelude::*;
 pub mod render_field;
