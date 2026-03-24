@@ -1,7 +1,6 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::AddIcon;
-use tailyew::molecules::ModalButton;
-use tailyew::molecules::ModalSize;
+use tailyew::molecules::{Accordion, ModalButton, ModalSize};
 use tailyew::organisms::table::Column;
 use tailyew::{Button, ButtonType, TagType, Typo};
 use yew::prelude::*;
@@ -181,6 +180,35 @@ pub fn modal_button_demo_section() -> Html {
                     })
                 })}
             />
+
+            <div class="overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
+                <Typo class="mb-3 block text-sm text-gray-700 dark:text-gray-300">
+                    {"Modals can be triggered from within accordion content and still open over the full page."}
+                </Typo>
+                <Accordion
+                    title={html! { "Modal in Accordion Content" }}
+                    default_open={true}
+                    heading_tag={TagType::H3}
+                >
+                    <div class="space-y-3">
+                        <Typo>
+                            {"Place modal actions inside expandable content without worrying about clipping or layout constraints."}
+                        </Typo>
+                        <ModalButton
+                            trigger_children={html! { "Open Modal" }}
+                            button_type={ButtonType::Primary}
+                            modal_size={ModalSize::Medium}
+                            modal_title={"Example Modal".to_string()}
+                            modal_content={html! {
+                                <div class="space-y-2 text-sm">
+                                    <Typo>{"This dialog opens above the page even though its trigger lives inside the accordion."}</Typo>
+                                    <Typo>{"That makes it a good fit for cards, sections, drawers, and other nested layouts."}</Typo>
+                                </div>
+                            }}
+                        />
+                    </div>
+                </Accordion>
+            </div>
 
             { feedback_message }
         </div>
