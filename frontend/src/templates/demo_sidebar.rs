@@ -345,7 +345,7 @@ pub fn all_demo_links() -> Vec<&'static DemoLink> {
 fn build_nested_sidebar_links(_title: &str, links: &[DemoLink]) -> Vec<NestedItem> {
     links
         .iter()
-        .map(|link| NestedItem::with_html(html! { &link.name }, link.route))
+        .map(|link| NestedItem::with_select(link.name, link.route))
         .collect()
 }
 

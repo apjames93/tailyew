@@ -1,5 +1,4 @@
 use crate::templates::demos::DemoComponent;
-use tailyew::atoms::{Button, ButtonType};
 use tailyew::molecules::ThemeToggle;
 use tailyew::molecules::{AppBar, AppBarPosition};
 use tailyew::organisms::{NestedItem, table::Column};
@@ -12,26 +11,20 @@ const LOGO_IMAGE_URL: &str = "/static/images/logo.png";
 #[component(AppBarDemoSection)]
 pub fn app_bar_demo_section() -> Html {
     let nested_list = vec![
-        NestedItem::with_html(html! { "Home" }, "home"),
-        NestedItem::with_html(html! { "Docs" }, "docs"),
-        NestedItem::with_html(html! { "Components" }, "components"),
-        NestedItem::with_html(html! { "GitHub" }, "github"),
+        NestedItem::with_select("Home", "home"),
+        NestedItem::with_select("Docs", "docs"),
+        NestedItem::with_select("Components", "components"),
+        NestedItem::with_external_link("GitHub", "github", "https://github.com/apjames93/tailyew"),
         NestedItem::with_children(
             "Account",
             vec![
-                NestedItem::with_html(
-                    html! { <Button button_type={ButtonType::Primary}>{ "Login" }</Button> },
-                    "login",
-                ),
-                NestedItem::with_html(
-                    html! { <Button button_type={ButtonType::Secondary}>{ "Sign up" }</Button> },
-                    "signup",
-                ),
+                NestedItem::with_select("Login", "login"),
+                NestedItem::with_select("Sign up", "signup"),
             ],
         ),
         NestedItem::with_children(
             "Settings",
-            vec![NestedItem::with_html(
+            vec![NestedItem::with_content(
                 html! { <ThemeToggle /> },
                 "theme-toggle",
             )],
@@ -40,6 +33,9 @@ pub fn app_bar_demo_section() -> Html {
 
     let on_logo_click = Callback::from(|_| console::log_1(&"Logo clicked!".into()));
     let on_title_click = Callback::from(|_| console::log_1(&"Title clicked!".into()));
+    let on_select = Callback::from(|value: AttrValue| {
+        console::log_1(&format!("Selected menu item: {value}").into());
+    });
 
     let example = html! {
         <div class="h-[300px] bg-gray-50 dark:bg-gray-800 relative">
@@ -48,6 +44,7 @@ pub fn app_bar_demo_section() -> Html {
                 logo_url={Some(AttrValue::from(LOGO_IMAGE_URL))}
                 nested_list={nested_list}
                 position={AppBarPosition::Static}
+                on_select={Some(on_select)}
                 logo_on_click={Some(on_logo_click)}
                 title_on_click={Some(on_title_click)}
             />
@@ -62,6 +59,7 @@ pub fn app_bar_demo_section() -> Html {
                 "logo_url".into(),
                 "nested_list".into(),
                 "position".into(),
+                "on_select".into(),
                 "logo_on_click".into(),
                 "title_on_click".into(),
             ],
@@ -73,6 +71,7 @@ pub fn app_bar_demo_section() -> Html {
                 "Option<AttrValue>".into(),
                 "Vec<NestedItem>".into(),
                 "AppBarPosition".into(),
+                "Option<Callback<AttrValue>>".into(),
                 "Option<Callback<MouseEvent>>".into(),
                 "Option<Callback<MouseEvent>>".into(),
             ],
@@ -84,6 +83,7 @@ pub fn app_bar_demo_section() -> Html {
                 "Optional logo image URL displayed left-aligned.".into(),
                 "Vector of `NestedItem` used for drawer navigation.".into(),
                 "Placement of the AppBar: Top (default), Bottom, or Static.".into(),
+                "Optional callback for selectable drawer rows.".into(),
                 "Optional click handler for the logo image.".into(),
                 "Optional click handler for the title text.".into(),
             ],
@@ -96,7 +96,7 @@ pub fn app_bar_demo_section() -> Html {
             github_source_path="molecules/app_bar.rs"
             title="AppBar Component"
             description={Some(html! {
-                <p>{"The `AppBar` provides a responsive navigation bar with logo, centered title, and a mobile-friendly drawer. The logo and title can be made clickable with optional callbacks."}</p>
+                <p>{"The `AppBar` provides a responsive navigation bar with logo, centered title, and a mobile-friendly drawer. Use `on_select` for selectable rows, link row kinds for external navigation, and `with_content` for embedded widgets like the theme toggle."}</p>
             })}
             example={example}
             usage_code={USAGE_CODE}

@@ -13,23 +13,30 @@ pub fn nested_list_demo_section() -> Html {
         NestedItem::with_children(
             "Billing",
             vec![
-                NestedItem::with_html(html! { "Invoices" }, "invoices"),
+                NestedItem::with_select("Invoices", "invoices"),
                 NestedItem::with_children(
                     "Subscriptions",
-                    vec![NestedItem::with_html(html! { "Order" }, "order")],
+                    vec![NestedItem::with_select("Order", "order")],
                 ),
-                NestedItem::with_html(html! { "Past Due" }, "past_due"),
+                NestedItem::with_external_link(
+                    "Past Due Docs",
+                    "past_due_docs",
+                    "https://tailyew.com",
+                ),
             ],
         ),
-        NestedItem::with_html(html! { "Reports" }, "reports"),
+        NestedItem::with_select("Reports", "reports"),
         NestedItem::with_children(
             "Dashboards",
             vec![
-                NestedItem::with_html(html! { "Admin" }, "admin"),
-                NestedItem::with_html(html! { "User" }, "user"),
+                NestedItem::with_select("Admin", "admin"),
+                NestedItem::with_select("User", "user"),
             ],
         ),
-        NestedItem::with_html(html! { "Settings" }, "settings"),
+        NestedItem::with_content(
+            html! { <span>{ "Settings widget slot" }</span> },
+            "settings",
+        ),
     ];
 
     let example = html! {
@@ -44,10 +51,11 @@ let on_select = Callback::from(|value: AttrValue| {
 });
 
 let nested_items = vec![
-    NestedItem::with_html(html! { "Reports" }, "reports"),
+    NestedItem::with_select("Reports", "reports"),
+    NestedItem::with_external_link("TailYew Docs", "docs", "https://tailyew.com"),
     NestedItem::with_children("Dashboards", vec![
-        NestedItem::with_html(html! { "Admin" }, "admin"),
-        NestedItem::with_html(html! { "User" }, "user"),
+        NestedItem::with_select("Admin", "admin"),
+        NestedItem::with_select("User", "user"),
     ]),
 ];
 
@@ -71,7 +79,7 @@ let nested_items = vec![
             header: "Description".into(),
             values: vec![
                 "Recursive list of items to render.".into(),
-                "Callback triggered when a leaf item is clicked.".into(),
+                "Callback triggered when a selectable or link leaf item is activated.".into(),
                 "Starting index used for alternating row striping.".into(),
             ],
         },
@@ -83,7 +91,7 @@ let nested_items = vec![
             github_source_path="organisms/nested_list.rs"
             title="NestedList Component"
             description={Some(html! {
-                <p>{"The `NestedList` component renders a recursive list with support for collapsible sublists using Accordions. Useful for nested navigation, categories, or drill-down structures."}</p>
+                <p>{"The `NestedList` component renders recursive menus with semantic button rows, full-width anchor rows, and collapsible sublists. Use `with_select` for actions, `with_external_link` for URL navigation, and `with_content` for embedded widgets."}</p>
             })}
             example={example}
             usage_code={usage_code}

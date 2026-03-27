@@ -44,7 +44,7 @@ pub fn sidebar_demo_section() -> Html {
                 </svg>
             },
             open_text: html! {"Menu"},
-            list: vec![NestedItem::new("Example")],
+            list: vec![NestedItem::with_select("Example", "example")],
         }
     ]}
     position={SidebarPosition::Left}
@@ -78,7 +78,7 @@ pub fn sidebar_demo_section() -> Html {
             header: "Description".into(),
             values: vec![
                 "List of toggle buttons and their nested items.".into(),
-                "Called when a leaf item is selected.".into(),
+                "Called when a selectable or link leaf item is activated.".into(),
                 "If true, drawer closes after item click.".into(),
                 "Optional class to offset below AppBar.".into(),
                 "Where to render the Sidebar (Left, Right, or Static).".into(),
@@ -93,18 +93,18 @@ pub fn sidebar_demo_section() -> Html {
                 NestedItem::with_children(
                     "Nested",
                     vec![
-                        NestedItem::with_html(html! { "Nested 1" }, "nested-1"),
-                        NestedItem::with_html(html! { "Nested 2" }, "nested-2"),
+                        NestedItem::with_select("Nested 1", "nested-1"),
+                        NestedItem::with_select("Nested 2", "nested-2"),
                     ],
                 ),
-                NestedItem::with_html(html! { "Getting Started" }, "getting-started"),
+                NestedItem::with_select("Getting Started", "getting-started"),
             ],
         ),
         NestedItem::with_children(
             "Components",
             vec![
-                NestedItem::with_html(html! { "Button" }, "button"),
-                NestedItem::with_html(html! { "Card" }, "card"),
+                NestedItem::with_select("Button", "button"),
+                NestedItem::with_select("Card", "card"),
             ],
         ),
     ];
