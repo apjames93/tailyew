@@ -78,7 +78,7 @@ pub fn markdown_demo_section() -> Html {
             github_source_path="organisms/markdown.rs"
             title="Markdown Component"
             description={Some(html! {
-              <p>{"The `Markdown` component renders sanitized markdown as styled HTML using `pulldown-cmark`. It supports inline styles, block elements, code formatting, and dynamic TailYew forms."}</p>
+              <p>{"The `Markdown` component renders sanitized markdown as styled HTML using `pulldown-cmark`. It supports inline styles, block elements, markdown tables rendered through TailYew `Table`, code formatting, and dynamic TailYew forms."}</p>
             })}
             example={example}
             usage_code={usage_code}

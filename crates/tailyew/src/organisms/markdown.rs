@@ -1,6 +1,6 @@
 use crate::form::FormSubmitCallback;
-use crate::{A, CodeBlock, Image, Li, MarkerType, TagType, Typo, Ul};
-use pulldown_cmark::{CodeBlockKind, Event, HeadingLevel, Parser, Tag};
+use crate::{A, CodeBlock, Column, Image, Li, MarkerType, Table, TagType, Typo, Ul};
+use pulldown_cmark::{CodeBlockKind, Event, HeadingLevel, Options, Parser, Tag};
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
@@ -14,7 +14,7 @@ pub struct MarkdownProps {
 
 #[component(Markdown)]
 pub fn markdown(props: &MarkdownProps) -> Html {
-    let parser = Parser::new(&props.content);
+    let parser = Parser::new_ext(&props.content, markdown_options());
     let nodes = markdown_to_yew(parser, props.on_form_submit.clone());
 
     html! {
@@ -26,20 +26,91 @@ pub fn markdown(props: &MarkdownProps) -> Html {
 
 // --- Core Markdown Parser ---
 
-fn markdown_to_yew(parser: Parser, on_form_submit: Option<FormSubmitCallback>) -> Html {
+fn markdown_options() -> Options {
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_TABLES);
+    options
+}
+
+enum Frame<'a> {
+    Html { tag: Tag<'a>, children: Vec<Html> },
+    Table(TableState),
+    TableHead(Vec<Html>),
+    TableRow(Vec<Html>),
+    TableCell(Vec<Html>),
+}
+
+#[derive(Default)]
+struct TableState {
+    headers: Vec<Html>,
+    rows: Vec<Vec<Html>>,
+}
+
+fn markdown_to_yew(parser: Parser<'_>, on_form_submit: Option<FormSubmitCallback>) -> Html {
     let mut html_nodes = Vec::new();
     let mut tags_stack = Vec::new();
 
     for event in parser {
         match event {
             Event::Start(tag) => {
-                tags_stack.push((tag, Vec::new()));
+                let frame = match tag {
+                    Tag::Table(_) => Frame::Table(TableState::default()),
+                    Tag::TableHead => Frame::TableHead(Vec::new()),
+                    Tag::TableRow => Frame::TableRow(Vec::new()),
+                    Tag::TableCell => Frame::TableCell(Vec::new()),
+                    _ => Frame::Html {
+                        tag,
+                        children: Vec::new(),
+                    },
+                };
+                tags_stack.push(frame);
             }
 
             Event::End(_) => {
-                if let Some((tag, children)) = tags_stack.pop() {
-                    let node = render_tag(tag, children, on_form_submit.clone());
-                    push_to_stack_or_root(&mut tags_stack, &mut html_nodes, node);
+                if let Some(frame) = tags_stack.pop() {
+                    match frame {
+                        Frame::Html { tag, children } => {
+                            let node = render_tag(tag, children, on_form_submit.clone());
+                            push_to_stack_or_root(&mut tags_stack, &mut html_nodes, node);
+                        }
+                        Frame::Table(table) => {
+                            let node = render_table(table);
+                            push_to_stack_or_root(&mut tags_stack, &mut html_nodes, node);
+                        }
+                        Frame::TableHead(cells) => {
+                            if let Some(table) = last_table_mut(&mut tags_stack) {
+                                table.headers = cells;
+                            }
+                        }
+                        Frame::TableRow(cells) => {
+                            if let Some(table) = last_table_mut(&mut tags_stack) {
+                                table.rows.push(cells);
+                            }
+                        }
+                        Frame::TableCell(children) => {
+                            if let Some(frame) = tags_stack.last_mut() {
+                                match frame {
+                                    Frame::TableHead(cells) => {
+                                        cells.push(render_table_header_cell(children));
+                                    }
+                                    Frame::TableRow(cells) => {
+                                        cells.push(render_table_cell(children));
+                                    }
+                                    _ => {
+                                        let cell = render_table_cell(children);
+                                        push_to_stack_or_root(
+                                            &mut tags_stack,
+                                            &mut html_nodes,
+                                            cell,
+                                        );
+                                    }
+                                }
+                            } else {
+                                let cell = render_table_cell(children);
+                                push_to_stack_or_root(&mut tags_stack, &mut html_nodes, cell);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -52,9 +123,7 @@ fn markdown_to_yew(parser: Parser, on_form_submit: Option<FormSubmitCallback>) -
             }
 
             Event::Code(code) => {
-                let node = html! {
-                    <code class="font-mono bg-gray-100 px-1 rounded">{ code.to_string() }</code>
-                };
+                let node = render_inline_code(code.to_string());
                 push_to_stack_or_root(&mut tags_stack, &mut html_nodes, node);
             }
 
@@ -69,15 +138,84 @@ fn markdown_to_yew(parser: Parser, on_form_submit: Option<FormSubmitCallback>) -
     Html::from_iter(html_nodes)
 }
 
-fn push_to_stack_or_root(stack: &mut Vec<(Tag, Vec<Html>)>, root: &mut Vec<Html>, node: Html) {
-    if let Some((_, parent)) = stack.last_mut() {
-        parent.push(node);
-    } else {
-        root.push(node);
+fn push_to_stack_or_root(stack: &mut Vec<Frame<'_>>, root: &mut Vec<Html>, node: Html) {
+    if let Some(Frame::Html { children, .. } | Frame::TableCell(children)) = stack.last_mut() {
+        children.push(node);
+        return;
+    }
+
+    root.push(node);
+}
+
+fn render_table_header_cell(children: Vec<Html>) -> Html {
+    render_table_inline(children)
+}
+
+fn render_inline_code(code: String) -> Html {
+    html! {
+        <code class="font-mono text-[0.875em] px-1.5 py-0.5 rounded border border-gray-200 bg-gray-100 text-gray-800 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
+            { code }
+        </code>
     }
 }
 
-fn render_tag(tag: Tag, children: Vec<Html>, on_form_submit: Option<FormSubmitCallback>) -> Html {
+fn last_table_mut<'a, 'b>(stack: &'a mut [Frame<'b>]) -> Option<&'a mut TableState> {
+    stack.iter_mut().rev().find_map(|frame| match frame {
+        Frame::Table(table) => Some(table),
+        _ => None,
+    })
+}
+
+fn render_table_cell(children: Vec<Html>) -> Html {
+    if children.is_empty() {
+        Html::default()
+    } else {
+        html! {
+            <Typo tag={TagType::Span} class="text-gray-700 dark:text-gray-300">
+                { render_table_inline(children) }
+            </Typo>
+        }
+    }
+}
+
+fn render_table_inline(children: Vec<Html>) -> Html {
+    match children.len() {
+        0 => Html::default(),
+        1 => children.into_iter().next().unwrap_or_default(),
+        _ => html! { <>{children}</> },
+    }
+}
+
+fn render_table(table: TableState) -> Html {
+    let column_count = table
+        .rows
+        .iter()
+        .map(Vec::len)
+        .fold(table.headers.len(), usize::max);
+
+    if column_count == 0 {
+        return Html::default();
+    }
+
+    let columns = (0..column_count)
+        .map(|index| Column {
+            header: table.headers.get(index).cloned().unwrap_or_default(),
+            values: table
+                .rows
+                .iter()
+                .map(|row| row.get(index).cloned().unwrap_or_default())
+                .collect(),
+        })
+        .collect::<Vec<_>>();
+
+    html! { <Table columns={columns} /> }
+}
+
+fn render_tag(
+    tag: Tag<'_>,
+    children: Vec<Html>,
+    on_form_submit: Option<FormSubmitCallback>,
+) -> Html {
     match tag {
         Tag::Paragraph => html! { <Typo tag={TagType::P}>{children}</Typo> },
 
@@ -93,7 +231,7 @@ fn render_tag(tag: Tag, children: Vec<Html>, on_form_submit: Option<FormSubmitCa
             html! { <Typo tag={tag_type}>{children}</Typo> }
         }
 
-        Tag::BlockQuote { .. } => html! {
+        Tag::BlockQuote(_) => html! {
             <Typo tag={TagType::BlockQuote}>{children}</Typo>
         },
 

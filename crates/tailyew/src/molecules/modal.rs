@@ -92,10 +92,12 @@ pub fn modal(props: &ModalProps) -> Html {
         use_effect_with(
             (*is_open, has_portal_host),
             move |(is_open, has_portal_host)| {
-                if *is_open && !*has_portal_host
-                    && let Some(host) = document_body_host() {
-                        portal_host.set(Some(host));
-                    }
+                if *is_open
+                    && !*has_portal_host
+                    && let Some(host) = document_body_host()
+                {
+                    portal_host.set(Some(host));
+                }
 
                 || ()
             },
