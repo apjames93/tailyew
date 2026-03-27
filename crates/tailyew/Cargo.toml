@@ -1,6 +1,6 @@
 [package]
 name = "tailyew"
-version = "0.1.51"
+version = "0.1.52"
 edition = "2024"
 authors = ["Alex James <apjames93@gmail.com>", "Alex Wardi <aaw5017@gmail.com>"]
 description = "Reusable Yew + Tailwind UI component library"
