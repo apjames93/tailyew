@@ -18,6 +18,9 @@ pub struct AppBarProps {
     pub position: AppBarPosition,
 
     #[prop_or_default]
+    pub on_select: Option<Callback<AttrValue>>,
+
+    #[prop_or_default]
     pub logo_on_click: Option<Callback<MouseEvent>>,
 
     #[prop_or_default]
@@ -31,6 +34,7 @@ pub fn app_bar(props: &AppBarProps) -> Html {
         logo_url,
         nested_list,
         position,
+        on_select,
         logo_on_click,
         title_on_click,
     } = props.clone();
@@ -49,10 +53,16 @@ pub fn app_bar(props: &AppBarProps) -> Html {
         Callback::from(move |_| drawer_open.set(false))
     };
 
-    // Close drawer on NestedList select (AttrValue)
-    let close_drawer_attr = {
+    // Close drawer on NestedList select and forward the selection when requested.
+    let handle_drawer_select = {
         let drawer_open = drawer_open.clone();
-        Callback::from(move |_value: AttrValue| drawer_open.set(false))
+        let on_select = on_select.clone();
+        Callback::from(move |value: AttrValue| {
+            drawer_open.set(false);
+            if let Some(on_select) = on_select.as_ref() {
+                on_select.emit(value);
+            }
+        })
     };
 
     html! {
@@ -117,7 +127,7 @@ pub fn app_bar(props: &AppBarProps) -> Html {
 
                             // Drawer content
                             <div class="fixed top-0 right-0 w-64 h-full bg-white dark:bg-gray-900 shadow-lg z-40 p-4">
-                                <NestedList list={nested_list.clone()} on_select={close_drawer_attr} />
+                                <NestedList list={nested_list.clone()} on_select={handle_drawer_select} />
                             </div>
                         </div>
                     }

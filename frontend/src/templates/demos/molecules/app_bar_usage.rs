@@ -3,27 +3,21 @@ html! {
     title={Some(AttrValue::from("TailYew"))}
     logo_url={Some(AttrValue::from(LOGO_IMAGE_URL))}
     nested_list={vec![
-      NestedItem::with_html(html! { "Home" }, "home"),
-      NestedItem::with_html(html! { "Docs" }, "docs"),
-      NestedItem::with_html(html! { "Components" }, "components"),
-      NestedItem::with_html(html! { "GitHub" }, "github"),
+      NestedItem::with_select("Home", "home"),
+      NestedItem::with_select("Docs", "docs"),
+      NestedItem::with_select("Components", "components"),
+      NestedItem::with_external_link("GitHub", "github", "https://github.com/apjames93/tailyew"),
       NestedItem::with_children(
           "Account",
           vec![
-              NestedItem::with_html(
-                  html! { <Button button_type={ButtonType::Primary}>{ "Login" }</Button> },
-                  "login",
-              ),
-              NestedItem::with_html(
-                  html! { <Button button_type={ButtonType::Secondary}>{ "Sign up" }</Button> },
-                  "signup",
-              ),
+              NestedItem::with_select("Login", "login"),
+              NestedItem::with_select("Sign up", "signup"),
           ],
       ),
       NestedItem::with_children(
           "Settings",
           vec![
-              NestedItem::with_html(
+              NestedItem::with_content(
                   html! { <ThemeToggle /> },
                   "theme-toggle",
               ),
@@ -31,5 +25,8 @@ html! {
       ),
   ]}
     position={AppBarPosition::Static}
+    on_select={Some(Callback::from(|value: AttrValue| {
+      log::info!("selected {value}");
+    }))}
   />
 }
