@@ -7,6 +7,14 @@ pub struct TabItem {
     pub content: Html,
 }
 
+fn clamp_tab_index(index: usize, item_count: usize) -> usize {
+    if item_count == 0 {
+        0
+    } else {
+        index.min(item_count - 1)
+    }
+}
+
 #[derive(Properties, PartialEq, Clone)]
 pub struct TabsProps {
     /// List of tabs (title + content)
@@ -17,17 +25,30 @@ pub struct TabsProps {
     /// Optional id prefix for tab and panel aria wiring
     #[prop_or_default]
     pub id_prefix: Option<AttrValue>,
+    /// Initial active tab index for uncontrolled usage
+    #[prop_or(0)]
+    pub initial_active_tab: usize,
+    /// Controlled active tab index
+    #[prop_or_default]
+    pub active_tab: Option<usize>,
+    /// Optional callback fired whenever tab selection changes
+    #[prop_or_default]
+    pub on_tab_change: Option<Callback<usize>>,
 }
 
 #[component(Tabs)]
 pub fn tabs(props: &TabsProps) -> Html {
     let scroll_into_view = props.scroll_into_view;
+    let item_count = props.items.len();
     let base_id = props
         .id_prefix
         .clone()
         .unwrap_or_else(|| AttrValue::from("tabs"))
         .to_string();
-    let active_tab_index = use_state(|| 0);
+    let initial_active_tab = clamp_tab_index(props.initial_active_tab, item_count);
+    let active_tab_index = use_state(move || initial_active_tab);
+    let effective_active_tab_index =
+        clamp_tab_index(props.active_tab.unwrap_or(*active_tab_index), item_count);
     let base_id_for_click = base_id.clone();
     let tab_refs = use_mut_ref(Vec::<NodeRef>::new);
 
@@ -41,13 +62,24 @@ pub fn tabs(props: &TabsProps) -> Html {
     // Click handler: set active index and optionally scroll tab into view
     let on_tab_click = {
         let active_tab_index = active_tab_index.clone();
+        let is_controlled = props.active_tab.is_some();
+        let on_tab_change = props.on_tab_change.clone();
         let base_id = base_id_for_click;
         Callback::from(move |index: usize| {
-            active_tab_index.set(index);
+            let next_index = clamp_tab_index(index, item_count);
+
+            if !is_controlled {
+                active_tab_index.set(next_index);
+            }
+
+            if let Some(on_tab_change) = &on_tab_change {
+                on_tab_change.emit(next_index);
+            }
+
             if scroll_into_view
                 && let Some(window) = web_sys::window()
                 && let Some(doc) = window.document()
-                && let Some(el) = doc.get_element_by_id(&format!("{}-tab-{}", base_id, index))
+                && let Some(el) = doc.get_element_by_id(&format!("{}-tab-{}", base_id, next_index))
             {
                 let opts = ScrollIntoViewOptions::new();
                 opts.set_behavior(ScrollBehavior::Smooth);
@@ -72,12 +104,12 @@ pub fn tabs(props: &TabsProps) -> Html {
     // Render content for active tab
     let content = props
         .items
-        .get(*active_tab_index)
+        .get(effective_active_tab_index)
         .map(|tab| tab.content.clone())
         .unwrap_or_else(|| html! { <div>{"No content available"}</div> });
 
-    let active_tab_id = format!("{}-tab-{}", base_id, *active_tab_index);
-    let active_panel_id = format!("{}-panel-{}", base_id, *active_tab_index);
+    let active_tab_id = format!("{}-tab-{}", base_id, effective_active_tab_index);
+    let active_panel_id = format!("{}-panel-{}", base_id, effective_active_tab_index);
 
     html! {
         <div class="tabs-component w-full p-2">
@@ -86,7 +118,7 @@ pub fn tabs(props: &TabsProps) -> Html {
                 role="tablist"
             >
                 { for props.items.iter().enumerate().map(|(index, item)| {
-                    let is_active = index == *active_tab_index;
+                    let is_active = index == effective_active_tab_index;
                     let tab_ref = {
                         let refs = tab_refs.borrow_mut();
                         refs[index].clone()
