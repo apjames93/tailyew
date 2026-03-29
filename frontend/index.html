@@ -24,17 +24,5 @@
     </head>
     <body>
         <div id="app"></div>
-        <script>
-            const isLocalhost =
-                window.location.hostname === "localhost" ||
-                window.location.hostname === "127.0.0.1" ||
-                window.location.hostname === "[::1]";
-
-            if (!isLocalhost && "serviceWorker" in navigator) {
-                navigator.serviceWorker.register("/static/service_worker.js").catch((error) =>
-                    console.error("Service Worker registration failed:", error),
-                );
-            }
-        </script>
     </body>
 </html>
