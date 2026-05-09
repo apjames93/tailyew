@@ -17,7 +17,7 @@ categories   = ["command-line-utilities", "web-programming", "wasm"]
 path = "src/lib.rs"
 
 [dependencies]
-tailyew = "0.1.54"
+tailyew = "0.1.55"
 
 clap         = { version = "4", features = ["derive"] }
 include_dir  = "0.7.4"
