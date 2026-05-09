@@ -15,7 +15,7 @@ use crate::templates::demos::{
     PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection,
     ScatterPlotDemoSection, SearchInputDemoSection, SelectDemoSection, SidebarDemoSection,
     SpacerDemoSection, StepperDemoSection, SwitchDemoSection, TableDemoSection, TabsDemoSection,
-    TextareaDemoSection, TooltipDemoSection, TypoDemoSection, UlDemoSection,
+    TextareaDemoSection, TooltipDemoSection, TypoDemoSection, UlDemoSection, VideoDemoSection,
 };
 use tailyew::{
     AppsIcon, AtomIcon, BarChartIcon, FormIcon, NestedItem, PolylineIcon, Sidebar, SidebarButton,
@@ -179,6 +179,11 @@ pub const ATOM_LINKS: &[DemoLink] = &[
         name: "Image",
         route: "image",
         render: || html! { <ImageDemoSection /> },
+    },
+    DemoLink {
+        name: "Video",
+        route: "video",
+        render: || html! { <VideoDemoSection /> },
     },
     DemoLink {
         name: "Linear Progress",

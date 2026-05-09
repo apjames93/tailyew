@@ -23,7 +23,7 @@ The TailYew demo site and documentation at [tailyew.com](https://tailyew.com) ar
 
 - 🌗 **Dark mode** with Tailwind's `dark:` utilities  
 - 🧹 **Reusable components**: Buttons, Modals, Forms, Accordions, Tabs  
-- 📙 **Markdown rendering** auto-maps to TailYew components (`Typo`, `A`, `Image`, `CodeBlock`) and supports embedded `FormBuilder` blocks  
+- 📙 **Markdown rendering** auto-maps to TailYew components (`Typo`, `A`, `Image`, `Video`, `CodeBlock`) and supports embedded `FormBuilder` blocks  
 - ✍️ **Dynamic Forms in Markdown** — render live `FormBuilder` blocks from fenced code like ````form ...```` via `pulldown-cmark`  
 - 📊 **Charts** — Canvas-based charts (Bar, Line, Bubble, Pie, Scatter) with no JS dependencies and theme-aware data visualizations  
 - 🧾 **Composable Forms** — Input-driven and config-driven forms with built-in state, modals, validation, and accessibility  
@@ -65,7 +65,7 @@ Starting with **TailYew v0.1.43**, new releases target **Yew 0.22+**.
 
 > TailYew includes 50+ components. Below is a summary of a few key components— [see the full demo here »](https://tailyew.com)
 
-- **Atoms**: `Button`, `Input`, `Textarea`, `Typo`, `Checkbox`, `Select`  
+- **Atoms**: `Button`, `Input`, `Textarea`, `Typo`, `Checkbox`, `Select`, `Video`  
 - **Molecules**: `ModalButton`, `Popover`, `Accordion`, `Stepper`, `Markdown`, `Notification`  
 - **Organisms**: `Table`, `Form`, `NavBar`, `Sidebar`, `Card`, `HeroHeader`  
 - **Charts**: `BarChart`, `LineChart`, `BubbleChart`, `PieChart`, `ScatterPlot`  

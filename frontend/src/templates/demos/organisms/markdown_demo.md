@@ -17,6 +17,7 @@ This demo exercises the markdown elements TailYew's `Markdown` component current
 | Ordered and unordered lists | `- item`, `1. item` | Nested lists work |
 | Code blocks | Fenced and indented blocks | `form` fences render dynamic forms |
 | Images | `![Alt text](https://...)` | Uses the TailYew `Image` component |
+| Videos | `![Video title](/path/video.mov)` | Uses the TailYew `Video` component for video files and YouTube URLs |
 | Tables | Pipe table syntax | Uses the TailYew `Table` component |
 
 ## Paragraphs and Inline Formatting
@@ -81,6 +82,11 @@ console.log(`Rendering markdown with ${framework}`);
 ![Yew Logo](https://yew.rs/img/logo.png)
 
 This paragraph includes an inline image ![Inline image](https://yew.rs/img/logo.png) alongside text and a [link to GitHub](https://github.com).
+
+## Videos
+![Local demo video](/static/images/demo.mov)
+
+![Trending YouTube trailer](https://www.youtube.com/watch?v=SJPu1spHqfk)
 
 ## Mixed Content
 > **Bold inside Blockquote** with [Link](https://openai.com)
