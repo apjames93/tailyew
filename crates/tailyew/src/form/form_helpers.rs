@@ -83,9 +83,23 @@ impl FormFieldSpec {
         }
     }
 
-
+    pub fn json(name: impl Into<AttrValue>) -> Self {
+        Self {
+            name: name.into(),
+            kind: FormFieldValueKind::Json,
+        }
+    }
 }
 
+pub fn e_form_json_object(e: &SubmitEvent, fields: &[FormFieldSpec]) -> Result<Value, String> {
+    let form = form_from_submit_event(e)?;
+
+    form_json_object_from_values(
+        fields,
+        |name| input_value_from_form(&form, name),
+        |name| checkbox_checked_from_form(&form, name),
+    )
+}
 
 fn form_from_submit_event(e: &SubmitEvent) -> Result<HtmlFormElement, String> {
     if let Some(form) = e.current_target().and_then(event_target_as_form) {
@@ -156,12 +170,41 @@ fn checkbox_checked_from_form(form: &HtmlFormElement, name: &str) -> Result<bool
     Ok(input.checked())
 }
 
+fn form_json_object_from_values<T, B>(
+    fields: &[FormFieldSpec],
+    mut text_value: T,
+    mut bool_value: B,
+) -> Result<Value, String>
+where
+    T: FnMut(&str) -> Result<String, String>,
+    B: FnMut(&str) -> Result<bool, String>,
+{
+    let mut object = Map::new();
+
+    for field in fields {
+        let name = field.name.as_str();
+        let value = match field.kind {
+            FormFieldValueKind::String => Value::String(text_value(name)?),
+            FormFieldValueKind::Number => parse_form_number(name, &text_value(name)?)?,
+            FormFieldValueKind::Boolean => Value::Bool(bool_value(name)?),
+            FormFieldValueKind::Json => parse_form_json(name, &text_value(name)?)?,
+        };
+        object.insert(name.to_owned(), value);
+    }
+
+    Ok(Value::Object(object))
+}
 
 fn parse_form_number(name: &str, raw: &str) -> Result<Value, String> {
     match serde_json::from_str::<Value>(raw.trim()) {
         Ok(Value::Number(number)) => Ok(Value::Number(number)),
         _ => Err(format!("Field '{name}' must be a valid JSON number.")),
     }
+}
+
+fn parse_form_json(name: &str, raw: &str) -> Result<Value, String> {
+    serde_json::from_str::<Value>(raw)
+        .map_err(|err| format!("Field '{name}' must contain valid JSON: {err}"))
 }
 
 #[derive(Debug, Clone)]
@@ -229,4 +272,90 @@ pub fn e_form_builder_values(
     }
 
     values
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn build_json_object(
+        fields: &[FormFieldSpec],
+        values: &[(&str, &str)],
+        checks: &[(&str, bool)],
+    ) -> Result<Value, String> {
+        form_json_object_from_values(
+            fields,
+            |name| {
+                values
+                    .iter()
+                    .find(|(field, _)| *field == name)
+                    .map(|(_, value)| (*value).to_owned())
+                    .ok_or_else(|| format!("Form field '{name}' was not found."))
+            },
+            |name| {
+                checks
+                    .iter()
+                    .find(|(field, _)| *field == name)
+                    .map(|(_, value)| *value)
+                    .ok_or_else(|| format!("Form field '{name}' was not found."))
+            },
+        )
+    }
+
+    #[test]
+    fn form_json_object_builds_mixed_payload() {
+        let payload = build_json_object(
+            &[
+                FormFieldSpec::string("user_name"),
+                FormFieldSpec::number("age"),
+                FormFieldSpec::boolean("active"),
+                FormFieldSpec::json("games_played"),
+            ],
+            &[
+                ("user_name", "buddy guy"),
+                ("age", "30"),
+                (
+                    "games_played",
+                    r#"[{"id":1,"name":"Resident Evil Requiem"}]"#,
+                ),
+            ],
+            &[("active", true)],
+        )
+        .unwrap();
+
+        assert_eq!(
+            payload,
+            serde_json::json!({
+                "user_name": "buddy guy",
+                "age": 30,
+                "active": true,
+                "games_played": [
+                    { "id": 1, "name": "Resident Evil Requiem" }
+                ]
+            })
+        );
+    }
+
+    #[test]
+    fn form_json_object_rejects_invalid_number() {
+        let err =
+            build_json_object(&[FormFieldSpec::number("age")], &[("age", "bad")], &[]).unwrap_err();
+
+        assert_eq!(err, "Field 'age' must be a valid JSON number.");
+    }
+
+    #[test]
+    fn form_json_object_rejects_invalid_json() {
+        let err = build_json_object(&[FormFieldSpec::json("payload")], &[("payload", "{")], &[])
+            .unwrap_err();
+
+        assert!(err.starts_with("Field 'payload' must contain valid JSON:"));
+    }
+
+    #[test]
+    fn form_json_object_reports_missing_field() {
+        let err = build_json_object(&[FormFieldSpec::string("missing")], &[], &[]).unwrap_err();
+
+        assert_eq!(err, "Form field 'missing' was not found.");
+    }
 }
