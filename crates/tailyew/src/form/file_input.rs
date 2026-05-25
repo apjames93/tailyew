@@ -1,4 +1,4 @@
-use crate::form::Label;
+use crate::form::{Label, join_aria_ids, submitted_name};
 use crate::form_deserializer::*;
 use serde::Deserialize;
 use web_sys::HtmlInputElement;
@@ -9,6 +9,10 @@ pub struct FileInputProps {
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_attr")]
     pub id: AttrValue,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub name: Option<AttrValue>,
 
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_attr")]
@@ -23,23 +27,68 @@ pub struct FileInputProps {
     pub accept: AttrValue,
 
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub helper_text: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub error: Option<AttrValue>,
+
+    #[prop_or(false)]
+    #[serde(default)]
+    pub visually_hidden_label: bool,
+
+    #[prop_or_default]
+    #[serde(default)]
+    pub aria_invalid: Option<bool>,
+
+    #[prop_or_default]
+    #[serde(
+        default,
+        rename = "aria-describedby",
+        deserialize_with = "de_option_attr"
+    )]
+    pub aria_describedby: Option<AttrValue>,
+
+    #[prop_or(false)]
+    #[serde(default)]
+    pub required: bool,
+
+    #[prop_or(false)]
+    #[serde(default)]
+    pub disabled: bool,
+
+    #[prop_or_default]
     #[serde(default, deserialize_with = "de_classes")]
     pub class: Classes,
 
     #[prop_or_default]
     #[serde(skip)]
     pub on_change: Option<Callback<String>>,
+
+    #[prop_or_default]
+    #[serde(skip)]
+    pub on_blur: Option<Callback<FocusEvent>>,
 }
 
 #[component(FileInput)]
 pub fn file_input(props: &FileInputProps) -> Html {
     let FileInputProps {
         id,
+        name,
         label,
         initial_file_name,
         accept,
+        helper_text,
+        error,
+        visually_hidden_label,
+        aria_invalid,
+        aria_describedby,
+        required,
+        disabled,
         class,
         on_change,
+        on_blur,
     } = props;
 
     let file_name = use_state(|| initial_file_name.clone());
@@ -61,6 +110,28 @@ pub fn file_input(props: &FileInputProps) -> Html {
         })
     };
 
+    let effective_error = error
+        .clone()
+        .map(|error| error.to_string())
+        .filter(|error| !error.is_empty());
+    let file_name_id = (!id.is_empty()).then(|| AttrValue::from(format!("{id}-file-name")));
+    let helper_id = helper_text
+        .as_ref()
+        .filter(|_| !id.is_empty())
+        .map(|_| AttrValue::from(format!("{id}-helper")));
+    let error_id = effective_error
+        .as_ref()
+        .filter(|_| !id.is_empty())
+        .map(|_| AttrValue::from(format!("{id}-error")));
+    let describedby = join_aria_ids(vec![
+        aria_describedby.clone(),
+        file_name_id.clone(),
+        helper_id.clone(),
+        error_id.clone(),
+    ]);
+    let effective_aria_invalid = aria_invalid.unwrap_or(effective_error.is_some());
+    let name_attr = submitted_name(id, name);
+
     let input_classes = classes!(
         "w-full",
         "px-4",
@@ -78,6 +149,11 @@ pub fn file_input(props: &FileInputProps) -> Html {
         "dark:border-gray-600",
         "dark:focus:ring-primary-dark",
         "dark:focus:border-primary-dark",
+        "disabled:cursor-not-allowed",
+        "disabled:bg-gray-100",
+        "disabled:text-gray-500",
+        "dark:disabled:bg-gray-700",
+        effective_error.is_some().then_some("border-red-500"),
         class.clone()
     );
 
@@ -91,17 +167,27 @@ pub fn file_input(props: &FileInputProps) -> Html {
 
     html! {
         <div class="flex flex-col space-y-2">
-            <Label for_id={id.clone()} text={label.clone()} />
+            <Label
+                for_id={id.clone()}
+                text={label.clone()}
+                required={*required}
+                class={classes!(visually_hidden_label.then_some("sr-only"))}
+            />
             <input
                 id={id.clone()}
+                name={name_attr}
                 type="file"
                 class={input_classes}
                 accept={accept.clone()}
                 onchange={on_change_internal}
+                onblur={on_blur.clone()}
+                required={*required}
+                disabled={*disabled}
                 aria-label={label.to_string()}
-                aria-describedby={format!("{id}-file-name")}
+                aria-invalid={AttrValue::from(effective_aria_invalid.to_string())}
+                aria-describedby={describedby}
             />
-            <p id={format!("{id}-file-name")} class={file_name_classes}>
+            <p id={file_name_id} class={file_name_classes}>
                 {
                     if !file_name.is_empty() {
                         format!("Selected file: {}", *file_name)
@@ -110,6 +196,16 @@ pub fn file_input(props: &FileInputProps) -> Html {
                     }
                 }
             </p>
+            if let Some(helper_text) = helper_text {
+                <p id={helper_id} class="text-sm text-gray-500 dark:text-gray-400">
+                    { helper_text.clone() }
+                </p>
+            }
+            if let Some(error) = effective_error {
+                <p id={error_id} class="text-sm font-medium text-red-600 dark:text-red-300" role="alert">
+                    { error }
+                </p>
+            }
         </div>
     }
 }

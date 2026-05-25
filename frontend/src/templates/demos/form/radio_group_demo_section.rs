@@ -7,8 +7,10 @@ const USAGE_CODE: &str = r#"
 html! {
     <RadioGroup
         id="favorite-color"
+        name="favorite_color"
         label="Favorite Color"
         default_value="green".to_string()
+        helper_text="Choose one color."
         options={vec![
             ("red".to_string(), "Red".to_string()),
             ("green".to_string(), "Green".to_string()),
@@ -34,9 +36,11 @@ pub fn radio_group_demo_section() -> Html {
     let example = html! {
         <RadioGroup
             id="favorite-color"
+            name="favorite_color"
             label="Favorite Color"
             options={options}
             default_value={"green".to_string()}
+            helper_text="Choose one color."
             on_change={Some(on_change)}
         />
     };
@@ -46,33 +50,60 @@ pub fn radio_group_demo_section() -> Html {
             header: "Prop".into(),
             values: vec![
                 "id".into(),
+                "name".into(),
                 "label".into(),
                 "options".into(),
                 "default_value".into(),
+                "value".into(),
+                "helper_text".into(),
+                "error".into(),
+                "aria_invalid".into(),
+                "aria_describedby".into(),
+                "required".into(),
+                "disabled".into(),
                 "class".into(),
                 "on_change".into(),
+                "on_blur".into(),
             ],
         },
         Column {
             header: "Type".into(),
             values: vec![
-                "String".into(),
-                "String".into(),
+                "AttrValue".into(),
+                "Option<AttrValue>".into(),
+                "AttrValue".into(),
                 "Vec<(String, String)>".into(),
-                "String".into(),
+                "AttrValue".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "Option<bool>".into(),
+                "Option<AttrValue>".into(),
+                "bool".into(),
+                "bool".into(),
                 "Classes".into(),
                 "Option<Callback<String>>".into(),
+                "Option<Callback<FocusEvent>>".into(),
             ],
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "The unique ID and name used for all radio inputs.".into(),
+                "DOM/accessibility ID for the radio group.".into(),
+                "Submitted form field name shared by all options. Defaults to id.".into(),
                 "Label displayed above the radio group.".into(),
                 "A list of (value, label) pairs for each option.".into(),
                 "The initially selected value.".into(),
+                "Controlled selected value for parent-owned state.".into(),
+                "Optional helper copy below the group.".into(),
+                "External error message shown below the group.".into(),
+                "Overrides computed aria-invalid state.".into(),
+                "Additional aria-describedby IDs.".into(),
+                "Requires one selected option.".into(),
+                "Disables all radio options.".into(),
                 "Optional Tailwind classes for custom styling.".into(),
                 "Callback fired when the selected value changes.".into(),
+                "Called when an option loses focus.".into(),
             ],
         },
     ];

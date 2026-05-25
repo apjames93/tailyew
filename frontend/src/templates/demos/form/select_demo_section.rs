@@ -13,6 +13,7 @@ let options = vec![
 html! {
     <Select
         id="demo-select"
+        name="demo_select"
         label={"Choose an option"}
         options={options}
         default_value={"2"}
@@ -52,6 +53,7 @@ pub fn select_demo_section() -> Html {
     let base_select = html! {
         <Select
             id="demo-select"
+            name="demo_select"
             label={"Choose an option"}
             options={options}
             default_value={"2"}
@@ -77,41 +79,77 @@ pub fn select_demo_section() -> Html {
         Column {
             header: "Prop".into(),
             values: vec![
-                "id".into(),
-                "options".into(),
-                "default_value".into(),
-                "label".into(),
-                "class".into(),
-                "required".into(),
-                "on_change".into(),
-                "disabled".into(),
-            ],
+                "id",
+                "name",
+                "options",
+                "default_value",
+                "value",
+                "size",
+                "label",
+                "class",
+                "container_class",
+                "label_class",
+                "visually_hidden_label",
+                "aria_label",
+                "error",
+                "aria_invalid",
+                "required",
+                "on_change",
+                "disabled",
+            ]
+            .into_iter()
+            .map(Html::from)
+            .collect(),
         },
         Column {
             header: "Type".into(),
             values: vec![
-                "String".into(),
-                "Vec<SelectOption>".into(),
-                "String".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
-                "bool".into(),
-                "Option<Callback<String>>".into(),
-                "bool".into(),
-            ],
+                "AttrValue",
+                "Option<AttrValue>",
+                "Vec<SelectOption>",
+                "AttrValue",
+                "Option<AttrValue>",
+                "SelectSize",
+                "AttrValue",
+                "Classes",
+                "Classes",
+                "Classes",
+                "bool",
+                "Option<AttrValue>",
+                "Option<AttrValue>",
+                "Option<bool>",
+                "bool",
+                "Option<Callback<String>>",
+                "bool",
+            ]
+            .into_iter()
+            .map(Html::from)
+            .collect(),
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "Unique ID for the select element.".into(),
-                "List of options with `label` and `value`.".into(),
-                "Initial selected value.".into(),
-                "Optional label rendered above the select.".into(),
-                "Optional Tailwind class overrides.".into(),
-                "Marks the field as required.".into(),
-                "Callback fired when the selected value changes.".into(),
-                "Disables the select if true.".into(),
-            ],
+                "DOM/accessibility ID.",
+                "Submitted form field name. Defaults to id.",
+                "List of options with label and value.",
+                "Initial uncontrolled selected value.",
+                "Controlled selected value.",
+                "Visual density for the select control.",
+                "Label rendered above the select.",
+                "Additional Tailwind classes for the select.",
+                "Additional Tailwind classes for the wrapper.",
+                "Additional Tailwind classes for the label.",
+                "Hides the label visually while preserving it for screen readers.",
+                "Accessible label for hidden-label contexts.",
+                "External error message shown below the select.",
+                "Overrides computed aria-invalid state.",
+                "Marks the field as required.",
+                "Callback fired when the selected value changes.",
+                "Disables the select if true.",
+            ]
+            .into_iter()
+            .map(Html::from)
+            .collect(),
         },
     ];
 

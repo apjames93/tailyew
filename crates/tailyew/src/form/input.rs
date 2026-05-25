@@ -1,4 +1,4 @@
-use crate::form::Label;
+use crate::form::{Label, join_aria_ids};
 use crate::form_deserializer::*;
 use regex::Regex;
 use serde::Deserialize;
@@ -13,6 +13,10 @@ pub struct InputProps {
     pub id: AttrValue,
 
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub name: Option<AttrValue>,
+
+    #[prop_or_default]
     #[serde(default, deserialize_with = "de_attr")]
     pub label: AttrValue,
 
@@ -25,8 +29,16 @@ pub struct InputProps {
     pub default_value: AttrValue,
 
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub value: Option<AttrValue>,
+
+    #[prop_or_default]
     #[serde(default)]
     pub input_type: InputType,
+
+    #[prop_or_default]
+    #[serde(default)]
+    pub size: InputSize,
 
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_option_attr")]
@@ -52,6 +64,34 @@ pub struct InputProps {
     #[serde(default, deserialize_with = "de_classes")]
     pub class: Classes,
 
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
+    pub container_class: Classes,
+
+    #[prop_or(false)]
+    #[serde(default)]
+    pub marginless: bool,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_classes")]
+    pub label_class: Classes,
+
+    #[prop_or(false)]
+    #[serde(default)]
+    pub visually_hidden_label: bool,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub helper_text: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub error: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default)]
+    pub aria_invalid: Option<bool>,
+
     // Cannot deserialize these from JSON blobs:
     #[prop_or_default]
     #[serde(skip)]
@@ -60,6 +100,10 @@ pub struct InputProps {
     #[prop_or_default]
     #[serde(skip)]
     pub on_focus: Option<Callback<FocusEvent>>,
+
+    #[prop_or_default]
+    #[serde(skip)]
+    pub on_blur: Option<Callback<FocusEvent>>,
 
     #[prop_or(false)]
     #[serde(default)]
@@ -124,6 +168,13 @@ pub enum InputType {
     Hidden,
 }
 
+#[derive(Debug, PartialEq, Clone, Default, Deserialize)]
+pub enum InputSize {
+    Small,
+    #[default]
+    Medium,
+}
+
 impl fmt::Display for InputType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
@@ -149,15 +200,26 @@ pub fn input(props: &InputProps) -> Html {
         placeholder,
         label,
         id,
+        name,
         input_type,
+        size,
         default_value,
+        value: controlled_value,
         min,
         max,
         error_title,
         required,
         class,
+        container_class,
+        marginless,
+        label_class,
+        visually_hidden_label,
+        helper_text,
+        error,
+        aria_invalid,
         on_change,
         on_focus,
+        on_blur,
         disabled,
         pattern,
         autocomplete,
@@ -173,6 +235,20 @@ pub fn input(props: &InputProps) -> Html {
 
     let value = use_state(|| default_value.to_string());
     let validation_error = use_state(|| None::<String>);
+
+    {
+        let value = value.clone();
+        let controlled_value = controlled_value.clone();
+
+        use_effect_with(controlled_value, move |controlled_value| {
+            if let Some(controlled_value) = controlled_value {
+                let next_value = controlled_value.to_string();
+                if *value != next_value {
+                    value.set(next_value);
+                }
+            }
+        });
+    }
 
     let oninput = {
         let value = value.clone();
@@ -227,14 +303,13 @@ pub fn input(props: &InputProps) -> Html {
 
     let input_classes = classes!(
         "w-full",
-        "px-4",
-        "py-2",
+        "box-border",
         "border",
         "border-gray-300",
-        "rounded-lg",
         "shadow-sm",
         "transition",
         "duration-150",
+        "focus:outline-none",
         "focus:ring-2",
         "focus:ring-primary",
         "focus:border-primary",
@@ -243,31 +318,49 @@ pub fn input(props: &InputProps) -> Html {
         "dark:border-gray-600",
         "dark:focus:ring-primary-dark",
         "dark:focus:border-primary-dark",
+        match size {
+            InputSize::Small => "h-9 rounded-md px-3 py-0 text-sm leading-5",
+            InputSize::Medium => "h-10 rounded-lg px-4 py-0 text-sm leading-5",
+        },
         class.clone()
     );
 
-    let title = validation_error
-        .as_ref()
-        .cloned()
+    let external_error = error.map(|s| s.to_string()).filter(|s| !s.is_empty());
+    let effective_error = external_error
+        .clone()
+        .or_else(|| validation_error.as_ref().cloned());
+    let title = effective_error
+        .clone()
         .or_else(|| error_title.map(|s| s.to_string()))
         .unwrap_or_default();
     let title_attr = (!title.is_empty()).then_some(title.clone());
+
+    let helper_id = helper_text
+        .as_ref()
+        .filter(|_| !id.is_empty())
+        .map(|_| AttrValue::from(format!("{id}-helper")));
+    let error_id = effective_error
+        .as_ref()
+        .filter(|_| !id.is_empty())
+        .map(|_| AttrValue::from(format!("{id}-error")));
+
+    let describedby = join_aria_ids(vec![aria_describedby, helper_id.clone(), error_id.clone()]);
 
     // a11y fallbacks
     let effective_aria_label = aria_label.or_else(|| (!label.is_empty()).then_some(label.clone()));
     let effective_aria_labelledby =
         aria_labelledby.or_else(|| (!id.is_empty()).then_some(id.clone()));
-    let effective_aria_describedby =
-        aria_describedby.or_else(|| (!title.is_empty()).then_some(id.clone()));
+    let effective_aria_invalid = aria_invalid.unwrap_or(effective_error.is_some());
 
     let id_attr = (!id.is_empty()).then_some(id.clone());
+    let name_attr = name.or_else(|| id_attr.clone());
 
     let input_element = html! {
         <input
             id={id_attr.clone()}
-            name={id_attr.clone()}
+            name={name_attr}
             type={input_type.to_string()}
-            value={(*value).clone()}
+            value={controlled_value.unwrap_or_else(|| AttrValue::from((*value).clone()))}
             placeholder={placeholder}
             class={input_classes}
             oninput={oninput}
@@ -278,15 +371,16 @@ pub fn input(props: &InputProps) -> Html {
             disabled={disabled}
             pattern={pattern}
             autocomplete={autocomplete}
-            aria-invalid={AttrValue::from(validation_error.is_some().to_string())}
+            aria-invalid={AttrValue::from(effective_aria_invalid.to_string())}
             aria-required={AttrValue::from(required.to_string())}
-            aria-describedby={effective_aria_describedby}
+            aria-describedby={describedby}
             aria-label={effective_aria_label}
             aria-labelledby={effective_aria_labelledby}
             aria-expanded={aria_expanded}
             aria-controls={aria_controls}
             aria-haspopup={aria_haspopup}
             onfocus={on_focus}
+            onblur={on_blur}
             ref={node_ref}
         />
     };
@@ -295,9 +389,30 @@ pub fn input(props: &InputProps) -> Html {
         html! { input_element }
     } else {
         html! {
-            <div class="flex flex-col mb-4">
-                <Label for_id={id.clone()} text={label.clone()} required={required} class={classes!("mb-2")} />
+            <div class={classes!("flex", "flex-col", (!marginless).then_some("mb-4"), container_class)}>
+                if !label.is_empty() {
+                    <Label
+                        for_id={id.clone()}
+                        text={label.clone()}
+                        required={required}
+                        class={classes!(
+                            "mb-2",
+                            visually_hidden_label.then_some("sr-only"),
+                            label_class,
+                        )}
+                    />
+                }
                 { input_element }
+                if let Some(helper_text) = helper_text {
+                    <p id={helper_id} class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        { helper_text }
+                    </p>
+                }
+                if let Some(error) = effective_error {
+                    <p id={error_id} class="mt-1 text-xs font-medium text-red-600 dark:text-red-300">
+                        { error }
+                    </p>
+                }
             </div>
         }
     }

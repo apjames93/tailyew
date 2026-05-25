@@ -1,4 +1,5 @@
 use crate::SelectOption;
+use crate::form::{join_aria_ids, submitted_name};
 use crate::form_deserializer::*;
 use crate::{Input, InputType, Label, Li, Typo, Ul, XIcon};
 use gloo_timers::callback::Timeout;
@@ -15,6 +16,10 @@ pub struct SearchInputProps {
     pub id: AttrValue,
 
     #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub name: Option<AttrValue>,
+
+    #[prop_or_default]
     #[serde(default)]
     pub items: Vec<SelectOption>,
 
@@ -29,6 +34,22 @@ pub struct SearchInputProps {
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_option_attr")]
     pub label: Option<AttrValue>,
+
+    #[prop_or(false)]
+    #[serde(default)]
+    pub visually_hidden_label: bool,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub helper_text: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub error: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default)]
+    pub aria_invalid: Option<bool>,
 
     #[prop_or(false)]
     #[serde(default)]
@@ -66,6 +87,10 @@ pub struct SearchInputProps {
     #[serde(skip)]
     pub on_fetch_more: Option<Callback<()>>,
 
+    #[prop_or_default]
+    #[serde(skip)]
+    pub on_blur: Option<Callback<FocusEvent>>,
+
     #[prop_or(300)]
     #[serde(default)]
     pub debounce_ms: u32,
@@ -88,12 +113,18 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         on_fetch_more,
         placeholder,
         label,
+        visually_hidden_label,
+        helper_text,
+        error,
+        aria_invalid,
         id,
+        name,
         required,
         class,
         aria_label,
         aria_labelledby,
         aria_describedby,
+        on_blur,
         error_title,
         disabled,
     } = props.clone();
@@ -322,23 +353,50 @@ pub fn search_input(props: &SearchInputProps) -> Html {
 
     let base_id = input_id.clone();
     let search_id = format!("search_{}", input_id);
+    let helper_id = helper_text
+        .as_ref()
+        .filter(|_| !base_id.is_empty())
+        .map(|_| AttrValue::from(format!("{base_id}-helper")));
+    let effective_error = error
+        .clone()
+        .map(|error| error.to_string())
+        .filter(|error| !error.is_empty());
+    let error_id = effective_error
+        .as_ref()
+        .filter(|_| !base_id.is_empty())
+        .map(|_| AttrValue::from(format!("{base_id}-error")));
+    let describedby = join_aria_ids(vec![
+        aria_describedby.clone(),
+        helper_id.clone(),
+        error_id.clone(),
+    ]);
+    let effective_aria_invalid = aria_invalid.unwrap_or(effective_error.is_some());
+    let name_attr = submitted_name(&base_id, &name);
+    let visible_label = label.unwrap_or_default();
 
     html! {
         <div class="relative space-y-2" ref={dropdown_ref}>
             // hidden field to hold the actual value
             <input
+                id={base_id.clone()}
                 type="hidden"
-                name={base_id.clone()}
+                name={name_attr}
                 value={selected_item.as_ref().map(|i| i.value.clone()).unwrap_or_default()}
                 aria-required={AttrValue::from(required.to_string())}
                 required={required}
-                aria-describedby={aria_describedby.clone()}
+                aria-invalid={AttrValue::from(effective_aria_invalid.to_string())}
+                aria-describedby={describedby.clone()}
                 aria-label={aria_label.clone()}
                 aria-labelledby={aria_labelledby.clone()}
             />
 
             // the visible search input
-            <Label for_id={search_id.clone()} required={required} text={label.unwrap_or("".into())} />
+            <Label
+                for_id={search_id.clone()}
+                required={required}
+                text={visible_label}
+                class={classes!(visually_hidden_label.then_some("sr-only"))}
+            />
             <Input
                 node_ref={input_ref.clone()}
                 id={search_id.clone()}
@@ -348,15 +406,23 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 class={class.clone()}
                 disabled={disabled}
                 autocomplete={"off"}
+                error={error.clone()}
+                aria_invalid={Some(effective_aria_invalid)}
                 on_change={Some(oninput)}
                 on_focus={Some(on_focus)}
+                on_blur={on_blur}
                 aria_expanded={Some(AttrValue::from((*show_dropdown).to_string()))}
                 aria_controls={Some((*dropdown_id).clone())}
                 aria_haspopup={Some(AttrValue::from("listbox"))}
                 aria_label={aria_label.clone().map(|v| AttrValue::from(format!("search-{v}")))}
                 aria_labelledby={aria_labelledby.clone().map(|v| AttrValue::from(format!("search-{v}")))}
-                aria_describedby={aria_describedby.clone().map(|v| AttrValue::from(format!("search-{v}")))}
+                aria_describedby={describedby.clone()}
             />
+            if let Some(helper_text) = helper_text {
+                <p id={helper_id} class="text-sm text-gray-500 dark:text-gray-400">
+                    { helper_text }
+                </p>
+            }
 
             {
                 if *show_dropdown && !filtered.is_empty() {
