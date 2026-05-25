@@ -1,9 +1,12 @@
 use crate::RenderFieldProps;
+use serde_json::{Map, Value};
 use std::collections::HashMap;
 use std::future::Future;
 use std::pin::Pin;
-use wasm_bindgen::JsCast;
-use web_sys::{EventTarget, HtmlFormElement, HtmlInputElement};
+use wasm_bindgen::{JsCast, JsValue};
+use web_sys::{
+    Element, EventTarget, HtmlFormElement, HtmlInputElement, HtmlSelectElement, HtmlTextAreaElement,
+};
 use yew::events::SubmitEvent;
 use yew::prelude::*;
 
@@ -24,28 +27,140 @@ where
     })
 }
 
-pub fn e_input_value(id: &str, e: &SubmitEvent) -> String {
-    let target: EventTarget = e.target().expect("Event should have a target.");
-    let form: HtmlFormElement = target.unchecked_into();
-    if let Some(input) = form.get_with_name(id) {
-        let input: HtmlInputElement = input.unchecked_into();
-        input.value()
-    } else {
-        web_sys::console::error_1(
-            &format!("Input element with name '{}' not found in form.", id).into(),
-        );
-        String::new()
+pub fn e_input_value(name: &str, e: &SubmitEvent) -> String {
+    match form_from_submit_event(e).and_then(|form| input_value_from_form(&form, name)) {
+        Ok(value) => value,
+        Err(message) => {
+            web_sys::console::error_1(&message.into());
+            String::new()
+        }
     }
 }
 
-pub fn e_checkbox_checked(id: &str, e: &SubmitEvent) -> bool {
-    let target = e.target().expect("Event should have a target.");
-    let form: HtmlFormElement = target.unchecked_into();
-    if let Some(input) = form.get_with_name(id) {
-        let input: HtmlInputElement = input.unchecked_into();
-        input.checked()
-    } else {
-        false
+pub fn e_checkbox_checked(name: &str, e: &SubmitEvent) -> bool {
+    match form_from_submit_event(e).and_then(|form| checkbox_checked_from_form(&form, name)) {
+        Ok(value) => value,
+        Err(message) => {
+            web_sys::console::error_1(&message.into());
+            false
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum FormFieldValueKind {
+    String,
+    Number,
+    Boolean,
+    Json,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FormFieldSpec {
+    pub name: AttrValue,
+    pub kind: FormFieldValueKind,
+}
+
+impl FormFieldSpec {
+    pub fn string(name: impl Into<AttrValue>) -> Self {
+        Self {
+            name: name.into(),
+            kind: FormFieldValueKind::String,
+        }
+    }
+
+    pub fn number(name: impl Into<AttrValue>) -> Self {
+        Self {
+            name: name.into(),
+            kind: FormFieldValueKind::Number,
+        }
+    }
+
+    pub fn boolean(name: impl Into<AttrValue>) -> Self {
+        Self {
+            name: name.into(),
+            kind: FormFieldValueKind::Boolean,
+        }
+    }
+
+
+}
+
+
+fn form_from_submit_event(e: &SubmitEvent) -> Result<HtmlFormElement, String> {
+    if let Some(form) = e.current_target().and_then(event_target_as_form) {
+        return Ok(form);
+    }
+
+    let target = e
+        .target()
+        .ok_or_else(|| "Submit event did not include a form target.".to_owned())?;
+
+    if let Some(form) = event_target_as_form(target.clone()) {
+        return Ok(form);
+    }
+
+    let target_element: Element = target
+        .dyn_into()
+        .map_err(|_| "Submit event target was not a form element.".to_owned())?;
+
+    target_element
+        .closest("form")
+        .map_err(|_| "Unable to resolve the submitted form element.".to_owned())?
+        .ok_or_else(|| "Submit event target was not inside a form element.".to_owned())?
+        .dyn_into::<HtmlFormElement>()
+        .map_err(|_| "Resolved submit target form was not a form element.".to_owned())
+}
+
+fn event_target_as_form(target: EventTarget) -> Option<HtmlFormElement> {
+    target.dyn_into::<HtmlFormElement>().ok()
+}
+
+fn input_value_from_form(form: &HtmlFormElement, name: &str) -> Result<String, String> {
+    let control = form
+        .get_with_name(name)
+        .ok_or_else(|| format!("Form field '{name}' was not found."))?;
+
+    value_from_form_control(&control)
+        .ok_or_else(|| format!("Form field '{name}' is not a supported value control."))
+}
+
+fn value_from_form_control(control: &js_sys::Object) -> Option<String> {
+    if let Some(input) = control.dyn_ref::<HtmlInputElement>() {
+        return Some(input.value());
+    }
+
+    if let Some(textarea) = control.dyn_ref::<HtmlTextAreaElement>() {
+        return Some(textarea.value());
+    }
+
+    if let Some(select) = control.dyn_ref::<HtmlSelectElement>() {
+        return Some(select.value());
+    }
+
+    // Radio groups are returned by HtmlFormElement::get_with_name as a
+    // RadioNodeList. Read its standard value property without requiring a
+    // separate web-sys feature gate.
+    js_sys::Reflect::get(control.as_ref(), &JsValue::from_str("value"))
+        .ok()
+        .and_then(|value| value.as_string())
+}
+
+fn checkbox_checked_from_form(form: &HtmlFormElement, name: &str) -> Result<bool, String> {
+    let input = form
+        .get_with_name(name)
+        .ok_or_else(|| format!("Form field '{name}' was not found."))?;
+    let input: HtmlInputElement = input
+        .dyn_into()
+        .map_err(|_| format!("Form field '{name}' is not a checkbox input element."))?;
+    Ok(input.checked())
+}
+
+
+fn parse_form_number(name: &str, raw: &str) -> Result<Value, String> {
+    match serde_json::from_str::<Value>(raw.trim()) {
+        Ok(Value::Number(number)) => Ok(Value::Number(number)),
+        _ => Err(format!("Field '{name}' must be a valid JSON number.")),
     }
 }
 
@@ -62,19 +177,24 @@ pub fn e_form_builder_values(
     fields: &[RenderFieldProps],
 ) -> HashMap<String, FormValue> {
     // just to assert that we really do have a form
-    let _form: HtmlFormElement = e
-        .target()
-        .expect("submit event should have a target")
-        .unchecked_into();
+    let _form: HtmlFormElement = form_from_submit_event(e)
+        .expect("submit event should resolve to the submitted form element");
 
     let mut values = HashMap::new();
 
     for field in fields {
         // pick out the field’s id/name
         let name: String = if let Some(chk) = &field.checkbox {
-            chk.id.to_string()
+            chk.name
+                .clone()
+                .unwrap_or_else(|| chk.id.clone())
+                .to_string()
         } else if let Some(input) = &field.input {
-            input.id.to_string()
+            input
+                .name
+                .clone()
+                .unwrap_or_else(|| input.id.clone())
+                .to_string()
         } else if let Some(textarea) = &field.textarea {
             textarea.id.to_string()
         } else if let Some(select) = &field.select {

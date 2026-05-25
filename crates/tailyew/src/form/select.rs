@@ -1,4 +1,4 @@
-use crate::form::Label;
+use crate::form::{Label, join_aria_ids};
 use crate::form_deserializer::*;
 use serde::Deserialize;
 use web_sys::HtmlSelectElement;
@@ -69,11 +69,19 @@ pub struct SelectProps {
 
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_option_attr")]
+    pub helper_text: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
     pub error: Option<AttrValue>,
 
     #[prop_or_default]
     #[serde(default)]
     pub aria_invalid: Option<bool>,
+
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub aria_describedby: Option<AttrValue>,
 
     #[prop_or(true)]
     #[serde(default)]
@@ -82,6 +90,10 @@ pub struct SelectProps {
     #[prop_or_default]
     #[serde(skip)]
     pub on_change: Option<Callback<String>>,
+
+    #[prop_or_default]
+    #[serde(skip)]
+    pub on_blur: Option<Callback<FocusEvent>>,
 
     #[prop_or(false)]
     #[serde(default)]
@@ -103,10 +115,13 @@ pub fn select(props: &SelectProps) -> Html {
         label_class,
         visually_hidden_label,
         aria_label,
+        helper_text,
         error,
         aria_invalid,
+        aria_describedby,
         required,
         on_change,
+        on_blur,
         disabled,
     } = props;
     let selected = use_state(|| default_value.clone());
@@ -144,10 +159,19 @@ pub fn select(props: &SelectProps) -> Html {
         .clone()
         .map(|error| error.to_string())
         .filter(|error| !error.is_empty());
+    let helper_id = helper_text
+        .as_ref()
+        .filter(|_| !id.is_empty())
+        .map(|_| AttrValue::from(format!("{id}-helper")));
     let error_id = effective_error
         .as_ref()
         .filter(|_| !id.is_empty())
         .map(|_| AttrValue::from(format!("{id}-error")));
+    let describedby = join_aria_ids(vec![
+        aria_describedby.clone(),
+        helper_id.clone(),
+        error_id.clone(),
+    ]);
     let effective_aria_invalid = aria_invalid.unwrap_or(effective_error.is_some());
     let name_attr = name.clone().unwrap_or_else(|| id.clone());
 
@@ -199,12 +223,13 @@ pub fn select(props: &SelectProps) -> Html {
                 name={name_attr}
                 class={select_classes}
                 onchange={onchange}
+                onblur={on_blur.clone()}
                 value={controlled_value.clone().unwrap_or_else(|| (*selected).clone())}
                 required={*required}
                 disabled={*disabled}
                 aria-label={aria_label.clone()}
                 aria-invalid={AttrValue::from(effective_aria_invalid.to_string())}
-                aria-describedby={error_id.clone()}
+                aria-describedby={describedby}
             >
                 <option
                     value=""
@@ -224,8 +249,13 @@ pub fn select(props: &SelectProps) -> Html {
                     </option>
                 }) }
             </select>
+            if let Some(helper_text) = helper_text {
+                <p id={helper_id} class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    { helper_text.clone() }
+                </p>
+            }
             if let Some(error) = effective_error {
-                <p id={error_id} class="mt-1 text-xs font-medium text-red-600 dark:text-red-300">
+                <p id={error_id} class="mt-1 text-xs font-medium text-red-600 dark:text-red-300" role="alert">
                     { error }
                 </p>
             }
