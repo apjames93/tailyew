@@ -5,17 +5,19 @@ use crate::templates::demos::{
     AComponentDemoSection, AccordionDemoSection, AppBarDemoSection, AvatarDemoSection,
     AvatarGroupDemoSection, BadgeDemoSection, BarChartDemoSection, BreadcrumbsDemoSection,
     BubbleChartDemoSection, ButtonDemoSection, CardDemoSection, CheckboxDemoSection,
-    CircularProgressDemoSection, CodeBlockDemoSection, ColorInputDemoSection,
-    CopyToClipboardDemoSection, DownloadButtonDemoSection, FileInputDemoSection,
-    FormBuilderDemoSection, FormDemoSection, FormModalDemoSection, GettingStarted,
-    HeroHeaderDemoSection, IconDemoSection, ImageDemoSection, InitThemeDemoSection,
-    InputDemoSection, JsonInputDemoSection, LabelDemoSection, LiDemoSection, LineChartDemoSection,
-    LinearProgressDemoSection, MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection,
-    NavBarDemoSection, NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection,
-    PieChartDemoSection, PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection,
-    ScatterPlotDemoSection, SearchInputDemoSection, SelectDemoSection, SidebarDemoSection,
-    SpacerDemoSection, StepperDemoSection, SwitchDemoSection, TableDemoSection, TabsDemoSection,
-    TextareaDemoSection, TooltipDemoSection, TypoDemoSection, UlDemoSection, VideoDemoSection,
+    ChipDemoSection, CircularProgressDemoSection, CodeBlockDemoSection, ColorInputDemoSection,
+    CopyToClipboardDemoSection, DownloadButtonDemoSection, FieldArrayDemoSection,
+    FileInputDemoSection, FormBuilderDemoSection, FormDemoSection, FormModalDemoSection,
+    GettingStarted, HeroHeaderDemoSection, IconDemoSection, ImageDemoSection, InitThemeDemoSection,
+    InputDemoSection, JsonBackedFormDemoSection, JsonInputDemoSection, KeyValueInputDemoSection,
+    LabelDemoSection, LiDemoSection, LineChartDemoSection, LinearProgressDemoSection,
+    MarkdownDemoSection, ModalButtonDemoSection, ModalDemoSection, NavBarDemoSection,
+    NestedListDemoSection, NotificationDemoSection, PhoneInputDemoSection, PieChartDemoSection,
+    PopoverDemoSection, RadioGroupDemoSection, RangeInputDemoSection, ScatterPlotDemoSection,
+    SearchInputDemoSection, SelectDemoSection, SidebarDemoSection, SpacerDemoSection,
+    StaticValuesInputDemoSection, StepperDemoSection, SwitchDemoSection, TableDemoSection,
+    TabsDemoSection, TagsInputDemoSection, TextareaDemoSection, TooltipDemoSection,
+    TypoDemoSection, UlDemoSection, VideoDemoSection,
 };
 use tailyew::{
     AppsIcon, AtomIcon, BarChartIcon, FormIcon, NestedItem, PolylineIcon, Sidebar, SidebarButton,
@@ -131,6 +133,31 @@ pub const FORM_LINKS: &[DemoLink] = &[
         route: "json_input",
         render: || html! { <JsonInputDemoSection /> },
     },
+    DemoLink {
+        name: "JSON-Backed Form",
+        route: "json_backed_form",
+        render: || html! { <JsonBackedFormDemoSection /> },
+    },
+    DemoLink {
+        name: "Field Array",
+        route: "field_array",
+        render: || html! { <FieldArrayDemoSection /> },
+    },
+    DemoLink {
+        name: "Key Value Input",
+        route: "key_value_input",
+        render: || html! { <KeyValueInputDemoSection /> },
+    },
+    DemoLink {
+        name: "Tags Input",
+        route: "tags_input",
+        render: || html! { <TagsInputDemoSection /> },
+    },
+    DemoLink {
+        name: "Static Values Input",
+        route: "static_values_input",
+        render: || html! { <StaticValuesInputDemoSection /> },
+    },
 ];
 
 pub const ATOM_LINKS: &[DemoLink] = &[
@@ -154,6 +181,11 @@ pub const ATOM_LINKS: &[DemoLink] = &[
         name: "Button",
         route: "button",
         render: || html! { <ButtonDemoSection /> },
+    },
+    DemoLink {
+        name: "Chip",
+        route: "chip",
+        render: || html! { <ChipDemoSection /> },
     },
     DemoLink {
         name: "Typo",
