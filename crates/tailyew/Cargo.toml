@@ -14,6 +14,7 @@ categories = ["wasm", "gui", "web-programming"]
 
 include = [
   "src/**",
+  "!src/**/.DS_Store",
   "tailyew-safelist.html",
   "README.md",
   "Cargo.toml",
