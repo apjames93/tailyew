@@ -1,5 +1,6 @@
+use crate::atoms::video::is_embeddable_video_source;
 use crate::form::FormSubmitCallback;
-use crate::{A, CodeBlock, Column, Image, Li, MarkerType, Table, TagType, Typo, Ul};
+use crate::{A, CodeBlock, Column, Image, Li, MarkerType, Table, TagType, Typo, Ul, Video};
 use pulldown_cmark::{CodeBlockKind, Event, HeadingLevel, Options, Parser, Tag};
 use yew::prelude::*;
 
@@ -254,9 +255,7 @@ fn render_tag(
 
         Tag::Image {
             dest_url, title, ..
-        } => html! {
-            <Image src={dest_url.to_string()} alt={title.to_string()} class="my-4" />
-        },
+        } => render_media(dest_url.to_string(), title.to_string()),
 
         Tag::CodeBlock(kind) => {
             let language = match kind {
@@ -271,5 +270,62 @@ fn render_tag(
         }
 
         _ => html! { <>{children}</> },
+    }
+}
+
+fn render_media(src: String, title: String) -> Html {
+    if is_video_source(&src) {
+        let aria_label = if title.is_empty() {
+            None
+        } else {
+            Some(AttrValue::from(title))
+        };
+
+        html! {
+            <Video src={src} aria_label={aria_label} class="my-4" />
+        }
+    } else {
+        html! {
+            <Image src={src} alt={title} class="my-4" />
+        }
+    }
+}
+
+fn is_video_source(src: &str) -> bool {
+    let lower_src = src.to_ascii_lowercase();
+
+    if lower_src.starts_with("data:video/") {
+        return true;
+    }
+
+    if is_embeddable_video_source(src) {
+        return true;
+    }
+
+    let path = lower_src.split(['?', '#']).next().unwrap_or(&lower_src);
+    path.rsplit('.').next().is_some_and(|extension| {
+        matches!(extension, "mp4" | "webm" | "ogg" | "ogv" | "mov" | "m4v")
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::is_video_source;
+
+    #[test]
+    fn detects_video_extensions() {
+        assert!(is_video_source("/assets/demo.mp4"));
+        assert!(is_video_source("https://example.com/demo.WEBM?version=2"));
+        assert!(is_video_source("data:video/mp4;base64,AAAA"));
+        assert!(is_video_source(
+            "https://www.youtube.com/watch?v=SJPu1spHqfk"
+        ));
+    }
+
+    #[test]
+    fn leaves_non_video_sources_as_images() {
+        assert!(!is_video_source("/assets/demo.png"));
+        assert!(!is_video_source("https://example.com/demo.jpg#preview"));
+        assert!(!is_video_source("/assets/video"));
     }
 }

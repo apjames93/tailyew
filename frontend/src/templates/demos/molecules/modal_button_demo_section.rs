@@ -89,6 +89,8 @@ pub fn modal_button_demo_section() -> Html {
 
             <ModalButton
                 trigger_children={html! { <AddIcon /> }}
+                trigger_class={classes!("p-2", "sm:p-3")}
+                trigger_aria_label={Some(AttrValue::from("Open informational modal"))}
                 modal_title={"Informational Modal".to_string()}
                 button_type={ButtonType::Danger}
                 modal_content={html! {
@@ -217,6 +219,8 @@ pub fn modal_button_demo_section() -> Html {
     let usage_code = r#"
 <ModalButton
     trigger_children={html! { "Open Confirm + Decline Modal" }}
+    trigger_class={classes!("w-full", "sm:w-auto")}
+    trigger_aria_label={Some(AttrValue::from("Open two-action modal"))}
     modal_title={"Two-Action Modal".to_string()}
     modal_content={html! { <p>{"Choose whether to proceed or cancel."}</p> }}
     footer={Some(Callback::from(move |close_modal: Callback<()>| {
@@ -235,6 +239,8 @@ pub fn modal_button_demo_section() -> Html {
             header: "Prop".into(),
             values: vec![
                 "trigger_children".into(),
+                "trigger_class".into(),
+                "trigger_aria_label".into(),
                 "button_type".into(),
                 "modal_title".into(),
                 "modal_content".into(),
@@ -250,6 +256,8 @@ pub fn modal_button_demo_section() -> Html {
             header: "Type".into(),
             values: vec![
                 "Html".into(),
+                "Classes".into(),
+                "Option<AttrValue>".into(),
                 "ButtonType".into(),
                 "String".into(),
                 "Html".into(),
@@ -265,14 +273,16 @@ pub fn modal_button_demo_section() -> Html {
             header: "Description".into(),
             values: vec![
                 "Content for the trigger button.".into(),
+                "Additional classes for the trigger button.".into(),
+                "ARIA label for the trigger button.".into(),
                 "Type of the trigger button.".into(),
                 "Heading displayed in the modal.".into(),
                 "Main content inside the modal.".into(),
                 "Optional default open state.".into(),
                 "Callback when the modal is closed.".into(),
                 "Optional footer renderer; receives a close callback.".into(),
-                "ARIA label for accessibility.".into(),
-                "ARIA label for accessibility.".into(),
+                "ARIA label for the modal dialog.".into(),
+                "ID of the heading element for the modal dialog aria-labelledby.".into(),
                 "Size of the modal. Small, Medium, Large (default), Fullscreen.".into(),
             ],
         },

@@ -8,6 +8,14 @@ pub struct ModalButtonProps {
     #[prop_or_default]
     pub trigger_children: Children,
 
+    /// Additional classes for the trigger button
+    #[prop_or_default]
+    pub trigger_class: Classes,
+
+    /// ARIA label for the trigger button
+    #[prop_or_default]
+    pub trigger_aria_label: Option<AttrValue>,
+
     /// Style for the trigger button
     #[prop_or(ButtonType::Primary)]
     pub button_type: ButtonType,
@@ -48,6 +56,8 @@ pub struct ModalButtonProps {
 pub fn modal_button(props: &ModalButtonProps) -> Html {
     let ModalButtonProps {
         trigger_children,
+        trigger_class,
+        trigger_aria_label,
         button_type,
         modal_title,
         modal_content,
@@ -91,6 +101,8 @@ pub fn modal_button(props: &ModalButtonProps) -> Html {
             <Button
                 button_type={button_type.clone()}
                 on_click={toggle_modal.clone()}
+                class={trigger_class.clone()}
+                aria_label={trigger_aria_label.clone()}
             >
                 { for trigger_children.iter() }
             </Button>

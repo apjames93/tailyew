@@ -33,6 +33,9 @@ pub use spacer::*;
 pub mod image;
 pub use image::*;
 
+pub mod video;
+pub use video::*;
+
 pub mod avatar;
 pub use avatar::*;
 

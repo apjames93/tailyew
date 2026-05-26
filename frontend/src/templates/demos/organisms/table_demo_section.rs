@@ -1,7 +1,7 @@
 use crate::templates::demos::DemoComponent;
 use tailyew::atoms::{Button, ButtonType, TagType, Typo};
 use tailyew::form::Checkbox;
-use tailyew::organisms::table::{Column, Table};
+use tailyew::organisms::table::{Column, Table, TableMobileLayout};
 use yew::prelude::*;
 
 #[component(TableDemoSection)]
@@ -42,7 +42,26 @@ pub fn table_demo_section() -> Html {
     let example = html! {
         <div class="space-y-6">
             <Typo tag={TagType::H1}>{ "Table Component Demo" }</Typo>
-            <Table columns={columns.clone()} row_click_callback={Some(on_row_click.clone())} />
+
+            <div class="space-y-3">
+                <Typo tag={TagType::H2}>{ "Stacked Mobile Layout" }</Typo>
+                <Table
+                    columns={columns.clone()}
+                    row_click_callback={Some(on_row_click.clone())}
+                    mobile_layout={TableMobileLayout::Stacked}
+                    caption={Some(html! { "Team member status" })}
+                    aria_label={Some(AttrValue::from("Team member status table"))}
+                />
+            </div>
+
+            <div class="space-y-3">
+                <Typo tag={TagType::H2}>{ "Default Scroll Layout" }</Typo>
+                <Table
+                    columns={columns.clone()}
+                    row_click_callback={Some(on_row_click.clone())}
+                    aria_label={Some(AttrValue::from("Default table layout"))}
+                />
+            </div>
 
             if let Some(index) = *clicked_row {
                 <div class="mt-4 text-sm text-gray-800 dark:text-gray-300">
@@ -79,22 +98,45 @@ let columns = vec![
         ],
     },
 ];
+
+<Table
+    columns={columns}
+    row_click_callback={Some(on_row_click)}
+    mobile_layout={TableMobileLayout::Stacked}
+    caption={Some(html! { "Team member status" })}
+    aria_label={Some(AttrValue::from("Team member status table"))}
+/>
 "#;
 
     let props_table = vec![
         Column {
             header: html! { "Prop" },
-            values: vec![html! { "columns" }, html! { "row_click_callback" }],
+            values: vec![
+                html! { "columns" },
+                html! { "row_click_callback" },
+                html! { "mobile_layout" },
+                html! { "caption" },
+                html! { "aria_label" },
+            ],
         },
         Column {
             header: html! { "Type" },
-            values: vec![html! { "Vec<Column>" }, html! { "Option<Callback<usize>>" }],
+            values: vec![
+                html! { "Vec<Column>" },
+                html! { "Option<Callback<usize>>" },
+                html! { "TableMobileLayout" },
+                html! { "Option<Html>" },
+                html! { "Option<AttrValue>" },
+            ],
         },
         Column {
             header: html! { "Description" },
             values: vec![
                 html! { "Each column with header and its row values." },
                 html! { "Optional click handler when a row is clicked." },
+                html! { "Responsive behavior: horizontal scroll by default or stacked cards below md." },
+                html! { "Optional visible table caption." },
+                html! { "Optional accessible label for the table." },
             ],
         },
     ];
@@ -106,7 +148,7 @@ let columns = vec![
             title="Table Component"
             description={Some(html! {
                 <Typo tag={TagType::P}>
-                    {"The `Table` component displays structured data in rows and columns. Supports plain text, rich HTML (buttons, checkboxes), and row click handlers. Fully styled for light and dark modes."}
+                    {"The `Table` component displays structured data in rows and columns. Supports plain text, rich HTML (buttons, checkboxes), row click handlers, accessible labels, and an opt-in stacked mobile layout."}
                 </Typo>
             })}
             example={example}
