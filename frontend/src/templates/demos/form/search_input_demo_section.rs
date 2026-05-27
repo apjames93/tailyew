@@ -25,11 +25,12 @@ html! {
         debounce_ms={250}
         on_select={Some(on_select)}
         id="language"
+        name="preferred_language"
         label="Language"
         placeholder="Type a language"
+        helper_text="Choose a language from the suggestions."
         required={true}
         default_selected={Some(SelectOption { label: "Rust".into(), value: "rust".into() })}
-        no_autocomplete={true}       // ← new prop
     />
 }
 "#;
@@ -128,9 +129,11 @@ pub fn search_input_demo_section() -> Html {
                     items={suggestions.clone()}
                     debounce_ms={250}
                     on_select={Some(on_select.clone())}
-                    id="language"
+                    id="language_disabled"
+                    name="disabled_language"
                     label="Language"
                     placeholder="Type a language"
+                    helper_text="Choose a language from the suggestions."
                     required={true}
                     default_selected={Some(SelectOption { label: "Rust".into(), value: "rust".into() })}
                 />
@@ -146,8 +149,10 @@ pub fn search_input_demo_section() -> Html {
                     debounce_ms={250}
                     on_select={Some(on_select.clone())}
                     id="language"
+                    name="preferred_language"
                     label="Language"
                     placeholder="Type a language"
+                    helper_text="Disabled controls keep the submitted selected value."
                     required={true}
                     default_selected={Some(SelectOption { label: "Rust".into(), value: "rust".into() })}
                     disabled={true}
@@ -165,12 +170,11 @@ pub fn search_input_demo_section() -> Html {
                     on_select={Some(on_poke_select.clone())}
                     on_fetch_more={Some(on_fetch_more.clone())}
                     id="pokemon"
+                    name="pokemon"
                     label="Pokémon"
                     placeholder="Search for a Pokémon"
+                    helper_text="If no matches are found, this will load more results from the API."
                 />
-                <Typo class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {"If no matches are found, this will load more results from the API."}
-                </Typo>
                 <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
                     { format!("Selected: {}", *poke_selected) }
                 </p>
@@ -187,16 +191,22 @@ pub fn search_input_demo_section() -> Html {
                 "on_fetch_more",
                 "debounce_ms",
                 "id",
+                "name",
                 "label",
+                "visually_hidden_label",
                 "placeholder",
+                "helper_text",
+                "error",
                 "default_selected",
                 "required",
                 "class",
                 "aria_label",
                 "aria_labelledby",
                 "aria_describedby",
+                "aria_invalid",
                 "error_title",
                 "disabled",
+                "on_blur",
             ]
             .into_iter()
             .map(Html::from)
@@ -209,6 +219,10 @@ pub fn search_input_demo_section() -> Html {
                 "Option<Callback<String>>",
                 "Option<Callback<()>>",
                 "u32",
+                "AttrValue",
+                "Option<AttrValue>",
+                "Option<AttrValue>",
+                "bool",
                 "Option<AttrValue>",
                 "Option<AttrValue>",
                 "Option<AttrValue>",
@@ -218,9 +232,10 @@ pub fn search_input_demo_section() -> Html {
                 "Option<AttrValue>",
                 "Option<AttrValue>",
                 "Option<AttrValue>",
+                "Option<bool>",
                 "AttrValue",
                 "bool",
-                "bool",
+                "Option<Callback<FocusEvent>>",
             ]
             .into_iter()
             .map(Html::from)
@@ -233,17 +248,23 @@ pub fn search_input_demo_section() -> Html {
                 "Callback when an item is chosen",
                 "Called when no matches are found",
                 "Debounce interval (ms)",
-                "Input ID/name",
+                "DOM/accessibility ID. The visible search box receives a search-prefixed id.",
+                "Submitted hidden selected-value field name. Defaults to id.",
                 "Visible label",
+                "Hides the visible label while preserving it for screen readers.",
                 "Placeholder text",
+                "Optional helper copy below the search input.",
+                "External error message shown below the search input.",
                 "Initial selected item",
                 "Marks input required",
                 "Custom CSS classes",
                 "ARIA label",
                 "ARIA labelledby",
                 "ARIA describedby",
+                "Overrides computed aria-invalid state.",
                 "Validation error title",
                 "Disable the input",
+                "Called when the visible search input loses focus.",
             ]
             .into_iter()
             .map(Html::from)
@@ -258,7 +279,7 @@ pub fn search_input_demo_section() -> Html {
             title="SearchInput Component"
             description={Some(html! {
                 <p>
-                    {"`SearchInput` is a debounced autocomplete text field with dynamic loading, full Tailwind & ARIA support, plus `disabled` and `no_autocomplete` flags."}
+                    {"`SearchInput` is a debounced autocomplete field with dynamic loading, submitted selected-value support, helper/error text, disabled state, and ARIA wiring."}
                 </p>
             })}
             example={example}

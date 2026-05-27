@@ -4,6 +4,23 @@ pub use form_demo_section::*;
 pub mod json_input_demo_section;
 pub use json_input_demo_section::*;
 
+pub mod json_backed_form_demo_section;
+pub use json_backed_form_demo_section::*;
+
+mod json_form_demo_helpers;
+
+pub mod field_array_demo_section;
+pub use field_array_demo_section::*;
+
+pub mod key_value_input_demo_section;
+pub use key_value_input_demo_section::*;
+
+pub mod tags_input_demo_section;
+pub use tags_input_demo_section::*;
+
+pub mod static_values_input_demo_section;
+pub use static_values_input_demo_section::*;
+
 pub mod input_demo_section;
 pub use input_demo_section::*;
 

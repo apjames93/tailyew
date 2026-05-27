@@ -1,4 +1,4 @@
-use crate::form::Label;
+use crate::form::{Label, join_aria_ids};
 use crate::form_deserializer::{de_attr, de_option_attr};
 use serde::Deserialize;
 use wasm_bindgen::JsCast;
@@ -11,6 +11,11 @@ pub struct SwitchProps {
     #[prop_or_default]
     #[serde(default, deserialize_with = "de_attr")]
     pub id: AttrValue,
+
+    /// submitted form field name; defaults to id
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub name: Option<AttrValue>,
 
     /// the visible label
     #[prop_or_default]
@@ -32,6 +37,21 @@ pub struct SwitchProps {
     #[serde(default, deserialize_with = "de_option_attr")]
     pub description: Option<AttrValue>,
 
+    /// preferred helper text alias; falls back to description when omitted
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub helper_text: Option<AttrValue>,
+
+    /// external error message
+    #[prop_or_default]
+    #[serde(default, deserialize_with = "de_option_attr")]
+    pub error: Option<AttrValue>,
+
+    /// hide the visible label while preserving it for screen readers
+    #[prop_or(false)]
+    #[serde(default)]
+    pub visually_hidden_label: bool,
+
     /// disable interaction
     #[prop_or(false)]
     #[serde(default)]
@@ -45,6 +65,10 @@ pub struct SwitchProps {
         deserialize_with = "de_option_attr"
     )]
     pub aria_describedby: Option<AttrValue>,
+
+    #[prop_or_default]
+    #[serde(default)]
+    pub aria_invalid: Option<bool>,
 
     #[prop_or_default]
     #[serde(default, rename = "aria-label", deserialize_with = "de_option_attr")]
@@ -62,21 +86,31 @@ pub struct SwitchProps {
     #[prop_or_default]
     #[serde(skip)]
     pub on_change: Option<Callback<bool>>,
+
+    #[prop_or_default]
+    #[serde(skip)]
+    pub on_blur: Option<Callback<FocusEvent>>,
 }
 
 #[component(Switch)]
 pub fn switch(props: &SwitchProps) -> Html {
     let SwitchProps {
         id,
+        name,
         label,
         checked,
         required,
         description,
+        helper_text,
+        error,
+        visually_hidden_label,
         disabled,
         aria_describedby,
+        aria_invalid,
         aria_label,
         aria_labelledby,
         on_change,
+        on_blur,
     } = props.clone();
 
     // Internal checked state, seeded from the prop
@@ -111,18 +145,28 @@ pub fn switch(props: &SwitchProps) -> Html {
 
     // Useful ids for a11y wiring
     let label_id = format!("{}-label", id);
-    let description_id = format!("{}-description", id);
+    let helper_id = format!("{}-helper", id);
+    let error_id = format!("{}-error", id);
+    let helper_text = helper_text.or(description);
+    let effective_error = error
+        .clone()
+        .map(|error| error.to_string())
+        .filter(|error| !error.is_empty());
 
     let effective_aria_label = aria_label.unwrap_or_else(|| label.clone());
     let effective_aria_labelledby =
         aria_labelledby.unwrap_or_else(|| AttrValue::from(label_id.clone()));
-    let effective_aria_describedby = aria_describedby.or_else(|| {
-        if description.is_some() {
-            Some(AttrValue::from(description_id.clone()))
-        } else {
-            None
-        }
-    });
+    let effective_aria_describedby = join_aria_ids(vec![
+        aria_describedby,
+        helper_text
+            .as_ref()
+            .map(|_| AttrValue::from(helper_id.clone())),
+        effective_error
+            .as_ref()
+            .map(|_| AttrValue::from(error_id.clone())),
+    ]);
+    let effective_aria_invalid = aria_invalid.unwrap_or(effective_error.is_some());
+    let name_attr = name.unwrap_or_else(|| id.clone());
 
     // Track (background) classes
     let track_classes = classes!(
@@ -176,6 +220,7 @@ pub fn switch(props: &SwitchProps) -> Html {
         "cursor-pointer",
         "transition",
         "duration-150",
+        visually_hidden_label.then_some("sr-only"),
         if current {
             "text-gray-900 dark:text-gray-300"
         } else {
@@ -190,13 +235,15 @@ pub fn switch(props: &SwitchProps) -> Html {
                 // Real checkbox for forms & accessibility
                 <input
                     id={id.clone()}
-                    name={id.clone()}
+                    name={name_attr}
                     type="checkbox"
                     checked={current}
                     required={required}
                     disabled={disabled}
                     class="sr-only"
                     onchange={handle_change}
+                    aria-invalid={AttrValue::from(effective_aria_invalid.to_string())}
+                    aria-describedby={effective_aria_describedby.clone()}
                 />
 
                 // Visual switch (primary control for keyboard/screen readers)
@@ -206,10 +253,12 @@ pub fn switch(props: &SwitchProps) -> Html {
                     aria-checked={current.to_string()}
                     aria-disabled={disabled.then_some("true")}
                     aria-required={AttrValue::from(required.to_string())}
+                    aria-invalid={AttrValue::from(effective_aria_invalid.to_string())}
                     aria-label={effective_aria_label}
                     aria-labelledby={effective_aria_labelledby.clone()}
                     aria-describedby={effective_aria_describedby.clone()}
                     class={track_classes}
+                    onblur={on_blur}
                     onclick={if disabled {
                         Callback::from(|_: MouseEvent| {})
                     } else {
@@ -237,19 +286,22 @@ pub fn switch(props: &SwitchProps) -> Html {
                     class={label_classes}
                 />
             </div>
-            {
-                if let Some(desc) = &description {
-                    html! {
-                        <p
-                            id={description_id}
-                            class="text-sm mt-1 ml-14 text-gray-500 dark:text-gray-400"
-                        >
-                            { desc.clone() }
-                        </p>
-                    }
-                } else {
-                    html! {}
-                }
+            if let Some(helper_text) = &helper_text {
+                <p
+                    id={helper_id}
+                    class="mt-1 ml-14 text-sm text-gray-500 dark:text-gray-400"
+                >
+                    { helper_text.clone() }
+                </p>
+            }
+            if let Some(error) = effective_error {
+                <p
+                    id={error_id}
+                    class="mt-1 ml-14 text-sm font-medium text-red-600 dark:text-red-300"
+                    role="alert"
+                >
+                    { error }
+                </p>
             }
         </div>
     }

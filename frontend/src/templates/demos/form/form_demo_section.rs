@@ -8,61 +8,36 @@ use web_sys::console;
 use yew::prelude::*;
 
 const USAGE_CODE: &str = r#"
-let form_values = use_state(|| "".to_string());
-let response_text = use_state(|| "".to_string());
-let error_message = use_state(|| None::<String>);
-let success_message = use_state(|| None::<String>);
+let submitted = use_state(|| "Submit has not run.".to_owned());
 
-let onsubmit_callback = {
-    let form_values = form_values.clone();
-    let response_text = response_text.clone();
-    let error_message = error_message.clone();
-    let success_message = success_message.clone();
-    Callback::from(move |e: SubmitEvent| {
-        e.prevent_default();
-        // Collect form values
-        let mut values = String::new();
-        let fields = vec![
-            "email", "password", "search", "color", "range", "date", "age",
-            "time", "textarea", "select", "gender", "file_upload", "phone", "language",
-        ];
-        for field in fields {
-            let v = e_input_value(field, &e);
-            values.push_str(&format!("{}: {}\n", field, v));
+let onsubmit_callback = async_callback({
+    let submitted = submitted.clone();
+
+    move |e: SubmitEvent| {
+        let submitted = submitted.clone();
+
+        async move {
+            // Form has already prevented default browser navigation and
+            // reported native validity before this callback runs.
+            let name = e_input_value("name", &e);
+            let email = e_input_value("email", &e);
+            submitted.set(format!("Submitted name={name}, email={email}"));
+            Ok(Some("Form submitted.".to_owned()))
         }
-        let checked = e_checkbox_checked("checkbox", &e);
-        values.push_str(&format!("checkbox: {}\n", checked));
-        form_values.set(values);
+    }
+});
 
-        // Fetch HTTP status code
-        let code = e_input_value("status", &e);
-        let response_text = response_text.clone();
-        let error_message = error_message.clone();
-        let success_message = success_message.clone();
-        spawn_local(async move {
-            let url = format!("https://httpstat.us/{}", code);
-            match Request::get(&url)
-                .header("Accept", "application/json")
-                .send()
-                .await
-            {
-                Ok(resp) => {
-                    let status = resp.status();
-                    let text = resp.text().await.unwrap_or_default();
-                    response_text.set(text.clone());
-                    if (200..300).contains(&status) {
-                        success_message.set(Some(format!("Success {}: {}", status, text)));
-                    } else {
-                        error_message.set(Some(format!("Error {}: {}", status, text)));
-                    }
-                }
-                Err(err) => {
-                    error_message.set(Some(format!("Network error: {}", err)));
-                }
-            }
-        });
-    })
-};
+html! {
+    <Form onsubmit_callback={onsubmit_callback}>
+        <Input id="name" label="Name" required={true} />
+        <Input
+            id="email"
+            label="Email"
+            input_type={InputType::Email}
+            required={true}
+        />
+    </Form>
+}
 "#;
 
 #[component(FormDemoSection)]
@@ -72,6 +47,22 @@ pub fn form_demo_section() -> Html {
     let response_text = use_state(|| "".to_string());
     let error_message = use_state(|| None::<String>);
     let success_message = use_state(|| None::<String>);
+    let validation_preview = use_state(|| "Submit has not run.".to_owned());
+
+    let validation_submit = async_callback({
+        let validation_preview = validation_preview.clone();
+
+        move |e: SubmitEvent| {
+            let validation_preview = validation_preview.clone();
+
+            async move {
+                let name = e_input_value("validation_name", &e);
+                let email = e_input_value("validation_email", &e);
+                validation_preview.set(format!("Submitted name={name}, email={email}"));
+                Ok(Some("Validation form submitted.".to_owned()))
+            }
+        }
+    });
 
     // Build onsubmit callback
     let onsubmit_callback = async_callback({
@@ -166,6 +157,33 @@ pub fn form_demo_section() -> Html {
     let example = html! {
         <section class="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg space-y-6">
             <Typo tag={TagType::H1}>{ "Form with HTTP Fetch Demo" }</Typo>
+            <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+                <Typo tag={TagType::H2}>{ "Native Validation Gate" }</Typo>
+                <p class="mb-4 text-sm text-gray-600 dark:text-gray-300">
+                    { "The Form checks native validity before calling the submit callback. The preview below only updates after required fields and email format are valid." }
+                </p>
+                <Form
+                    onsubmit_callback={validation_submit}
+                    button_label="Submit validation example"
+                >
+                    <Input
+                        id="validation_name"
+                        label="Name"
+                        placeholder="Enter a name"
+                        required={true}
+                    />
+                    <Input
+                        id="validation_email"
+                        label="Email"
+                        input_type={InputType::Email}
+                        default_value="not-an-email"
+                        required={true}
+                    />
+                    <p class="rounded border border-gray-200 bg-gray-50 p-2 text-sm text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200">
+                        { (*validation_preview).clone() }
+                    </p>
+                </Form>
+            </div>
             <Form
                 onsubmit_callback={onsubmit_callback.clone()}
                 button_label="Submit and Fetch"
@@ -249,7 +267,7 @@ pub fn form_demo_section() -> Html {
             github_demo_path="form/form_demo_section.rs"
             github_source_path="form/form_container.rs"
             title="Form HTTP Fetch Demo"
-            description={Some(html! {<p>{"Submit the form to collect all field values and then fetch the given HTTP status code from httpstat.us."}</p>})}
+            description={Some(html! {<p>{"Form prevents invalid native submissions before running callbacks, then valid submissions can collect field values and perform async work."}</p>})}
             example={example}
             usage_code={USAGE_CODE}
             props_table={Some(props_table)}

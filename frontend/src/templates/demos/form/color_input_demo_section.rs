@@ -13,8 +13,10 @@ let on_change = {
 html! {
     <ColorInput
         id="brand_color"
+        name="brand_color_hex"
         label="Brand Color"
         value={(*color).clone()}
+        helper_text="Submitted as the selected hex color."
         on_change={Some(on_change)}
     />
 }
@@ -29,29 +31,56 @@ pub fn color_input_demo_section() -> Html {
             header: "Prop".into(),
             values: vec![
                 "id".into(),
+                "name".into(),
                 "label".into(),
                 "value".into(),
+                "helper_text".into(),
+                "error".into(),
+                "visually_hidden_label".into(),
+                "aria_invalid".into(),
+                "aria_describedby".into(),
+                "required".into(),
+                "disabled".into(),
                 "on_change".into(),
+                "on_blur".into(),
                 "class".into(),
             ],
         },
         Column {
             header: "Type".into(),
             values: vec![
-                "String".into(),
-                "String".into(),
-                "String".into(),
+                "AttrValue".into(),
+                "Option<AttrValue>".into(),
+                "AttrValue".into(),
+                "AttrValue".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "bool".into(),
+                "Option<bool>".into(),
+                "Option<AttrValue>".into(),
+                "bool".into(),
+                "bool".into(),
                 "Option<Callback<String>>".into(),
+                "Option<Callback<FocusEvent>>".into(),
                 "Classes".into(),
             ],
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "ID and name of the input element.".into(),
+                "DOM/accessibility ID.".into(),
+                "Submitted form field name. Defaults to id.".into(),
                 "Label text displayed above the color input.".into(),
                 "Initial hex value of the color (e.g., \"#000000\").".into(),
+                "Optional helper copy below the color input.".into(),
+                "External error message below the input.".into(),
+                "Hides the label visually while preserving it for screen readers.".into(),
+                "Overrides computed aria-invalid state.".into(),
+                "Additional aria-describedby IDs.".into(),
+                "Marks the color input as required.".into(),
+                "Disables the color input.".into(),
                 "Fires when the color changes, passing the new hex string.".into(),
+                "Called when the color input loses focus.".into(),
                 "Optional Tailwind classes for the input element.".into(),
             ],
         },
@@ -83,8 +112,10 @@ fn color_input_usage() -> Html {
     html! {
         <ColorInput
             id="brand_color"
+            name="brand_color_hex"
             label="Brand Color"
             value={(*color).clone()}
+            helper_text="Submitted as the selected hex color."
             on_change={Some(on_change)}
         />
     }

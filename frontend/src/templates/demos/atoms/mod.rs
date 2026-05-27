@@ -33,3 +33,6 @@ pub use avatar_demo_section::*;
 
 pub mod badge_demo_section;
 pub use badge_demo_section::*;
+
+pub mod chip_demo_section;
+pub use chip_demo_section::*;

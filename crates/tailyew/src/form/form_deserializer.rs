@@ -12,7 +12,7 @@ where
     Ok(s.into())
 }
 
-/// Deserialize Option<AttrValue> from JSON string or null/missing
+/// Deserialize `Option<AttrValue>` from JSON string or null/missing.
 pub fn de_option_attr<'de, D>(de: D) -> Result<Option<AttrValue>, D::Error>
 where
     D: Deserializer<'de>,

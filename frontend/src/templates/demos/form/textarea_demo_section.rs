@@ -13,9 +13,11 @@ let on_change = {
 html! {
     <Textarea
         id="message"
+        name="message"
         label="Your Message"
         placeholder="Type your message here..."
         default_value=""
+        helper_text="Use a few sentences if helpful."
         rows={6}
         on_change={Some(on_change)}
     />
@@ -33,9 +35,11 @@ pub fn textarea_demo_section() -> Html {
     let example = html! {
         <Textarea
             id="message"
+            name="message"
             label="Your Message"
             placeholder="Type your message here..."
             default_value=""
+            helper_text="Use a few sentences if helpful."
             rows={6}
             on_change={Some(on_change)}
         />
@@ -45,44 +49,86 @@ pub fn textarea_demo_section() -> Html {
         Column {
             header: "Prop".into(),
             values: vec![
-                "id".into(),
-                "label".into(),
-                "default_value".into(),
-                "placeholder".into(),
-                "class".into(),
-                "container_class".into(),
-                "required".into(),
-                "on_change".into(),
-                "rows".into(),
-            ],
+                "id",
+                "name",
+                "label",
+                "default_value",
+                "value",
+                "placeholder",
+                "class",
+                "container_class",
+                "label_class",
+                "visually_hidden_label",
+                "helper_text",
+                "error",
+                "aria_invalid",
+                "aria_describedby",
+                "aria_label",
+                "required",
+                "disabled",
+                "on_change",
+                "on_blur",
+                "rows",
+            ]
+            .into_iter()
+            .map(Html::from)
+            .collect(),
         },
         Column {
             header: "Type".into(),
             values: vec![
-                "String".into(),
-                "String".into(),
-                "String".into(),
-                "String".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
-                "bool".into(),
-                "Option<Callback<String>>".into(),
-                "usize".into(),
-            ],
+                "AttrValue",
+                "Option<AttrValue>",
+                "AttrValue",
+                "AttrValue",
+                "Option<AttrValue>",
+                "AttrValue",
+                "Classes",
+                "Classes",
+                "Classes",
+                "bool",
+                "Option<AttrValue>",
+                "Option<AttrValue>",
+                "Option<bool>",
+                "Option<AttrValue>",
+                "Option<AttrValue>",
+                "bool",
+                "bool",
+                "Option<Callback<String>>",
+                "Option<Callback<FocusEvent>>",
+                "usize",
+            ]
+            .into_iter()
+            .map(Html::from)
+            .collect(),
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "ID and name for the textarea.".into(),
-                "Visible label text.".into(),
-                "Initial value of the textarea.".into(),
-                "Placeholder text when empty.".into(),
-                "Optional Tailwind classes for the input.".into(),
-                "Optional Tailwind classes for the container.".into(),
-                "Whether the input is required.".into(),
-                "Callback called on input value change.".into(),
-                "Number of visible text rows.".into(),
-            ],
+                "DOM/accessibility ID.",
+                "Submitted form field name. Defaults to id.",
+                "Visible label text.",
+                "Initial uncontrolled value.",
+                "Controlled value for parent-owned textarea state.",
+                "Placeholder text when empty.",
+                "Additional Tailwind classes for the textarea.",
+                "Additional Tailwind classes for the wrapper.",
+                "Additional Tailwind classes for the label.",
+                "Hides the label visually while preserving it for screen readers.",
+                "Optional helper copy below the textarea.",
+                "External error message shown below the textarea.",
+                "Overrides computed aria-invalid state.",
+                "Additional aria-describedby IDs.",
+                "Accessible label for hidden-label contexts.",
+                "Whether the textarea is required.",
+                "Disables the textarea.",
+                "Callback called on input value change.",
+                "Called when the textarea loses focus.",
+                "Number of visible text rows.",
+            ]
+            .into_iter()
+            .map(Html::from)
+            .collect(),
         },
     ];
 

@@ -13,9 +13,12 @@ let on_change = {
 html! {
     <FileInput
         id="resume"
+        name="resume_file"
         label="Upload Resume"
         initial_file_name=""
-        accept={Some(".pdf,.docx")}
+        accept=".pdf,.docx"
+        helper_text="Accepted formats: PDF or DOCX."
+        required={true}
         on_change={Some(on_change)}
     />
 }
@@ -30,33 +33,60 @@ pub fn file_input_demo_section() -> Html {
             header: "Prop".into(),
             values: vec![
                 "id".into(),
+                "name".into(),
                 "label".into(),
                 "initial_file_name".into(),
                 "accept".into(),
+                "helper_text".into(),
+                "error".into(),
+                "visually_hidden_label".into(),
+                "aria_invalid".into(),
+                "aria_describedby".into(),
+                "required".into(),
+                "disabled".into(),
                 "class".into(),
                 "on_change".into(),
+                "on_blur".into(),
             ],
         },
         Column {
             header: "Type".into(),
             values: vec![
-                "String".into(),
-                "String".into(),
-                "String".into(),
-                "Option<String>".into(),
+                "AttrValue".into(),
+                "Option<AttrValue>".into(),
+                "AttrValue".into(),
+                "AttrValue".into(),
+                "AttrValue".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "bool".into(),
+                "Option<bool>".into(),
+                "Option<AttrValue>".into(),
+                "bool".into(),
+                "bool".into(),
                 "Classes".into(),
                 "Option<Callback<String>>".into(),
+                "Option<Callback<FocusEvent>>".into(),
             ],
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "Input ID and label 'for' target.".into(),
+                "DOM/accessibility ID.".into(),
+                "Submitted form field name. Defaults to id.".into(),
                 "Label text for the file input.".into(),
                 "Initial file name to display (if any).".into(),
                 "Optional file type filters (e.g., \".pdf,.docx\").".into(),
+                "Optional helper copy below the file picker.".into(),
+                "External error message shown below the picker.".into(),
+                "Hides the label visually while preserving it for screen readers.".into(),
+                "Overrides computed aria-invalid state.".into(),
+                "Additional aria-describedby IDs.".into(),
+                "Marks the file input as required.".into(),
+                "Disables the file input.".into(),
                 "Additional Tailwind classes.".into(),
                 "Callback fired when a file is selected, passing its name.".into(),
+                "Called when the file input loses focus.".into(),
             ],
         },
     ];
@@ -87,10 +117,13 @@ fn file_input_usage() -> Html {
     html! {
             <FileInput
                 id="resume"
+                name="resume_file"
             label="Upload Resume"
             initial_file_name=""
             accept={".pdf,.docx"}
-            on_change={on_change}
+            helper_text="Accepted formats: PDF or DOCX."
+            required={true}
+            on_change={Some(on_change)}
         />
     }
 }

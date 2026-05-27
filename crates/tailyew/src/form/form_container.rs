@@ -1,7 +1,6 @@
 use crate::atoms::{Button, ButtonType};
 use crate::form::FormSubmitCallback;
 use crate::molecules::{Notification, NotificationTypes};
-use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
 use web_sys::HtmlFormElement;
 use yew::events::SubmitEvent;
@@ -49,6 +48,7 @@ pub fn form(props: &FormProps) -> Html {
     let loading = use_state(|| false);
     let error_message = use_state(|| None::<String>);
     let success_message = use_state(|| None::<String>);
+    let form_ref = use_node_ref();
 
     // Compute form CSS classes
     let form_classes = if form_class.is_empty() {
@@ -69,15 +69,19 @@ pub fn form(props: &FormProps) -> Html {
         let error_message = error_message.clone();
         let success_message = success_message.clone();
         let onsubmit_callback = onsubmit_callback.clone();
+        let form_ref = form_ref.clone();
 
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
 
-            // HTML5 form validation
-            if let Some(target) = e.target()
-                && let Ok(form_el) = target.dyn_into::<HtmlFormElement>()
-                && !form_el.check_validity()
-            {
+            let Some(form_el) = form_ref.cast::<HtmlFormElement>() else {
+                web_sys::console::error_1(
+                    &"TailYew Form submit blocked: unable to resolve form element.".into(),
+                );
+                return;
+            };
+
+            if !should_call_submit_callback(form_el.report_validity()) {
                 return;
             }
 
@@ -132,6 +136,7 @@ pub fn form(props: &FormProps) -> Html {
             }
 
             <form
+                ref={form_ref}
                 id={id.clone()}
                 class={form_classes}
                 onsubmit={onsubmit_wrapper}
@@ -164,5 +169,24 @@ pub fn form(props: &FormProps) -> Html {
                 }
             </form>
         </div>
+    }
+}
+
+fn should_call_submit_callback(form_reported_valid: bool) -> bool {
+    form_reported_valid
+}
+
+#[cfg(test)]
+mod tests {
+    use super::should_call_submit_callback;
+
+    #[test]
+    fn form_blocks_submit_callback_when_native_form_is_invalid() {
+        assert!(!should_call_submit_callback(false));
+    }
+
+    #[test]
+    fn form_allows_submit_callback_when_native_form_is_valid() {
+        assert!(should_call_submit_callback(true));
     }
 }

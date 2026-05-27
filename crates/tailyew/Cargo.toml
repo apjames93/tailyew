@@ -1,6 +1,6 @@
 [package]
 name = "tailyew"
-version = "0.1.56"
+version = "0.1.57"
 edition = "2024"
 authors = ["Alex James <apjames93@gmail.com>", "Alex Wardi <aaw5017@gmail.com>"]
 description = "Reusable Yew + Tailwind UI component library"
@@ -14,6 +14,7 @@ categories = ["wasm", "gui", "web-programming"]
 
 include = [
   "src/**",
+  "!src/**/.DS_Store",
   "tailyew-safelist.html",
   "README.md",
   "Cargo.toml",

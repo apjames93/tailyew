@@ -41,3 +41,6 @@ pub use avatar::*;
 
 pub mod badge;
 pub use badge::*;
+
+pub mod chip;
+pub use chip::*;

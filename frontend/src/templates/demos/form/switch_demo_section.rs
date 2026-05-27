@@ -20,8 +20,9 @@ fn switch_usage() -> Html {
     html! {
         <Switch
             id="notifications"
+            name="notifications_enabled"
             label="Enable notifications"
-            description="Receive important updates by email."
+            helper_text="Receive important updates by email."
             checked={*state}
             on_change={Some(on_change)}
         />
@@ -38,45 +39,64 @@ pub fn switch_demo_section() -> Html {
             header: "Prop".into(),
             values: vec![
                 "id".into(),
+                "name".into(),
                 "label".into(),
                 "checked".into(),
                 "required".into(),
                 "description".into(),
+                "helper_text".into(),
+                "error".into(),
+                "visually_hidden_label".into(),
                 "disabled".into(),
                 "aria-describedby".into(),
+                "aria_invalid".into(),
                 "aria-label".into(),
                 "aria-labelledby".into(),
                 "on_change".into(),
+                "on_blur".into(),
             ],
         },
         Column {
             header: "Type".into(),
             values: vec![
-                "String".into(),
-                "String".into(),
+                "AttrValue".into(),
+                "Option<AttrValue>".into(),
+                "AttrValue".into(),
                 "bool".into(),
                 "bool".into(),
-                "Option<String>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
                 "bool".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
-                "Option<String>".into(),
+                "bool".into(),
+                "Option<AttrValue>".into(),
+                "Option<bool>".into(),
+                "Option<AttrValue>".into(),
+                "Option<AttrValue>".into(),
                 "Option<Callback<bool>>".into(),
+                "Option<Callback<FocusEvent>>".into(),
             ],
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "The HTML id/name for the underlying input.".into(),
+                "DOM/accessibility ID for the underlying checkbox input.".into(),
+                "Submitted form field name. Defaults to id.".into(),
                 "Text label displayed next to the switch.".into(),
-                "Initial on/off state (acts like a default value, can be used in controlled mode).".into(),
+                "Initial on/off state (acts like a default value, can be used in controlled mode)."
+                    .into(),
                 "Whether this field is required for form submission.".into(),
-                "Optional helper text shown below the control.".into(),
+                "Backward-compatible helper text alias.".into(),
+                "Preferred helper text shown below the control.".into(),
+                "External error message shown below the switch.".into(),
+                "Hides the label visually while preserving it for screen readers.".into(),
                 "Disables the switch when true.".into(),
-                "ID of an element that provides additional description; defaults to `${id}-description` when `description` is provided.".into(),
+                "Additional aria-describedby IDs.".into(),
+                "Overrides computed aria-invalid state.".into(),
                 "Accessible label for the switch; falls back to the visible `label` text.".into(),
                 "ID of an element that labels the switch; defaults to `${id}-label`.".into(),
                 "Called when the switch value changes, receiving the new `bool` state.".into(),
+                "Called when the switch loses focus.".into(),
             ],
         },
     ];
@@ -110,8 +130,9 @@ fn switch_usage() -> Html {
     html! {
         <Switch
             id="notifications"
+            name="notifications_enabled"
             label="Enable notifications"
-            description="Receive important updates by email."
+            helper_text="Receive important updates by email."
             checked={*state}
             on_change={Some(on_change)}
         />

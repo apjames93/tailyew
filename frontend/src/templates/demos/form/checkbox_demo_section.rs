@@ -15,8 +15,9 @@ let on_change = {
 html! {
     <Checkbox
         id="subscribe"
+        name="newsletter_subscribed"
         label="Subscribe to newsletter"
-        description="We'll never send spam."
+        helper_text="We'll never send spam."
         checked={*state}
         on_change={Some(on_change)}
     />
@@ -31,35 +32,71 @@ pub fn checkbox_demo_section() -> Html {
         Column {
             header: "Prop".into(),
             values: vec![
-                "id".into(),
-                "label".into(),
-                "checked".into(),
-                "description".into(),
-                "disabled".into(),
-                "on_change".into(),
-            ],
+                "id",
+                "name",
+                "label",
+                "checked",
+                "required",
+                "description",
+                "helper_text",
+                "error",
+                "visually_hidden_label",
+                "aria_invalid",
+                "aria_describedby",
+                "aria_label",
+                "disabled",
+                "on_change",
+                "on_blur",
+            ]
+            .into_iter()
+            .map(Html::from)
+            .collect(),
         },
         Column {
             header: "Type".into(),
             values: vec![
-                "String".into(),
-                "String".into(),
-                "bool".into(),
-                "Option<String>".into(),
-                "bool".into(),
-                "Option<Callback<bool>>".into(),
-            ],
+                "AttrValue",
+                "Option<AttrValue>",
+                "AttrValue",
+                "bool",
+                "bool",
+                "Option<AttrValue>",
+                "Option<AttrValue>",
+                "Option<AttrValue>",
+                "bool",
+                "Option<bool>",
+                "Option<AttrValue>",
+                "Option<AttrValue>",
+                "bool",
+                "Option<Callback<bool>>",
+                "Option<Callback<FocusEvent>>",
+            ]
+            .into_iter()
+            .map(Html::from)
+            .collect(),
         },
         Column {
             header: "Description".into(),
             values: vec![
-                "The ID and name for the checkbox input.".into(),
-                "Visible label text.".into(),
-                "Whether the checkbox is checked.".into(),
-                "Optional helper text below the label.".into(),
-                "Disables the checkbox if true.".into(),
-                "Called when the checkbox value changes.".into(),
-            ],
+                "DOM/accessibility ID.",
+                "Submitted form field name. Defaults to id.",
+                "Visible label text.",
+                "Whether the checkbox is checked.",
+                "Marks the checkbox as required.",
+                "Backward-compatible helper text alias.",
+                "Preferred helper text below the checkbox.",
+                "External error message shown below the checkbox.",
+                "Hides the label visually while preserving it for screen readers.",
+                "Overrides computed aria-invalid state.",
+                "Additional aria-describedby IDs.",
+                "Accessible label for compact or hidden-label contexts.",
+                "Disables the checkbox if true.",
+                "Called when the checkbox value changes.",
+                "Called when the checkbox loses focus.",
+            ]
+            .into_iter()
+            .map(Html::from)
+            .collect(),
         },
     ];
 
@@ -89,8 +126,9 @@ fn checkbox_usage() -> Html {
     html! {
         <Checkbox
             id="subscribe"
+            name="newsletter_subscribed"
             label="Subscribe to newsletter"
-            description="We'll never send spam."
+            helper_text="We'll never send spam."
             checked={*state}
             on_change={Some(on_change)}
         />
